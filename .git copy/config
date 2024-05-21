@@ -1,0 +1,13 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = http://extra.univ-littoral.fr/gitlab/guilbert.emma/Guilbert_Emma_SAE_C1.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "branche_de_tests"]
+	remote = origin
+	merge = refs/heads/branche_de_tests

@@ -1,112 +1,147 @@
-import pygame
+# ----------------------- Jeu de plateau - Plateau  ------------------------ #
 
-# Initialisation de Pygame
+# Bibliothèques utilisées pour le code
+import pygame, couleur, texte
+import random
+
 pygame.init()
 
-# Dimensions de la fenêtre
-largeur, hauteur = 800, 700
-
-# Création de la fenêtre
-fenetre = pygame.display.set_mode((largeur, hauteur))
-pygame.display.set_caption("Plateau de jeu")
-
-# Définition des couleurs
-NOIR = (0, 0, 0)
-BLANC = (255, 255, 255)
-JAUNE = (255, 255, 0)
-VERT = (0, 255, 0)
-VIOLET = (238, 130, 238)
-ROUGE = (255, 0, 0)
-GRIS = (128, 128, 128)
-ROSE = (255, 192, 203)
-TURQUOISE = (175,238,238)
-INDIGO = (75, 0, 130)
-ORANGE = (255, 127, 0)
-BLEU = (0, 204, 204)
-BEIGE = (255, 255, 204)
-
-def Plateau_de_Jeu():
-    # Taille d'une case
-    taille_case = largeur // 17
-
-    # Définition du plateau
-    plateau = [
-        [ROUGE, ROUGE, BLANC, BLANC, NOIR, NOIR, NOIR, NOIR, JAUNE, NOIR, NOIR, NOIR, NOIR, VIOLET, BLANC, ROUGE, ROUGE],
-        [ROUGE, ROUGE, NOIR, ORANGE, NOIR, NOIR, NOIR, NOIR, ROSE, NOIR, NOIR, NOIR, NOIR, TURQUOISE, NOIR, ROUGE, ROUGE],
-        [NOIR, NOIR, NOIR, BLANC, NOIR, VERT, VERT, NOIR, VIOLET, NOIR, VERT, VERT, NOIR, BLANC, NOIR, NOIR, NOIR],
-        [VIOLET, BLANC, ROSE, BLANC, NOIR, NOIR, BLANC, NOIR, BLANC, NOIR, ROSE, NOIR, NOIR, BLANC, BLANC, ROSE, BLANC],
-        [BLANC, NOIR, NOIR, NOIR,  NOIR, NOIR, BLANC, NOIR, ORANGE, NOIR, BLANC, NOIR, NOIR, NOIR, NOIR, NOIR, BLANC],
-        [INDIGO, BLANC, BLANC, BLANC, BLANC, VIOLET, ROSE, BLANC, BLANC, TURQUOISE, BLANC, BLANC, TURQUOISE, BLANC, ORANGE, VIOLET, INDIGO],
-        [ROSE, NOIR, NOIR, NOIR,  NOIR, BLANC, NOIR, NOIR, BLANC, NOIR, NOIR, BLEU, NOIR, NOIR, NOIR, NOIR, BLANC],
-        [BLANC, TURQUOISE, ORANGE, BLANC, NOIR, ORANGE, NOIR, NOIR, BEIGE, NOIR, NOIR, BLANC, NOIR, BLANC, BLANC, BLANC, ORANGE],
-        [NOIR, NOIR, NOIR, BLANC, NOIR, VERT, VERT, NOIR, BLEU, NOIR, GRIS, GRIS, NOIR, ROSE, NOIR, NOIR, NOIR],
-        [ROUGE, ROUGE, NOIR, VIOLET, NOIR, NOIR, NOIR, NOIR, BLANC, NOIR, NOIR, NOIR, NOIR, VIOLET, NOIR, ROUGE, ROUGE],
-        [ROUGE, ROUGE, BLANC, BLANC, NOIR, NOIR, NOIR, NOIR, JAUNE, NOIR, NOIR, NOIR, NOIR, BLANC, BLANC, ROUGE, ROUGE]
-    ]
-
-    # Définition des noms des cases
-    nom_case = {
-        ROUGE: "Boss",
-        ROSE: "Chance",
-        ORANGE: "Malus",
-        INDIGO: "Move",
-        VIOLET: "Replay",
-        VERT: "Profit PV",
-        TURQUOISE: "Retreat",
-        BEIGE: "Witch",
-        GRIS: "Special",
-        BLEU: "Well"
-    }
-
-    # Police de texte
-    font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 12)
-
-    # Boucle principale
-    running = True
-    while running:
-        # Si le joueur quitte la fenêtre
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # Dessiner le plateau de jeu
-        for ligne in range(11):
-            for colonne in range(17):
-                couleur_case = plateau[ligne][colonne]
-                pygame.draw.rect(fenetre, couleur_case, (colonne * taille_case, ligne * taille_case, taille_case, taille_case))
-
-        # Écrire le nom de la case
-                # Écrire le message de la case si la couleur correspond
-                if couleur_case in nom_case:
-                    message = nom_case[couleur_case]
-                    text = font.render(message, True, NOIR)
-                    fenetre.blit(text, (colonne * taille_case + taille_case/7, ligne * taille_case + taille_case/2.5))
-                elif couleur_case == JAUNE and ligne == 0:
-                    message = "Start"
-                    text = font.render(message, True, NOIR)
-                    fenetre.blit(text, (colonne * taille_case + taille_case/4.5, ligne * taille_case + taille_case/2.5))
-                elif couleur_case == JAUNE and ligne == 10:
-                    message = "Finish"
-                    text = font.render(message, True, NOIR)
-                    fenetre.blit(text, (colonne * taille_case + taille_case/4.5, ligne * taille_case + taille_case/2.5))
-        
-        # Dessiner les traits des cases
-        for ligne in range(17):
-            for colonne in range(13):
-                if colonne != 12:
-                    pygame.draw.line(fenetre,NOIR,(ligne * taille_case,colonne * taille_case),(ligne * taille_case + taille_case, colonne * taille_case),1)
-                    pygame.draw.line(fenetre,NOIR,(ligne * taille_case,colonne * taille_case),(ligne * taille_case, colonne * taille_case + taille_case),1)
-                else:
-                    pygame.draw.line(fenetre,BLANC,(ligne * taille_case,colonne * taille_case),(ligne * taille_case + taille_case, colonne * taille_case),1)
-
-        # Mettre à jour l'affichage
-        pygame.display.flip()
-
-    # Quitter Pygame
-    pygame.quit()
-
-# ------------------------------------------------------------------------------------------------------ #
-
-if __name__ == "__main__":
-    Plateau_de_Jeu()
+class Plateau:
+    """La classe Plateau est une classe qui permet de créer le plateau de jeu."""
     
+    # Initialisation du plateau
+    def __init__(self) -> None:
+        """_summary_
+            Initialisation du Plateau
+        """
+        # Définir le plateau
+        self.__plateau = []
+        
+        # Définir la taille d'une case
+        self.__taille_case = 800 // 17
+        
+        # Définir les noms des cases
+        self.__nom_case = {
+            couleur.Couleur().get_Rouge(): "Boss",
+            couleur.Couleur().get_Rose(): "Chance",
+            couleur.Couleur().get_Orange(): "Malus",
+            couleur.Couleur().get_Indigo(): "Pouf",
+            couleur.Couleur().get_Violet(): "Rejoue",
+            couleur.Couleur().get_Turquoise(): "Grrr",
+            couleur.Couleur().get_Beige(): "Hutte",
+            couleur.Couleur().get_Gris(): "Spéciale",
+            couleur.Couleur().get_Bleu(): "Puit",
+            couleur.Couleur().get_Blanc(): "Vide",
+            couleur.Couleur().get_Noir(): "Mort",
+            couleur.Couleur().get_Jaune(): "Départ"
+        }
+        
+        self.__max_couleur = {
+            couleur.Couleur().get_Rouge(): 4,
+            couleur.Couleur().get_Rose(): 26,
+            couleur.Couleur().get_Orange(): 29,
+            couleur.Couleur().get_Indigo(): 2,
+            couleur.Couleur().get_Violet(): 20,
+            couleur.Couleur().get_Turquoise(): 20,
+            couleur.Couleur().get_Beige(): 1,
+            couleur.Couleur().get_Gris(): 10,
+            couleur.Couleur().get_Bleu(): 1,
+            couleur.Couleur().get_Noir(): 1,
+            couleur.Couleur().get_Jaune():1,
+            couleur.Couleur().get_Blanc():55
+        }
+        
+
+    def get_plateau(self):
+        """Renvoie le plateau de jeu."""
+        return self.__plateau
+
+    def set_plateau(self, plateau):
+        """Modifie le plateau de jeu."""
+        self.__plateau = plateau
+        
+    def get_case_jaune(self):
+        """Renvoie les coordonnées correspondant à la case jaune."""
+        for ligne in range(10):
+            for colonne in range(17):
+                if self.get_plateau()[ligne][colonne] == couleur.Couleur().get_Jaune():
+                    coord_case_jaune = (ligne, colonne)
+        return coord_case_jaune
+
+    def get_case_indigo(self, joueur):
+        """Renvoie les coordonnées correspondant aux cases indigo."""
+        for ligne in range(10):
+            for colonne in range(17):
+                if self.get_plateau()[ligne][colonne] == couleur.Couleur().get_Indigo():
+                    if joueur.get_plateaux() == ligne and joueur.get_plateauy() == colonne:
+                        pass
+                    else:
+                        coord_case_indigo = (ligne, colonne)
+        return coord_case_indigo
+
+    def remplir_plateau_aleatoirement(self):
+        """Remplit le plateau de manière aléatoire en fonction de max_couleur."""
+        # Crée une liste des couleurs disponibles en fonction de max_couleur
+        couleurs_disponibles = []
+        for couleurs, nombre_max in self.__max_couleur.items():
+            couleurs_disponibles.extend([couleurs] * nombre_max)
+
+         # Remplit le plateau de manière aléatoire
+        for i in range(10):
+            ligne_plateau = []
+            for j in range(17):
+                if couleurs_disponibles:  # Vérifiez si des couleurs sont disponibles
+                    couleur_aleatoire = random.choice(couleurs_disponibles)
+                    couleurs_disponibles.remove(couleur_aleatoire)  # Supprime la couleur de la liste
+                    ligne_plateau.append(couleur_aleatoire)
+        
+            self.__plateau.append(ligne_plateau)
+        return self.__plateau
+    
+    def dessiner_plateau(self, surface):
+        """Dessine le plateau à l'écran avec Pygame."""
+        # (Code inchangé)
+
+    def get_cases(self, ligne, colonne):
+        """Renvoie la couleur de la case à la position spécifiée."""
+        return self.get_plateau()[ligne][colonne]
+        
+    def get_nom(self, ligne, colonne):
+        """Renvoie le nom de la case à la position spécifiée."""
+        couleur_case = self.get_plateau()[ligne][colonne]  # Obtenir la couleur de la case
+        nom_case = self.__nom_case[couleur_case]
+        return nom_case
+    
+    def plateau_cache(self, surface):
+        """Cache le plateau en le dessinant entièrement en noir."""
+        for ligne in range(10):
+            for colonne in range(17):
+                x = colonne * self.__taille_case  # Coordonnée X du coin supérieur gauche du rectangle
+                y = ligne * self.__taille_case  # Coordonnée Y du coin supérieur gauche du rectangle          
+                rectangle = pygame.Rect(x, y, self.__taille_case, self.__taille_case)  # Créer un rectangle
+                pygame.draw.rect(surface, couleur.Couleur().get_Noir(), rectangle)  # Dessiner le rectangle avec la couleur
+
+    def mise_a_jour_plateau(self, case_decouverte, surface):
+        """Met à jour le plateau en affichant les cases découvertes."""
+        font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
+        for i in case_decouverte:
+            couleur_case = self.get_plateau()[i[0]][i[1]]  # Obtenir la couleur de la case
+            x = i[1] * self.__taille_case  # Coordonnée X du coin supérieur gauche du rectangle
+            y = i[0] * self.__taille_case  # Coordonnée Y du coin supérieur gauche du rectangle          
+            rectangle = pygame.Rect(x, y, self.__taille_case, self.__taille_case)  # Créer un rectangle
+            pygame.draw.rect(surface, couleur_case, rectangle)  # Dessiner le rectangle avec la couleur
+            if (self.__nom_case[couleur_case] != "Vide") and (self.__nom_case[couleur_case] != "Mort") and (self.__nom_case[couleur_case] != "Départ/arrivée"):
+                texte.Texte(self.__nom_case[couleur_case], couleur.Couleur().get_Noir(), x + 9, y + 15).affiche(font, surface)
+
+            
+        
+if __name__ == "__main__" :
+    plateau_de_jeu = Plateau()
+    plateau_de_jeu.remplir_plateau_aleatoirement()
+    surface = pygame.display.set_mode((800, 700))
+    plateau_de_jeu.dessiner_plateau(surface)
+    plateau_de_jeu.plateau_cache(surface)
+    case_decouverte = [[1,2],[1,3],[1,4]]
+    plateau_de_jeu.mise_a_jour_plateau(case_decouverte)
+    pygame.display.update()
+    pygame.time.delay(2000)
