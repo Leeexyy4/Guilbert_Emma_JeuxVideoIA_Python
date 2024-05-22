@@ -7,11 +7,11 @@ class Joueur:
     """La classe Joueur est une classe qui permet d'utiliser un personnage."""
     
     # Definir un joueur
-    def __init__(self,ordre,prenom,element,plateaux,plateauy) -> None:
+    def __init__(self,id,prenom,element,plateaux,plateauy) -> None:
         """_summary_
             Initialisation du joueur
         """
-        self.__ordre = ordre
+        self.__id = id
         self.__x = plateauy * 47
         self.__y = plateaux * 47
         self.__prenom = prenom
@@ -21,9 +21,15 @@ class Joueur:
         self.__element = element
         self.__plateaux = plateaux
         self.__plateauy = plateauy
-        self.__inventaire = []
-    
+        self.__inventaire = ["clé de la Forêt","clé de la Ville","clé de la Rivière", "clé de la Ville"]
+
     # Definir les getters
+    def get_id(self):
+            """_summary_
+                Getter de l'id
+            """
+            return self.__id
+
     def get_x(self):
         """_summary_
             Getter de la position x
@@ -208,14 +214,14 @@ class Joueur:
     def ajouter_pv(self,liste_joueur,nb_pv,surface):
         """Ajoute des points de vie au joueur et met à jour l'affichage."""
         self.set_pv((self.get_pv() + nb_pv))
-        liste_joueur[self.get_ordre()][5] = self.get_pv()
+        liste_joueur[self.get_id()][5] = self.get_pv()
         pygame.display.update() # Mettre à jour l'affichage
         return self
     
     def supprimer_pv(self,liste_joueur,nb_pv,surface):
         """Supprime des points de vie au joueur et met à jour l'affichage."""
         self.set_pv((self.get_pv() - nb_pv))
-        liste_joueur[self.get_ordre()][5] = self.get_pv()
+        liste_joueur[self.get_id()][5] = self.get_pv()
         pygame.display.update() # Mettre à jour l'affichage
         return self
 
@@ -341,7 +347,7 @@ class Joueur:
     
     def affichage_potion(self,surface):
         """
-            La fonction affichage_image_plateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
+            La fonction affichage_potion permet d'afficher la potion dans l'inventaire du joueur
         """
         # Charger l'image
         potion = pygame.image.load("assets\img\illustrations\Potion_inverstium.png")
@@ -376,6 +382,24 @@ class Joueur:
             gagne = True
         return gagne
         
+    def adv_nb_attaquer(self,liste_joueur):
+        # Combien d'adversaire on peut attaquer
+        nbjoueur_attaque = 0
+        x1 = self.get_plateaux()
+        y1 = self.get_plateauy()
+        for i in liste_joueur:
+            if (((i[3] == x1) or (i[3] == x1 + 1) or (i[3] == x1 - 1)) and ((i[4] == y1) or (i[4] == y1 + 1) or (i[4] == y1 - 1)) and (i[0] != self.get_id())):
+                nbjoueur_attaque = nbjoueur_attaque + 1
+        return nbjoueur_attaque
+
+    def adv_a_attaquer(self, liste_joueur):
+        # Quel adversaire on peut attaquer
+        x1 = self.get_plateaux()
+        y1 = self.get_plateauy()
+        for i in liste_joueur:
+            if (((i[3] == x1) or (i[3] == x1 + 1) or (i[3] == x1 - 1)) and ((i[4] == y1) or (i[4] == y1 + 1) or (i[4] == y1 - 1)) and (i[0] != self.get_id())):
+                return i[0]
+        return (-1)
         
         
         
@@ -384,7 +408,8 @@ class Joueur:
 if __name__ == "__main__":
     fenetre = pygame.display.set_mode((800,700))
     nouveau_joueur = Joueur(1,"Ondine","Riviere",1,2)
-    nouveau_joueur.set_inventaire(["cle de la Ville","cle de la Riviere","cle du Rocher"])
+    nouveau_joueur.set_inventaire(["cle de la Ville","cle de la Foret","cle du Rocher"])
     nouveau_joueur.affichage_image_plateau(300,400,fenetre)
     nouveau_joueur.affichage_cle(fenetre)
+    nouveau_joueur.affichage_potion(fenetre)
     pygame.time.delay(3500)

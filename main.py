@@ -23,31 +23,7 @@ import pygame # Importation de la bibliotheque pygame
 import joueur, rectangle, texte, de, plateau, couleur, ennemis, image # Importation des classes crees
 import random # Importation de la bibliotheque aleatoire
 
-# ----------------------- Jeu de plateau - Fenetre de jeu ------------------------ #
-
-# Initialisation de Pygame
-pygame.init()
-
-# Dimensions de la fenetre
-largeur, hauteur = 800, 700
-
-# Creation de la fenetre
-fenetre = pygame.display.set_mode((largeur, hauteur))
-pygame.display.set_caption("Plateau de jeu")
-
-# Police de texte
-police = pygame.font.Font('./assets/font/times-new-roman.ttf', 16)
-
-# Definir les variables utiles
-plateau_de_jeu=plateau.Plateau()
-de_jeu = de.De()
-liste_joueur = []
-case_decouverte = []
-
 # ----------------------- Jeu de plateau - Plateau de jeu ------------------------ #
-
-# Taille d'une case
-taille_case = largeur // 17
 
 def Menu_bas():
     # Dessiner la partie basse
@@ -176,7 +152,7 @@ def Page_nb_joueur():
                 if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 :   
                     nb = 3
                     return nb
-            if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
+            if event.type == pygame.QUIT: # si le joueur quitte la fenetre
                 pygame.quit()
                 exit()
 
@@ -191,15 +167,31 @@ def Page_choixperso():
     texte.Texte("Je t'invite à choisir un personnage parmi la liste suivante :",couleur.Couleur().get_Noir() ,20,620).affiche(police, fenetre)
     texte.Texte("Pierre, Ondine, Kevin ou Flora",couleur.Couleur().get_Noir() ,20,650).affiche(police,fenetre)
     
-    # Ajouter les photos des personnages
-    image.Image(400,585,"./assets/img/personnages/Pierre.png").affiche(fenetre)
-    texte.Texte("Pierre",couleur.Couleur().get_Noir(), 413, 650).affiche(police,fenetre)
-    image.Image(500,585,"./assets/img/personnages/Ondine.png").affiche(fenetre)
-    texte.Texte("Ondine",couleur.Couleur().get_Noir(), 510, 650).affiche(police,fenetre)
-    image.Image(600,585,"./assets/img/personnages/Kevin.png").affiche(fenetre)
-    texte.Texte("Kevin",couleur.Couleur().get_Noir(), 613, 650).affiche(police,fenetre)
-    image.Image(700,585,"./assets/img/personnages/Flora.png").affiche(fenetre)
-    texte.Texte("Flora",couleur.Couleur().get_Noir(), 715, 650).affiche(police,fenetre)
+    # Ajouter les photos des personnages non pris
+    if liste_joueur != []:
+        for i in liste_joueur:
+            if i[1] != "Pierre":
+                image.Image(400,585,"./assets/img/personnages/Pierre.png").affiche(fenetre)
+                texte.Texte("Pierre",couleur.Couleur().get_Noir(), 413, 650).affiche(police,fenetre)
+            if i[1] != "Ondine":
+                image.Image(500,585,"./assets/img/personnages/Ondine.png").affiche(fenetre)
+                texte.Texte("Ondine",couleur.Couleur().get_Noir(), 510, 650).affiche(police,fenetre)
+            if i[1] != "Kevin":
+                image.Image(600,585,"./assets/img/personnages/Kevin.png").affiche(fenetre)
+                texte.Texte("Kevin",couleur.Couleur().get_Noir(), 613, 650).affiche(police,fenetre)
+            if i[1] != "Flora":
+                image.Image(700,585,"./assets/img/personnages/Flora.png").affiche(fenetre)
+                texte.Texte("Flora",couleur.Couleur().get_Noir(), 715, 650).affiche(police,fenetre)
+    else:
+        image.Image(400,585,"./assets/img/personnages/Pierre.png").affiche(fenetre)
+        texte.Texte("Pierre",couleur.Couleur().get_Noir(), 413, 650).affiche(police,fenetre)
+        image.Image(500,585,"./assets/img/personnages/Ondine.png").affiche(fenetre)
+        texte.Texte("Ondine",couleur.Couleur().get_Noir(), 510, 650).affiche(police,fenetre)
+
+        image.Image(600,585,"./assets/img/personnages/Kevin.png").affiche(fenetre)
+        texte.Texte("Kevin",couleur.Couleur().get_Noir(), 613, 650).affiche(police,fenetre)
+        image.Image(700,585,"./assets/img/personnages/Flora.png").affiche(fenetre)
+        texte.Texte("Flora",couleur.Couleur().get_Noir(), 715, 650).affiche(police,fenetre)
     
     # Texte pour animer la page
     texte.Texte("Amusez-vous bien ici demarre une nouvelle aventure !",couleur.Couleur().get_Blanc(),230, 530).affiche(police,fenetre)
@@ -248,7 +240,7 @@ def Page_premier_mouvement():
     Menu_bas()    
     # cacher le Texte
     rectangle.Rectangle(100, 590, 390, 80).affiche(fenetre,couleur.Couleur().get_Beige())
-    texte.Texte("Tu es le joueur " + str(un_joueur.get_ordre() + 1) + ", clique sur le de afin de faire",couleur.Couleur().get_Noir(),110,600).affiche(police,fenetre)
+    texte.Texte("Tu es le joueur " + str(un_joueur.get_id() + 1) + ", clique sur le de afin de faire",couleur.Couleur().get_Noir(),110,600).affiche(police,fenetre)
     texte.Texte("ton deplacement",couleur.Couleur().get_Noir(),110,620).affiche(police,fenetre)
     
     # Affiche le de sur la face 1
@@ -261,7 +253,7 @@ def Page_mouvement():
     image.Image(0,468,'assets/img/illustrations/Page_choixdouble.png').affiche(fenetre)
     Menu_bas()
     rectangle.Rectangle(100, 590, 390, 80).affiche(fenetre,couleur.Couleur().get_Beige())
-    texte.Texte("Joueur " + str(un_joueur.get_ordre() + 1) + " : " + un_joueur.get_prenom() + " clique sur le de afin ",couleur.Couleur().get_Noir(),110,600).affiche(police,fenetre)
+    texte.Texte("Joueur " + str(un_joueur.get_id() + 1) + " : " + un_joueur.get_prenom() + " clique sur le de afin ",couleur.Couleur().get_Noir(),110,600).affiche(police,fenetre)
     texte.Texte("d'attaquer un joueur ou de lancer le de",couleur.Couleur().get_Noir(),110,620).affiche(police,fenetre)
     
     # Affiche le de sur la face 1
@@ -299,7 +291,7 @@ def Page_mouvement():
                 pygame.quit()
                 exit()
 
-def Page_direction(case_decouverte):
+def Page_direction():
     """Genere la page qui permet de faire le deplacement en demandant le choix de direction
 
     Return:
@@ -340,10 +332,10 @@ def Page_direction(case_decouverte):
                 if touche_fleche == pygame.K_UP:
                     # La touche fleche vers le haut a ete enfoncee
                     avancer = un_joueur.haut(47)
-                    case_decouverte = case_decouverte + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]]
-                    Mise_a_jour(un_joueur.get_ordre())
+                    plateau_de_jeu.set_cases_decouvertes(plateau_de_jeu.get_cases_decouvertes() + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]])
+                    Mise_a_jour(un_joueur.get_id())
                     plateau_de_jeu.plateau_cache(fenetre)
-                    plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                    plateau_de_jeu.mise_a_jour_plateau(fenetre)
                     un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
                     un_joueur.affichage_image_plateau(un_joueur.get_x(),un_joueur.get_y(),fenetre)
                     if avancer == True :
@@ -354,10 +346,10 @@ def Page_direction(case_decouverte):
                 elif touche_fleche == pygame.K_DOWN:
                     # La touche fleche vers le bas a ete enfoncee
                     avancer = un_joueur.bas(47)
-                    case_decouverte = case_decouverte + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]]
-                    Mise_a_jour(un_joueur.get_ordre())
+                    plateau_de_jeu.set_cases_decouvertes(plateau_de_jeu.get_cases_decouvertes() + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]])
+                    Mise_a_jour(un_joueur.get_id())
                     plateau_de_jeu.plateau_cache(fenetre)
-                    plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                    plateau_de_jeu.mise_a_jour_plateau(fenetre)
                     un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
                     un_joueur.affichage_image_plateau(un_joueur.get_x(),un_joueur.get_y(),fenetre)
                     if avancer == True :
@@ -368,10 +360,10 @@ def Page_direction(case_decouverte):
                 elif touche_fleche == pygame.K_RIGHT:
                     # La touche fleche vers la droite a ete enfoncee
                     avancer = un_joueur.droite(47) 
-                    case_decouverte = case_decouverte + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]]
-                    Mise_a_jour(un_joueur.get_ordre()) 
+                    plateau_de_jeu.set_cases_decouvertes(plateau_de_jeu.get_cases_decouvertes() + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]])
+                    Mise_a_jour(un_joueur.get_id()) 
                     plateau_de_jeu.plateau_cache(fenetre)
-                    plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                    plateau_de_jeu.mise_a_jour_plateau(fenetre)
                     un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
                     un_joueur.affichage_image_plateau(un_joueur.get_x(),un_joueur.get_y(),fenetre)
                     if avancer == True :
@@ -382,17 +374,16 @@ def Page_direction(case_decouverte):
                 elif touche_fleche == pygame.K_LEFT:
                     # La touche fleche vers la gauche a ete enfoncee
                     avancer = un_joueur.gauche(47) 
-                    case_decouverte = case_decouverte + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]]  
-                    Mise_a_jour(un_joueur.get_ordre())                
+                    plateau_de_jeu.set_cases_decouvertes(plateau_de_jeu.get_cases_decouvertes() + [[un_joueur.get_plateaux(),un_joueur.get_plateauy()]])
+                    Mise_a_jour(un_joueur.get_id())                
                     plateau_de_jeu.plateau_cache(fenetre)
-                    plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                    plateau_de_jeu.mise_a_jour_plateau(fenetre)
                     un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
                     un_joueur.affichage_image_plateau(un_joueur.get_x(),un_joueur.get_y(),fenetre)
                     if avancer == True :
                         face_choisie = face_choisie - 1
                     else:
                         Page_rejouer(face_choisie)
-    return case_decouverte
                         
 def Page_rejouer(face_choisie):
         # Dessiner le rectangle pour les dialogues
@@ -410,7 +401,7 @@ def Page_rejouer(face_choisie):
         pygame.display.update()
         return
 
-def Page_action(case_decouverte):
+def Page_action():
         # Dessiner le rectangle pour les dialogues
         rectangle.Rectangle(100, 590, 390, 80).affiche(fenetre, couleur.Couleur().get_Beige())
         # Texte pour dire au joueur de rejouer
@@ -461,9 +452,9 @@ def Page_action(case_decouverte):
                 Action_couleur_Turquoise()
                 
             elif couleur_case == couleur.Couleur().get_Violet():
-                case_decouverte = Action_couleur_Violet(case_decouverte,liste_joueur)
+                plateau_de_jeu.set_cases_decouvertes(Action_couleur_Violet(liste_joueur))
             pygame.display.update()
-            return case_decouverte, liste_joueur
+            return liste_joueur
    
 def Action_couleur_Bleu():
     image.Image(0,468,'assets/img/illustrations/Page_choixdouble.png').affiche(fenetre)
@@ -528,7 +519,7 @@ def Action_couleur_Bleu():
                         rectangle.Rectangle(500,590,130,35).affiche(fenetre,couleur.Couleur().get_Vert())
                         rectangle.Rectangle(100, 590, 390, 80).affiche(fenetre, couleur.Couleur().get_Beige())
                         un_joueur.set_pv(0)
-                        Mise_a_jour(un_joueur.get_ordre())
+                        Mise_a_jour(un_joueur.get_id())
                         texte.Texte(un_joueur.get_pv(),couleur.Couleur().get_Noir(),538,598).affiche(police,fenetre)
                         texte.Texte("Tu n'as pas de cles, ni assez de pv",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)       
                         texte.Texte("Tu es donc condamne à devoir mourrir et arreter",couleur.Couleur().get_Noir(),110, 620).affiche(police,fenetre)       
@@ -583,7 +574,7 @@ def Action_couleur_Orange():
                             if un_joueur.get_plateaux() > 0:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateaux((un_joueur.get_plateaux() - 1))
-                                liste_joueur[un_joueur.get_ordre()][3] = un_joueur.get_plateaux()
+                                liste_joueur[un_joueur.get_id()][3] = un_joueur.get_plateaux()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -591,7 +582,7 @@ def Action_couleur_Orange():
                             elif un_joueur.get_plateauy() > 0 and un_joueur.get_plateaux() <= 0:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateauy((un_joueur.get_plateauy() - 1))
-                                liste_joueur[un_joueur.get_ordre()][4] = un_joueur.get_plateauy()
+                                liste_joueur[un_joueur.get_id()][4] = un_joueur.get_plateauy()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -599,7 +590,7 @@ def Action_couleur_Orange():
                             elif un_joueur.get_plateaux() <= 0 and un_joueur.get_plateauy() <= 0:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateauy((un_joueur.get_plateaux() + 2))
-                                liste_joueur[un_joueur.get_ordre()][4] = un_joueur.get_plateaux()
+                                liste_joueur[un_joueur.get_id()][4] = un_joueur.get_plateaux()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -609,7 +600,7 @@ def Action_couleur_Orange():
                             if un_joueur.get_plateaux() > 1:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateaux((un_joueur.get_plateaux() - 2))
-                                liste_joueur[un_joueur.get_ordre()][3] = un_joueur.get_plateaux()
+                                liste_joueur[un_joueur.get_id()][3] = un_joueur.get_plateaux()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -617,7 +608,7 @@ def Action_couleur_Orange():
                             elif un_joueur.get_plateaux() <= 1 and un_joueur.get_plateauy() > 1:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateauy((un_joueur.get_plateauy() - 2))
-                                liste_joueur[un_joueur.get_ordre()][4] = un_joueur.get_plateauy()
+                                liste_joueur[un_joueur.get_id()][4] = un_joueur.get_plateauy()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -625,7 +616,7 @@ def Action_couleur_Orange():
                             elif un_joueur.get_plateaux() <= 1 and un_joueur.get_plateauy() <= 1:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateauy((un_joueur.get_plateaux() + 3))
-                                liste_joueur[un_joueur.get_ordre()][4] = un_joueur.get_plateaux()
+                                liste_joueur[un_joueur.get_id()][4] = un_joueur.get_plateaux()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -635,7 +626,7 @@ def Action_couleur_Orange():
                             if un_joueur.get_plateaux() > 2:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateaux((un_joueur.get_plateaux() - 3))
-                                liste_joueur[un_joueur.get_ordre()][3] = un_joueur.get_plateaux()
+                                liste_joueur[un_joueur.get_id()][3] = un_joueur.get_plateaux()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -643,7 +634,7 @@ def Action_couleur_Orange():
                             elif un_joueur.get_plateaux() <= 2 and un_joueur.get_plateauy() > 2:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateauy((un_joueur.get_plateauy() - 3))
-                                liste_joueur[un_joueur.get_ordre()][4] = un_joueur.get_plateauy()
+                                liste_joueur[un_joueur.get_id()][4] = un_joueur.get_plateauy()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -651,7 +642,7 @@ def Action_couleur_Orange():
                             elif un_joueur.get_plateaux() <= 2 and un_joueur.get_plateauy() <= 2:
                                 # Definir les nouveaux pv suite à l'echange
                                 un_joueur.set_plateauy((un_joueur.get_plateaux() + 4))
-                                liste_joueur[un_joueur.get_ordre()][4] = un_joueur.get_plateaux()
+                                liste_joueur[un_joueur.get_id()][4] = un_joueur.get_plateaux()
                                 
                                 pygame.display.update() # Mettre à jour l'affichage
                                 selection_malus = True
@@ -851,7 +842,7 @@ def Action_couleur_Rouge():
                         pygame.display.update()
                         pygame.time.delay(2000)
                         un_ennemis.set_pv(0)
-                        liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
+                        liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
                         selection_combat = True; combat_en_cours =False
                         return un_joueur 
         if un_ennemis.get_pv()>0 and un_joueur.get_pv()>0:
@@ -872,7 +863,7 @@ def Action_couleur_Rouge():
             un_ennemis.set_x(620); un_ennemis.set_y(400)
         elif un_joueur.get_pv()<=0:
             Menu_bas()
-            liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
+            liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
             un_ennemis.affichage_pv_combat(fenetre,police)
             texte.Texte("Fin du combat... Tu n'as pas survecu",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)
             texte.Texte("à l'attaque du boss...",couleur.Couleur().get_Noir(),110, 620).affiche(police,fenetre)
@@ -884,13 +875,13 @@ def Action_couleur_Rouge():
             return un_joueur
         elif un_ennemis.get_pv()<=0 and un_joueur.get_pv()>=0 and un_joueur.avoir_tt_cles() != True:
             Menu_bas()
-            liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
+            liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
             un_ennemis.affichage_pv_combat(fenetre,police)
             texte.Texte("Fin du combat ! Bravo tu as vaincu le boss",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)
             texte.Texte("{}, recupere les autres cles en tuant les".format(un_ennemis.get_element()),couleur.Couleur().get_Noir(),110, 620).affiche(police,fenetre)
             texte.Texte("autres boss et detruit cette sorciere !!!",couleur.Couleur().get_Noir(),110, 640).affiche(police,fenetre)
             un_joueur.set_inventaire(un_joueur.get_inventaire() + ["cle " + un_ennemis.get_element()])
-            liste_joueur[un_joueur.get_ordre()][6] = un_joueur.get_inventaire() 
+            liste_joueur[un_joueur.get_id()][6] = un_joueur.get_inventaire() 
             un_joueur.affichage_cle(fenetre)           
             pygame.display.update()
             pygame.time.delay(1500)
@@ -899,13 +890,13 @@ def Action_couleur_Rouge():
             return un_joueur
         elif un_ennemis.get_pv()<=0 and un_joueur.get_pv()>=0 and un_joueur.avoir_tt_cles() == True:
             Menu_bas()
-            liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
+            liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
             un_ennemis.affichage_pv_combat(fenetre,police)
             texte.Texte("Fin du combat ! Bravo tu as vaincu le boss",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)
             texte.Texte("{}, en plus de ça tu as toutes les cles, depeche ".format(un_ennemis.get_element()),couleur.Couleur().get_Noir(),110, 620).affiche(police,fenetre)
             texte.Texte("toi pour etre le premier à tuer la sorciere !!!",couleur.Couleur().get_Noir(),110, 640).affiche(police,fenetre)
             un_joueur.set_inventaire(un_joueur.get_inventaire() + ["cle " + un_ennemis.get_element()])
-            liste_joueur[un_joueur.get_ordre()][6] = un_joueur.get_inventaire() 
+            liste_joueur[un_joueur.get_id()][6] = un_joueur.get_inventaire() 
             un_joueur.affichage_cle(fenetre)           
             pygame.display.update()
             pygame.time.delay(1500)
@@ -1054,7 +1045,7 @@ def Action_couleur_Gris():
                     selection_speciale = True
                     return liste_joueur
             
-def Action_couleur_Violet(case_decouverte,liste_joueur):
+def Action_couleur_Violet(liste_joueur):
     # Dessiner le rectangle pour les dialogues
     rectangle.Rectangle(100, 590, 390, 80).affiche(fenetre, couleur.Couleur().get_Beige())
     texte.Texte("Tu es sur une case Rejoue !",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)
@@ -1069,12 +1060,11 @@ def Action_couleur_Violet(case_decouverte,liste_joueur):
     fenetre.blit(de_face1,(350,475))
     texte.Texte("Clique sur le de ! ",couleur.Couleur().get_Noir(),110,600).affiche(police,fenetre)
     pygame.display.update()    
-    case_decouverte = Page_direction(case_decouverte)
-    Mise_a_jour(un_joueur.get_ordre())
+    plateau_de_jeu.set_cases_decouvertes(Page_direction())
+    Mise_a_jour(un_joueur.get_id())
     un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
-    case_decouverte, liste_joueur = Page_action(case_decouverte)
+    plateau_de_jeu.set_cases_decouvertes(Page_action())
 
-    return case_decouverte
 
 def Action_couleur_Beige():
     image.Image(0,468,'assets/img/illustrations/Page_choixdouble.png').affiche(fenetre)
@@ -1239,7 +1229,7 @@ def Action_couleur_Indigo():
                     coord_case_indigo = plateau_de_jeu.get_case_indigo(un_joueur)
                     un_joueur.set_plateaux(coord_case_indigo[0])
                     un_joueur.set_plateauy(coord_case_indigo[1])
-                    Mise_a_jour(un_joueur.get_ordre())
+                    Mise_a_jour(un_joueur.get_id())
                     selection_teleporte = True
                     return liste_joueur
                     
@@ -1273,14 +1263,14 @@ def Action_couleur_Turquoise():
 def Mise_a_jour(numero_joueur):
     # Met à jour la liste des joueurs
     if liste_joueur[numero_joueur][5] > 0:
-        liste_joueur[numero_joueur][0] = un_joueur.get_ordre()
+        liste_joueur[numero_joueur][0] = un_joueur.get_id()
         liste_joueur[numero_joueur][1] = un_joueur.get_prenom()
         liste_joueur[numero_joueur][2] = un_joueur.get_element()
         liste_joueur[numero_joueur][3] = un_joueur.get_plateaux()
         liste_joueur[numero_joueur][4] = un_joueur.get_plateauy()
         liste_joueur[numero_joueur][5] = un_joueur.get_pv()
     else:
-        liste_joueur.pop(un_joueur.get_ordre())
+        liste_joueur.pop(un_joueur.get_id())
         Nombre_joueur()
     return liste_joueur
             
@@ -1291,35 +1281,7 @@ def Nombre_joueur():
         if i[0] > numero_joueur:
             numero_joueur = i[0]
     return numero_joueur
-                   
-def Combien_Attaquer():
-    # Combien d'adversaire on peut attaquer
-    nbjoueur_attaque = 0
-    x1 = un_joueur.get_plateaux()
-    y1 = un_joueur.get_plateauy()
-    for i in liste_joueur:
-        if (((i[3] == x1) or (i[3] == x1 + 1) or (i[3] == x1 - 1)) and ((i[4] == y1) or (i[4] == y1 + 1) or (i[4] == y1 - 1)) and (i[0] != un_joueur.get_ordre())):
-            nbjoueur_attaque = nbjoueur_attaque + 1
-    return nbjoueur_attaque
-
-def Qui_Attaquer():
-    # Quel adversaire on peut attaquer
-    x1 = un_joueur.get_plateaux()
-    y1 = un_joueur.get_plateauy()
-    for i in liste_joueur:
-        if (((i[3] == x1) or (i[3] == x1 + 1) or (i[3] == x1 - 1)) and ((i[4] == y1) or (i[4] == y1 + 1) or (i[4] == y1 - 1)) and (i[0] != un_joueur.get_ordre())):
-            return i[0]
-    return (-1)
-
-def Peut_Attaquer():
-    # Savoir si on a quelqu'un a attaqué
-    attaquer = False
-    x1 = un_joueur.get_plateaux()
-    y1 = un_joueur.get_plateauy()
-    for i in liste_joueur:
-        if (((i[3] == x1) or (i[3] == x1 + 1) or (i[3] == x1 - 1)) and ((i[4] == y1) or (i[4] == y1 + 1) or (i[4] == y1 - 1)) and (i[0] != un_joueur.get_ordre())):
-            attaquer = True
-    return attaquer
+                
 
 def Combat_joueurs(ordre_adv):
     # Combats des joueurs
@@ -1366,14 +1328,14 @@ def Combat_joueurs(ordre_adv):
         while selection_combat != True:
             if un_joueur.get_pv()<=0:
                 Menu_bas()
-                liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
+                liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
                 joueur_adv.affichage_pv_combat_adv(fenetre,police)
                 texte.Texte("Fin du combat... Tu n'as pas survecu",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)
                 texte.Texte("à l'attaque de l'adversaire...",couleur.Couleur().get_Noir(),110, 620).affiche(police,fenetre)
                 texte.Texte("Retour au plateau !",couleur.Couleur().get_Noir(),110, 640).affiche(police,fenetre)
                 pygame.display.update()
                 pygame.time.delay(1500)
-                Mise_a_jour(joueur_adv.get_ordre())
+                Mise_a_jour(joueur_adv.get_id())
                 selection_combat = True
                 combat_en_cours = False
                 return un_joueur
@@ -1450,8 +1412,8 @@ def Combat_joueurs(ordre_adv):
                         pygame.display.update()
                         pygame.time.delay(2000)
                         joueur_adv.set_pv(0)
-                        liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
-                        Mise_a_jour(joueur_adv.get_ordre())
+                        liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
+                        Mise_a_jour(joueur_adv.get_id())
                         selection_combat = True; combat_en_cours =False
                         return un_joueur
         if joueur_adv.get_pv()>0 and un_joueur.get_pv()>0:
@@ -1472,24 +1434,24 @@ def Combat_joueurs(ordre_adv):
             joueur_adv.set_x(620); joueur_adv.set_y(400)
         elif un_joueur.get_pv()<=0:
             Menu_bas()
-            liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
+            liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
             joueur_adv.affichage_pv_combat_adv(fenetre,police)
             texte.Texte("Fin du combat... Tu n'as pas survecu",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)
             texte.Texte("à l'attaque de l'adversaire...",couleur.Couleur().get_Noir(),110, 620).affiche(police,fenetre)
             texte.Texte("Retour au plateau !",couleur.Couleur().get_Noir(),110, 640).affiche(police,fenetre)
             pygame.display.update()
             pygame.time.delay(1500)
-            Mise_a_jour(joueur_adv.get_ordre())
+            Mise_a_jour(joueur_adv.get_id())
             Menu_bas()
             plateau_de_jeu.plateau_cache(fenetre)
-            plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+            plateau_de_jeu.mise_a_jour_plateau(fenetre)
             un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
             selection_combat = True
             combat_en_cours = False
             return un_joueur
         elif joueur_adv.get_pv()<=0 and un_joueur.get_pv()>=0:
             Menu_bas()
-            liste_joueur[un_joueur.get_ordre()][5] = un_joueur.get_pv()
+            liste_joueur[un_joueur.get_id()][5] = un_joueur.get_pv()
             joueur_adv.affichage_pv_combat_adv(fenetre,police)
             texte.Texte("Fin du combat ! Bravo tu as vaincu l'adversaire",couleur.Couleur().get_Noir(),110, 600).affiche(police,fenetre)
             texte.Texte("tu as la chance de pouvoir lui voler tous ce qu'il".format(joueur_adv.get_element()),couleur.Couleur().get_Noir(),110, 620).affiche(police,fenetre)
@@ -1498,11 +1460,11 @@ def Combat_joueurs(ordre_adv):
             pygame.time.delay(1500)
             un_joueur.set_inventaire(un_joueur.get_inventaire() + joueur_adv.get_inventaire())
             un_joueur.set_pv(un_joueur.get_pv() + joueur_adv.get_pv())
-            Mise_a_jour(un_joueur.get_ordre())
-            Mise_a_jour(joueur_adv.get_ordre())
+            Mise_a_jour(un_joueur.get_id())
+            Mise_a_jour(joueur_adv.get_id())
             Menu_bas()
             plateau_de_jeu.plateau_cache(fenetre)
-            plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+            plateau_de_jeu.mise_a_jour_plateau(fenetre)
             un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
             selection_combat = True
             combat_en_cours =False
@@ -1511,9 +1473,26 @@ def Combat_joueurs(ordre_adv):
 # ------------------------------------------------------------------------------------------------------ #
 
 if __name__ == "__main__":
+# ----------------------- Jeu de plateau - Fenetre de jeu ------------------------ #
     # Initialisation de Pygame
     pygame.init()
-    
+
+    # Dimensions de la fenetre
+    largeur, hauteur = 800, 700
+
+    # Creation de la fenetre
+    fenetre = pygame.display.set_mode((largeur, hauteur))
+    pygame.display.set_caption("Plateau de jeu")
+
+    # Police de texte
+    police = pygame.font.Font('./assets/font/times-new-roman.ttf', 16)
+
+    # Definir les variables utiles
+    plateau_de_jeu=plateau.Plateau()
+    de_jeu = de.De()
+    liste_joueur = []
+
+
     # Définir la musique
     song = pygame.mixer_music.load("assets/musique/Musique_jeu.mp3")
     pygame.mixer_music.play(-1,0.0,0)
@@ -1528,7 +1507,7 @@ if __name__ == "__main__":
             Page_demarrage()
             # Afficher le plateau
             plateau_de_jeu.remplir_plateau_aleatoirement()
-            plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+            plateau_de_jeu.mise_a_jour_plateau(fenetre)
             # Recuperer les coordonnees de la case jaune pour y afficher le joueur au demarrage du jeu
             coord_case_jaune = plateau_de_jeu.get_case_jaune()
             etat_jeu = "lancement_jeu"
@@ -1552,23 +1531,23 @@ if __name__ == "__main__":
                         nb = Page_nb_joueur()
                     prenom, element = Page_choixperso()
                 un_joueur = joueur.Joueur(numero_joueur,prenom,element,coord_case_jaune[0],coord_case_jaune[1])
-                case_decouverte = case_decouverte + [[coord_case_jaune[0],coord_case_jaune[1]]]
+                plateau_de_jeu.set_cases_decouvertes(plateau_de_jeu.get_cases_decouvertes() + [[coord_case_jaune[0],coord_case_jaune[1]]])
                 image.Image(0,0,'assets/img/illustrations/Page_jeu.png').affichage_image_redimensionnee(800, 700,fenetre)
                 Menu_bas() # Affiche le plateau de jeu avec le personnage choisi
                 Page_premier_mouvement()
                 plateau_de_jeu.plateau_cache(fenetre)
-                plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
-                liste_joueur = liste_joueur + [[un_joueur.get_ordre(), un_joueur.get_prenom(), un_joueur.get_element(), un_joueur.get_plateaux(), un_joueur.get_plateauy(), un_joueur.get_pv(), un_joueur.get_inventaire()]]
+                plateau_de_jeu.mise_a_jour_plateau(fenetre)
+                liste_joueur = liste_joueur + [[un_joueur.get_id(), un_joueur.get_prenom(), un_joueur.get_element(), un_joueur.get_plateaux(), un_joueur.get_plateauy(), un_joueur.get_pv(), un_joueur.get_inventaire()]]
                 un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
-                case_decouverte = Page_direction(case_decouverte)
-                Mise_a_jour(un_joueur.get_ordre())
+                Page_direction()
+                Mise_a_jour(un_joueur.get_id())
                 un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
-                case_decouverte, liste_joueur = Page_action(case_decouverte)
+                liste_joueur = Page_action()
                 numero_joueur = Nombre_joueur()
                 pygame.time.delay(3400)
                 Menu_bas()
                 plateau_de_jeu.plateau_cache(fenetre)
-                plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                plateau_de_jeu.mise_a_jour_plateau(fenetre)
                 un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
                 numero_joueur = numero_joueur + 1
                 prenom = ""
@@ -1591,9 +1570,9 @@ if __name__ == "__main__":
                         
                         # Si le joueur veut attaquer
                         if action_joueur == "Attaquer":
-                            if Peut_Attaquer() == True:
-                                Peut_Attaquer()
-                                ordre_adv = Qui_Attaquer()
+                            if un_joueur.adv_nb_attaquer(liste_joueur) == True:
+                                un_joueur.adv_nb_attaquer(liste_joueur)
+                                ordre_adv = un_joueur.adv_a_attaquer(liste_joueur)
                                 if ordre_adv != 2:
                                     Combat_joueurs(ordre_adv)
                             else:
@@ -1605,7 +1584,7 @@ if __name__ == "__main__":
                                 pygame.time.delay(2000)
                             Menu_bas()
                             plateau_de_jeu.plateau_cache(fenetre)
-                            plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                            plateau_de_jeu.mise_a_jour_plateau(fenetre)
                             un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
                         else:
                         # Sinon le joueur lance le dé
@@ -1613,23 +1592,23 @@ if __name__ == "__main__":
                             texte.Texte("Clique sur le de ! ",couleur.Couleur().get_Noir(),110,600).affiche(police,fenetre)
                             numero_joueur = Nombre_joueur()
                             un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
-                            case_decouverte = Page_direction(case_decouverte)
+                            Page_direction()
                             pygame.display.update()
-                            Mise_a_jour(un_joueur.get_ordre())
+                            Mise_a_jour(un_joueur.get_id())
                             un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
-                            case_decouverte, liste_joueur = Page_action(case_decouverte)
+                            liste_joueur = Page_action()
                             numero_joueur = Nombre_joueur()
                             pygame.time.delay(3400)
                             Menu_bas()
                             plateau_de_jeu.plateau_cache(fenetre)
-                            plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                            plateau_de_jeu.mise_a_jour_plateau(fenetre)
                             un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
                             if un_joueur.a_gagne(plateau_de_jeu) == True:
                                 etat_jeu = "fin_du_jeu"
                             else:
                                 etat_jeu = "partie_en_cours"
                     else:
-                        liste_joueur.pop(un_joueur.get_ordre())
+                        liste_joueur.pop(un_joueur.get_id())
                         print(numero_joueur)
                         numero_joueur = Nombre_joueur()
                         un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
@@ -1639,7 +1618,7 @@ if __name__ == "__main__":
                         pygame.time.delay(3400)
                         Menu_bas()
                         plateau_de_jeu.plateau_cache(fenetre)
-                        plateau_de_jeu.mise_a_jour_plateau(case_decouverte,fenetre)
+                        plateau_de_jeu.mise_a_jour_plateau(fenetre)
                         un_joueur.affiche_tt_joueur(liste_joueur,numero_joueur,fenetre)
             else: 
                 etat_jeu = "fin_du_jeu"

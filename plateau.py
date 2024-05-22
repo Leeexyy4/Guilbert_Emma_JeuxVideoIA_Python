@@ -50,16 +50,22 @@ class Plateau:
             couleur.Couleur().get_Jaune():1,
             couleur.Couleur().get_Blanc():55
         }
+
+        self.__case_decouverte = []
+
+        
+        # Afficher le plateau
+        self.remplir_plateau_aleatoirement()
         
 
     def get_plateau(self):
         """Renvoie le plateau de jeu."""
         return self.__plateau
+    
+    def get_cases_decouvertes(self):
+        """Renvoie le plateau de jeu."""
+        return self.__case_decouverte
 
-    def set_plateau(self, plateau):
-        """Modifie le plateau de jeu."""
-        self.__plateau = plateau
-        
     def get_case_jaune(self):
         """Renvoie les coordonnées correspondant à la case jaune."""
         for ligne in range(10):
@@ -78,6 +84,25 @@ class Plateau:
                     else:
                         coord_case_indigo = (ligne, colonne)
         return coord_case_indigo
+    
+    def get_cases(self, ligne, colonne):
+        """Renvoie la couleur de la case à la position spécifiée."""
+        return self.get_plateau()[ligne][colonne]
+        
+    def get_nom(self, ligne, colonne):
+        """Renvoie le nom de la case à la position spécifiée."""
+        couleur_case = self.get_plateau()[ligne][colonne]  # Obtenir la couleur de la case
+        nom_case = self.__nom_case[couleur_case]
+        return nom_case
+
+    def set_plateau(self, plateau):
+        """Modifie le plateau de jeu."""
+        self.__plateau = plateau
+
+    def set_cases_decouvertes(self, case_decouverte):
+        """Modifie le plateau de jeu."""
+        self.__case_decouverte = case_decouverte
+        
 
     def remplir_plateau_aleatoirement(self):
         """Remplit le plateau de manière aléatoire en fonction de max_couleur."""
@@ -98,20 +123,6 @@ class Plateau:
             self.__plateau.append(ligne_plateau)
         return self.__plateau
     
-    def dessiner_plateau(self, surface):
-        """Dessine le plateau à l'écran avec Pygame."""
-        # (Code inchangé)
-
-    def get_cases(self, ligne, colonne):
-        """Renvoie la couleur de la case à la position spécifiée."""
-        return self.get_plateau()[ligne][colonne]
-        
-    def get_nom(self, ligne, colonne):
-        """Renvoie le nom de la case à la position spécifiée."""
-        couleur_case = self.get_plateau()[ligne][colonne]  # Obtenir la couleur de la case
-        nom_case = self.__nom_case[couleur_case]
-        return nom_case
-    
     def plateau_cache(self, surface):
         """Cache le plateau en le dessinant entièrement en noir."""
         for ligne in range(10):
@@ -121,10 +132,10 @@ class Plateau:
                 rectangle = pygame.Rect(x, y, self.__taille_case, self.__taille_case)  # Créer un rectangle
                 pygame.draw.rect(surface, couleur.Couleur().get_Noir(), rectangle)  # Dessiner le rectangle avec la couleur
 
-    def mise_a_jour_plateau(self, case_decouverte, surface):
+    def mise_a_jour_plateau(self, surface):
         """Met à jour le plateau en affichant les cases découvertes."""
         font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
-        for i in case_decouverte:
+        for i in self.get_cases_decouvertes():
             couleur_case = self.get_plateau()[i[0]][i[1]]  # Obtenir la couleur de la case
             x = i[1] * self.__taille_case  # Coordonnée X du coin supérieur gauche du rectangle
             y = i[0] * self.__taille_case  # Coordonnée Y du coin supérieur gauche du rectangle          
@@ -135,13 +146,12 @@ class Plateau:
 
             
         
-if __name__ == "__main__" :
-    plateau_de_jeu = Plateau()
-    plateau_de_jeu.remplir_plateau_aleatoirement()
-    surface = pygame.display.set_mode((800, 700))
-    plateau_de_jeu.dessiner_plateau(surface)
-    plateau_de_jeu.plateau_cache(surface)
-    case_decouverte = [[1,2],[1,3],[1,4]]
-    plateau_de_jeu.mise_a_jour_plateau(case_decouverte)
-    pygame.display.update()
-    pygame.time.delay(2000)
+# if __name__ == "__main__" :
+#     plateau_de_jeu = Plateau()
+#     plateau_de_jeu.remplir_plateau_aleatoirement()
+#     surface = pygame.display.set_mode((800, 700))
+#     plateau_de_jeu.plateau_cache(surface)
+#     case_decouverte = [[i, j] for i in range(0, 10) for j in range(0, 17)]
+#     plateau_de_jeu.mise_a_jour_plateau(surface)
+#     pygame.display.update()
+#     pygame.time.delay(2000)
