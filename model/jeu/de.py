@@ -4,6 +4,8 @@
 import pygame
 from random import randint
 
+#pour les images : De creees par Moi-meme side Piskel
+
 class De:
     """La classe De est une classe qui permet de lancer le de."""
 
@@ -100,32 +102,43 @@ class De:
             # Affiche le de sur la face 1
             de_face1 = pygame.image.load("./assets/img/de/Face1.png")
             surface.blit(de_face1,(350,475))
+            # Mettre à jour l'affichage
+            pygame.display.update()
             
         elif self.__face_choisie == 2:
             # Affiche le de sur la face 2
             de_face2 = pygame.image.load("./assets/img/de/Face2.png")
             surface.blit(de_face2,(350,475))
+            # Mettre à jour l'affichage
+            pygame.display.update()
             
         elif self.__face_choisie == 3:
             # Affiche le de sur la face 3
             de_face3 = pygame.image.load("./assets/img/de/Face3.png")
             surface.blit(de_face3,(350,475))
+            # Mettre à jour l'affichage
+            pygame.display.update()
             
         elif self.__face_choisie == 4:
             # Affiche le de sur la face 4
             de_face4 = pygame.image.load("./assets/img/de/Face4.png")
             surface.blit(de_face4,(350,475))
+            # Mettre à jour l'affichage
+            pygame.display.update()
             
         elif self.__face_choisie == 5:
             # Affiche le de sur la face 5
             de_face5 = pygame.image.load("./assets/img/de/Face5.png")
             surface.blit(de_face5,(350,475))
+            # Mettre à jour l'affichage
+            pygame.display.update()
             
         elif self.__face_choisie == 6:
             # Affiche le de sur la face 6
             de_face6 = pygame.image.load("./assets/img/de/Face6.png")
             surface.blit(de_face6,(350,475))
-        pygame.display.update()
+            # Mettre à jour l'affichage
+            pygame.display.update()
             
         return self.__face_choisie
 

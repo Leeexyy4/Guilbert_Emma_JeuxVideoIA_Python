@@ -1,7 +1,9 @@
 # ----------------------- Jeu de plateau - Joueur  ------------------------ #
 
 # Bibliothèques utilisées pour le code
-import pygame, rectangle, texte, couleur, random, joueur
+import pygame, random
+from model.visuel import texte, couleur, rectangle
+from model.personnage import joueur
 
 class Ennemis:
     """La classe Ennemis est une classe qui permet de créer un ennemi."""
@@ -12,7 +14,7 @@ class Ennemis:
         self.__y = 400
         self.__prenom = prenom
         self.__lien = "./assets/img/ennemis/" + prenom + ".png"
-        self.__pv = 750
+        self.__pv = 1500
         self.__attaque = 110
         self.__element = element
     
@@ -77,7 +79,7 @@ class Ennemis:
         image = pygame.image.load(self.get_lien())
         surface.blit(image, (self.get_x(), self.get_y()))
         rectangle.Rectangle(500, 635, 130, 35).affiche(surface, couleur.Couleur().get_Rouge())
-        texte.Texte(self.get_pv(), couleur.Couleur().get_Noir(), 538, 644).affiche(font, surface)
+        texte.Texte(self.get_pv(), couleur.Couleur().get_Noir(), 538, 598).affiche(font, surface)
         pygame.display.update()
     
     def affichage_image_plateau(self, x, y, surface):
@@ -90,7 +92,7 @@ class Ennemis:
     def affichage_pv_combat(self, surface, font):
         """Affiche les points de vie de l'ennemi en combat."""
         rectangle.Rectangle(500, 635, 130, 35).affiche(surface, couleur.Couleur().get_Rouge())
-        texte.Texte(self.get_pv(), couleur.Couleur().get_Noir(), 538, 643).affiche(font, surface)
+        texte.Texte(self.get_pv(), couleur.Couleur().get_Noir(), 538, 645).affiche(font, surface)
         pygame.display.update()
 
 def Choix_ennemis(un_joueur):

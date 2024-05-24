@@ -81,8 +81,4 @@ if __name__ == "__main__":
     blanc = nouvelle_couleur.get_Blanc()
     bleu = nouvelle_couleur.get_Bleu()
 
-    print("Exemples d'utilisation:")
-    print(f"Couleur Noir: {noir}")
-    print(f"Couleur Blanc: {blanc}")
-    print(f"Couleur Bleu: {bleu}")
 """
