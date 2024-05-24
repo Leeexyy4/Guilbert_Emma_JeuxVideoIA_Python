@@ -32,7 +32,6 @@ if __name__ == "__main__":
     pygame.init()
     
     page = interfaces.Interface()
-    page.get_plateau_de_jeu().set_cases_decouvertes([[i, j] for i in range(0, 10) for j in range(0, 17)])
     # etat initial du jeu
     etat_jeu = "demarrage_jeu"
     # Pour tous les joueurs encore en vie
@@ -64,7 +63,7 @@ if __name__ == "__main__":
                 image.Image(0,0,'assets/img/illustrations/Page_jeu.png').affichage_image_redimensionnee(800, 700,page.get_fenetre())
                 page.Menu_bas(un_joueur) # Affiche le plateau de jeu avec le personnage choisi
                 page.Page_premier_mouvement(un_joueur)
-                # page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
+                page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
                 page.get_plateau_de_jeu().mise_a_jour_plateau(page.get_fenetre())
                 page.set_liste_joueur(page.get_liste_joueur() + [[un_joueur.get_id(), un_joueur.get_prenom(), un_joueur.get_element(), un_joueur.get_plateaux(), un_joueur.get_plateauy(), un_joueur.get_pv(), un_joueur.get_inventaire()]])
                 un_joueur.affiche_tt_joueur(page.get_liste_joueur(),page.get_fenetre())
@@ -74,7 +73,7 @@ if __name__ == "__main__":
                 page.Page_action(un_joueur)
                 pygame.time.delay(3400)
                 page.Menu_bas(un_joueur)
-                # page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
+                page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
                 page.get_plateau_de_jeu().mise_a_jour_plateau(page.get_fenetre())
                 un_joueur.affiche_tt_joueur(page.get_liste_joueur(),page.get_fenetre())
                 numero_joueur = numero_joueur + 1
@@ -110,7 +109,7 @@ if __name__ == "__main__":
                                 pygame.display.update()
                                 pygame.time.delay(2000)
                             page.Menu_bas(un_joueur)
-                            # page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
+                            page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
                             page.get_plateau_de_jeu().mise_a_jour_plateau(page.get_fenetre())
                             un_joueur.affiche_tt_joueur(page.get_liste_joueur(),page.get_fenetre())
                         else:
@@ -125,7 +124,7 @@ if __name__ == "__main__":
                             page.Page_action(un_joueur)
                             pygame.time.delay(3400)
                             page.Menu_bas(un_joueur)
-                            # page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
+                            page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
                             page.get_plateau_de_jeu().mise_a_jour_plateau(page.get_fenetre())
                             un_joueur.affiche_tt_joueur(page.get_liste_joueur(),page.get_fenetre())
                             if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
@@ -140,7 +139,7 @@ if __name__ == "__main__":
                         pygame.display.update()
                         pygame.time.delay(3400)
                         page.Menu_bas(un_joueur)
-                        # page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
+                        page.get_plateau_de_jeu().plateau_cache(page.get_fenetre())
                         page.get_plateau_de_jeu().mise_a_jour_plateau(page.get_fenetre())
                         un_joueur.affiche_tt_joueur(page.get_liste_joueur(),page.get_fenetre())
             else: 
@@ -149,5 +148,5 @@ if __name__ == "__main__":
         if etat_jeu == "fin_du_jeu":
             if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
                 un_joueur.set_inventaire([])
-                page.Page_sorciere()
+                page.Page_sorciere(un_joueur)
                 pygame.quit()
