@@ -77,35 +77,33 @@ if __name__ == "__main__":
                             else:
                                 page.Menu_bas(un_joueur) # Affiche le plateau de jeu avec le personnage choisi
                                 texte.Texte("Personne n'est assez proche de toi pour ",couleur.Couleur().get_Noir(),110,600).affiche(page.get_police(),page.get_fenetre())
-                                texte.Texte("être attaquer. Rééssaye quand le joueur",couleur.Couleur().get_Noir(),110,620).affiche(page.get_police(),page.get_fenetre())
-                                texte.Texte("adverse sera plus proche de toi.",couleur.Couleur().get_Noir(),110,640).affiche(page.get_police(),page.get_fenetre())
+                                texte.Texte("être attaquer. Clique sur le dé",couleur.Couleur().get_Noir(),110,620).affiche(page.get_police(),page.get_fenetre())
+                                texte.Texte("pour avancer dans la partie.",couleur.Couleur().get_Noir(),110,640).affiche(page.get_police(),page.get_fenetre())
                                 pygame.display.update()
-                                pygame.time.delay(2000)
-                            page.Menu_bas(un_joueur) # Affiche le plateau de jeu avec le personnage choisi
-                            texte.Texte("Clique sur le de ! ",couleur.Couleur().get_Noir(),110,600).affiche(page.get_police(),page.get_fenetre())
-                            page.get_plateau_de_jeu().plateau_cache(page)
-                            page.Page_direction(un_joueur)
-                            page.Mise_a_jour(un_joueur)
-                            page.get_plateau_de_jeu().plateau_cache(page)
-                            page.Page_action(un_joueur)
-                            pygame.time.delay(3400)
-                            page.Menu_bas(un_joueur)
-                            page.get_plateau_de_jeu().plateau_cache(page)
-                            page.get_plateau_de_jeu().plateau_cache(page)
-                            if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
-                                etat_jeu = "fin_du_jeu"
-                            else:
-                                etat_jeu = "partie_en_cours"
+                                page.get_plateau_de_jeu().plateau_cache(page)
+                                de_face1 = pygame.image.load("./assets/img/de/Face1.png")
+                                page.get_fenetre().blit(de_face1,(350,475))
+                                pygame.display.update()
+                                page.Page_direction(un_joueur)
+                                page.Mise_a_jour(un_joueur)
+                                page.get_plateau_de_jeu().plateau_cache(page)
+                                page.Page_action(un_joueur)
+                                page.Menu_bas(un_joueur)
+                                page.get_plateau_de_jeu().plateau_cache(page)
+                                if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
+                                    etat_jeu = "fin_du_jeu"
+                                else:
+                                    etat_jeu = "partie_en_cours"
                         else:
                         # Sinon le joueur lance le dé
                             page.Menu_bas(un_joueur) # Affiche le plateau de jeu avec le personnage choisi
                             texte.Texte("Clique sur le de ! ",couleur.Couleur().get_Noir(),110,600).affiche(page.get_police(),page.get_fenetre())
+                            pygame.display.update()
                             page.get_plateau_de_jeu().plateau_cache(page)
                             page.Page_direction(un_joueur)
                             page.Mise_a_jour(un_joueur)
                             page.get_plateau_de_jeu().plateau_cache(page)
                             page.Page_action(un_joueur)
-                            pygame.time.delay(3400)
                             page.Menu_bas(un_joueur)
                             page.get_plateau_de_jeu().plateau_cache(page)
                             page.get_plateau_de_jeu().plateau_cache(page)

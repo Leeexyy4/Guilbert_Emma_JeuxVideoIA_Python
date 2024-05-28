@@ -53,6 +53,9 @@ class Plateau:
         }
 
         self.__cases_decouvertes = []
+        for x in range(10):
+            for y in range(17):
+                self.__cases_decouvertes.append((x, y))
 
         self.remplir_plateau_aleatoirement()
         
@@ -320,6 +323,179 @@ class Plateau:
             pygame.time.delay(3500)
             
             combat_en_cours = False
+                
+        # Mettre la fenetre combat
+        interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
+        image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
+        image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
+        interface.get_fenetre().blit(image_redimensionnee, (0, 0))
+            
+        #Afficher le joueur et l'adversaire
+        interface.Menu_bas(joueur)
+        interface.affichage_image(100,400,joueur)
+        interface.affichage_image_adv(620,400,un_ennemis)
+            
+        # Affiche le texte 
+        texte.Texte("Tu as décidé de combattre un joueur. Le celebre ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+        texte.Texte("{}. Prepare toi à le combattre afin de prendre".format(un_ennemis.get_prenom()), couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+        texte.Texte("l'avantage sur lui !", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+        pygame.display.update()
+        pygame.time.delay(3500)
+        
+        combat_en_cours = True
+        # Tant que l'ennemis est en vie
+        while combat_en_cours:
+            if joueur.get_pv()<=0:
+                joueur.set_pv(0)
+                interface.Menu_bas(joueur)
+                interface.affichage_image(100,400,joueur)
+                interface.affichage_image_adv(620,400,un_ennemis)
+                texte.Texte("Fin du combat... Tu n'as pas survecu",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("à l'attaque du boss...",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("Retour au plateau !",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                interface.Mise_a_jour(joueur)
+                pygame.display.update()
+                pygame.time.delay(2500)
+                combat_en_cours = False
+            elif un_ennemis.get_pv()<=0 and joueur.avoir_tt_cles() != True:
+                un_ennemis.set_pv(0)
+                interface.Menu_bas(joueur)
+                interface.affichage_image(100,400,joueur)
+                interface.affichage_image_adv(620,400,un_ennemis)
+                texte.Texte("Fin du combat ! Bravo tu as vaincu le boss",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("{}, recupere les autres cles en tuant les".format(un_ennemis.get_element()),couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("autres boss et detruit cette sorciere !!!",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                joueur.set_inventaire(joueur.get_inventaire() + ["cle " + un_ennemis.get_element()])
+                interface.Mise_a_jour(joueur)
+                pygame.display.update()
+                pygame.time.delay(2500)
+                combat_en_cours = False
+            elif joueur.get_pv()>0 and un_ennemis.get_pv()>0:
+                tour_en_cours = True
+                interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
+                image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
+                image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
+                interface.get_fenetre().blit(image_redimensionnee, (0, 0))
+                interface.Menu_bas(joueur)
+                interface.affichage_image(100,400,joueur)
+                interface.affichage_image_adv(620,400,un_ennemis)
+                texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("la fuite ?", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                image.Image(100,508,'assets/img/illustrations/Basique.png').affiche(interface.get_fenetre())
+                image.Image(250,508,'assets/img/illustrations/Speciale.png').affiche(interface.get_fenetre())
+                image.Image(400,508,'assets/img/illustrations/Defense.png').affiche(interface.get_fenetre())
+                image.Image(550,508,'assets/img/illustrations/Fuite.png').affiche(interface.get_fenetre())
+                pygame.display.update()
+                while tour_en_cours:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
+                            pygame.quit()
+                            exit() 
+                        
+                        # Si le clique est presse
+                        if event.type == pygame.MOUSEBUTTONDOWN:  
+                            mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+                            if 100 < mouse_x < 164 and 508 < mouse_y < 572:
+                                #action_joueur = "attaque basique"
+                                toucher = random.choice([True,False,True])
+                                if toucher == True:
+                                    if joueur.get_element() == un_ennemis.get_element():
+                                        pv = random.randint(joueur.get_attaque(),joueur.get_attaque()+20)
+                                        un_ennemis.set_pv(un_ennemis.get_pv()-pv)
+                                    else:
+                                        pv = random.randint(joueur.get_attaque()-20,joueur.get_attaque())
+                                        un_ennemis.set_pv(un_ennemis.get_pv()-pv)
+                                    interface.Menu_bas(joueur)
+                                    interface.affichage_image(100,400,joueur)
+                                    interface.affichage_image_adv(620,400,un_ennemis)
+                                    texte.Texte("Tu as choisi de faire une attaque basique,", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("bravo, l'adversaire a perdu {} pvs".format(pv), couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                else:
+                                    interface.Menu_bas(joueur)
+                                    interface.affichage_image(100,400,joueur)
+                                    interface.affichage_image_adv(620,400,un_ennemis)
+                                    texte.Texte("L'adversaire a esquive le coup, dommage", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("L'adversaire n'a pas perdu de pv", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                            if 250 < mouse_x < 314 and 508 < mouse_y < 572:
+                                #action_joueur = "attaque speciale"
+                                toucher = random.choice([True,False])
+                                if toucher == True:
+                                    pv = joueur.get_attaque()+50
+                                    un_ennemis.set_pv(un_ennemis.get_pv()-pv)
+                                    interface.Menu_bas(joueur)
+                                    interface.affichage_image(100,400,joueur)
+                                    interface.affichage_image_adv(620,400,un_ennemis)
+                                    texte.Texte("Tu as choisi de faire une attaque speciale,", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("bravo, l'adversaire a perdu {} pvs".format(pv), couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                else:
+                                    interface.Menu_bas(joueur)
+                                    interface.affichage_image(100,400,joueur)
+                                    interface.affichage_image_adv(620,400,un_ennemis)
+                                    texte.Texte("L'adversaire a esquive le coup, dommage", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("L'adversaire n'a pas perdu de pv", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                            if 400 < mouse_x < 464 and 508 < mouse_y < 572:
+                                #action_joueur = "se defendre"
+                                toucher = random.choice([True,False])
+                                if toucher == True:
+                                    un_ennemis.set_attaque(un_ennemis.get_attaque()-20)
+                                    interface.Menu_bas(joueur)
+                                    interface.affichage_image(100,400,joueur)
+                                    interface.affichage_image_adv(620,400,un_ennemis)
+                                    texte.Texte("Tu as choisi de te defendre, tu fais une", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("grimace au boss et cela reduit les degâts", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("qu'il peut t'infliger." ,couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                                else:
+                                    interface.Menu_bas(joueur)
+                                    interface.affichage_image(100,400,joueur)
+                                    interface.affichage_image_adv(620,400,un_ennemis)
+                                    texte.Texte("L'ennemis n'a pas pris peur, les", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("degâts qu'il t'inflige ne sont pas", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                    texte.Texte("reduits.", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                            if 550 < mouse_x < 614 and 508 < mouse_y < 572:
+                                #action_joueur = "prendre la fuite"
+                                interface.Menu_bas(joueur)
+                                interface.affichage_image(100,400,joueur)
+                                interface.affichage_image_adv(620,400,un_ennemis)
+                                texte.Texte("Tu as choisi de prendre la fuite, c'est", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("surement le bon choix retente ta chance plus", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("tard et detruit moi cet adversaire !!!" ,couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                                combat_en_cours = False
+                            pygame.display.update()
+                            pygame.time.delay(2000)
+                            interface.Menu_bas(joueur)
+                            interface.affichage_image(100,400,joueur)
+                            interface.affichage_image_adv(620,400,un_ennemis)
+                            texte.Texte("C'est au tour du boss d'attaquer",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                            texte.Texte("Le boss reflechit...",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                            pygame.display.update()
+                            pygame.time.delay(2000)
+                            toucher = random.choice([True,False])
+                            if toucher == True:
+                                pv = random.randint(un_ennemis.get_attaque(),un_ennemis.get_attaque() + 10)
+                                joueur.set_pv(joueur.get_pv() - pv)
+                                texte.Texte("Il te fais perdre {} pvs.".format(pv),couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                            else:
+                                texte.Texte("L'ennemi a rate son coup.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                            interface.Mise_a_jour(joueur)
+                            pygame.display.update()
+                            pygame.time.delay(2000)
+                            tour_en_cours = False ; 
+            elif un_ennemis.get_pv()<=0 and joueur.get_pv()>=0 and joueur.avoir_tt_cles() == True:
+                interface.get_liste_joueur()[joueur.get_id()][5] = joueur.get_pv()
+                interface.Menu_bas(joueur)
+                interface.affichage_image(100,400,joueur)
+                interface.affichage_image_adv(620,400,un_ennemis)
+                texte.Texte("Fin du combat ! Bravo tu as vaincu le boss",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("{}, en plus de ça tu as toutes les cles, depeche ".format(un_ennemis.get_element()),couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("toi pour etre le premier à tuer la sorciere !!!",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                joueur.set_inventaire(joueur.get_inventaire() + ["cle " + un_ennemis.get_element()])
+                interface.get_liste_joueur()[joueur.get_id()][6] = joueur.get_inventaire() 
+                interface.affichage_cle(joueur)           
+                pygame.display.update()
+                pygame.time.delay(1500)
+                combat_en_cours =False
+                selection_combat = True
         # Mettre la interface.get_fenetre() combat
         interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
         image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
@@ -463,6 +639,8 @@ class Plateau:
                 interface.Menu_bas(joueur)
                 interface.affichage_image(100,400,joueur)
                 interface.affichage_image_adv(620,400,un_ennemis)
+                texte.Texte("C'est au tour du boss d'attaquer",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
+                texte.Texte("Le boss reflechit...",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                 toucher = random.choice([True,False])
                 if toucher == True:
                     pv = random.randint(un_ennemis.get_attaque(),un_ennemis.get_attaque() + 10)
@@ -470,15 +648,8 @@ class Plateau:
                     texte.Texte("Il te fais perdre {} pvs.".format(pv),couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
                 else:
                     texte.Texte("L'ennemi a rate son coup.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
-                interface.Menu_bas(joueur)
-                interface.affichage_image(100,400,joueur)
-                interface.affichage_image_adv(620,400,un_ennemis)
-                texte.Texte("C'est au tour du boss d'attaquer",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                texte.Texte("Le boss reflechit...",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
-                un_ennemis.set_x(100); un_ennemis.set_y(400)
                 pygame.display.update()
                 pygame.time.delay(2000)
-                un_ennemis.set_x(620); un_ennemis.set_y(400)
             elif joueur.get_pv()<=0:
                 interface.get_liste_joueur()[joueur.get_id()][5] = joueur.get_pv()
                 interface.Menu_bas(joueur)
@@ -808,4 +979,5 @@ class Plateau:
             i[4] = random.randint(0,16)
             interface.get_plateau_de_jeu().set_cases_decouvertes(interface.get_plateau_de_jeu().get_cases_decouvertes() + [[i[3],i[4]]])
         pygame.display.update()
+        pygame.time.delay(1500)
         
