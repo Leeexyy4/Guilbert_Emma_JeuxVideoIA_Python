@@ -35,18 +35,3 @@ class Image:
         image_redimensionnee = pygame.transform.scale(image, (x, y))
         surface.blit(image_redimensionnee, (self.get_x(), self.get_y()))
         pygame.display.update()
-
-# Tests des fonctions
-if __name__ == "__main__":
-    import pygame, couleur
-
-    pygame.init()
-
-    fenetre = pygame.display.set_mode((700, 800))
-
-    nouvelle_image = Image(500, 600, "./assets/img/illustrations/1.png")
-    nouvelle_image.affiche(fenetre)
-
-    pygame.display.update()
-
-    pygame.time.delay(3000)

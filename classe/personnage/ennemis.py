@@ -78,13 +78,13 @@ def Choix_ennemis(un_joueur):
     """Choisit un ennemi en fonction des clés obtenues par le joueur."""
     liste_ennemis = ["Ecureuil", "Crapaud", "Lezard", "Rat"]
     for i in un_joueur.get_inventaire():
-        if i == "clé du Rocher":
+        if i == "cle du Rocher":
             liste_ennemis.remove("Lezard")
-        elif i == "clé de la Forêt":
+        elif i == "cle de la Forêt":
             liste_ennemis.remove("Ecureuil")
-        elif i == "clé de la Ville":
+        elif i == "cle de la Ville":
             liste_ennemis.remove("Rat")
-        elif i == "clé de la Rivière":
+        elif i == "cle de la Rivière":
             liste_ennemis.remove("Crapaud")
             
     ennemis_select = random.choice(liste_ennemis)

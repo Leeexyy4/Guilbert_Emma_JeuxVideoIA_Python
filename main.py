@@ -22,7 +22,7 @@
 import pygame # Importation de la bibliotheque pygame
 from classe.jeu import interfaces
 from classe.visuel import texte, couleur, image, rectangle
-from classe.personnage import ennemis, joueur
+from classe.personnage import joueur
 
 # ----------------------- Jeu de plateau - Logique du jeu ------------------------ #
      
@@ -31,14 +31,11 @@ if __name__ == "__main__":
     pygame.init()
     
     page = interfaces.Interface()
-    # Etat initial du jeu
-    etat_jeu = "demarrage_jeu"
-
     # Pour tous les joueurs encore en vie
-    while etat_jeu != "fin_du_jeu": 
+    while page.get_etat_de_jeu() != "fin_du_jeu": 
         
         # Gerer les etats du jeu
-        if etat_jeu == "demarrage_jeu": # si le jeu demarre
+        if page.get_etat_de_jeu() == "demarrage_jeu": # si le jeu demarre
             page.Page_demarrage()
             page.Page_nb_joueur()
             if page.get_nb_joueur() > 0:  # si le nombre de joueur est choisi
@@ -53,12 +50,11 @@ if __name__ == "__main__":
                     page.Mise_a_jour(un_joueur)
                     page.get_plateau_de_jeu().plateau_cache(page)
                     page.Page_action(un_joueur)
-                    pygame.time.delay(3400)
                     numero_joueur = numero_joueur + 1
                     prenom = ""  
-                etat_jeu = "partie_en_cours"
+                page.set_etat_de_jeu("partie_en_cours")
 
-        if etat_jeu == "partie_en_cours":
+        if page.get_etat_de_jeu() == "partie_en_cours":
             if page.get_liste_joueur() != []:
                 for i in page.get_liste_joueur():
                     un_joueur = joueur.Joueur(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
@@ -91,9 +87,9 @@ if __name__ == "__main__":
                                 page.Menu_bas(un_joueur)
                                 page.get_plateau_de_jeu().plateau_cache(page)
                                 if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
-                                    etat_jeu = "fin_du_jeu"
+                                    page.set_etat_de_jeu("fin_du_jeu")
                                 else:
-                                    etat_jeu = "partie_en_cours"
+                                    page.set_etat_de_jeu("partie_en_cours")
                         else:
                         # Sinon le joueur lance le dé
                             page.Menu_bas(un_joueur) # Affiche le plateau de jeu avec le personnage choisi
@@ -108,23 +104,25 @@ if __name__ == "__main__":
                             page.get_plateau_de_jeu().plateau_cache(page)
                             page.get_plateau_de_jeu().plateau_cache(page)
                             if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
-                                etat_jeu = "fin_du_jeu"
+                                page.set_etat_de_jeu("fin_du_jeu")
                             else:
-                                etat_jeu = "partie_en_cours"
-                    else:
-                        page.set_liste_joueur(page.get_liste_joueur().pop(un_joueur.get_id()))
-                        page.get_plateau_de_jeu().plateau_cache(page)
-                        texte.Texte("Tu es mort au combat, reviens vite ",couleur.Couleur().get_Noir(),110,600).affiche(page.get_police(),page.get_fenetre())
-                        texte.Texte("tenter ta chance jeune aventurier !",couleur.Couleur().get_Noir(),110,620).affiche(page.get_police(),page.get_fenetre())
-                        pygame.display.update()
-                        pygame.time.delay(3400)
-                        page.Menu_bas(un_joueur)
-                        page.get_plateau_de_jeu().plateau_cache(page)
+                                page.set_etat_de_jeu("partie_en_cours")
             else: 
-                etat_jeu = "fin_du_jeu"
+                page.set_etat_de_jeu("fin_du_jeu")
 
-        if etat_jeu == "fin_du_jeu":
+        if page.get_etat_de_jeu() == "fin_du_jeu":
             if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
                 un_joueur.set_inventaire([])
                 page.Page_sorciere(un_joueur)
+                pygame.quit()
+            else:
+                # Page de la sorcière quan don a réussi le jeu
+                image.Image(0,0,'assets/img/illustrations/Page_findujeu.png').affichage_image_redimensionnee(800, 700,page.get_fenetre())
+                # Dessiner la partie basse
+                pygame.draw.rect(page.get_fenetre(),page.get_couleur().get_Gris(),(10,580,780,102))
+                texte.Texte("Aucun des joueurs n'a réussi à finir le jeu",couleur.Couleur().get_Noir(),30,600).affiche(page.get_police(),page.get_fenetre())
+                texte.Texte("Retentez votre chance une prochaine fois",couleur.Couleur().get_Noir(),30,620).affiche(page.get_police(),page.get_fenetre())
+                texte.Texte("pour profiter de cette aventure :)",couleur.Couleur().get_Noir(),30,640).affiche(page.get_police(),page.get_fenetre())
+                pygame.display.update()
+                pygame.time.delay(2500)
                 pygame.quit()

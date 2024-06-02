@@ -79,20 +79,6 @@ class De:
                         # Mettre à jour l'affichage
                         pygame.display.update()
                         pygame.time.delay(450)
-                        
-                        # Affiche le de sur la face 1
-                        de_face1 = pygame.image.load("./assets/img/de/Face1.png")
-                        surface.blit(de_face1,(350,475))
-                        # Mettre à jour l'affichage
-                        pygame.display.update()
-                        pygame.time.delay(500)
-                        
-                        # Affiche le de sur la face 4
-                        de_face4 = pygame.image.load("./assets/img/de/Face4.png")
-                        surface.blit(de_face4,(350,475))
-                        # Mettre à jour l'affichage
-                        pygame.display.update()
-                        pygame.time.delay(550)
                         de_cliquer = "True" 
                         
         # Choisir la face aleatoire
