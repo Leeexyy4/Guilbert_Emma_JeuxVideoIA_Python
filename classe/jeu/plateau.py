@@ -53,6 +53,9 @@ class Plateau:
         }
 
         self.__cases_decouvertes = []
+        for ligne in range(10):
+            for colonne in range(17):
+                self.__cases_decouvertes.append((ligne, colonne))
         
         self.remplir_plateau_aleatoirement()
         

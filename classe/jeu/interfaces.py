@@ -30,6 +30,7 @@ class Interface:
         self.__couleur = couleur.Couleur()
         self.__liste_joueur = []
         self.__nb_joueur = 0
+        self.__nb_ia = 0
 
     def get_fenetre(self):
         """Getter de la fenetre."""
@@ -95,6 +96,14 @@ class Interface:
         """Setter du nb de joueur."""
         self.__nb_joueur = nb_joueur
 
+    def get_nb_ia(self):
+        """Getter du nb d'IA."""
+        return self.__nb_ia
+
+    def set_nb_ia(self, nb_ia):
+        """Setter du nb d'IA."""
+        self.__nb_ia = nb_ia
+
     def Mise_a_jour(self, joueur):
         # Met à jour la liste des joueurs
         if self.get_liste_joueur()[joueur.get_id()][5] > 0:
@@ -124,15 +133,20 @@ class Interface:
             for event in pygame.event.get():
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
-                    if (330 <= mouse_x <= 475 and 500 <= mouse_y <= 570) : # si appuie bouton play
-                        start = True
+                    if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # si appuie bouton stats
+                        self.Page_statistiques()
+                        pygame.display.update()
+                    if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # si appuie bouton en local
+                        self.set_etat_de_jeu("demarrage_jeu")
+                        pygame.display.update()
+                    if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
+                        self.set_etat_de_jeu("demarrage_jeu")
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         image.Image(0,0,'assets/img/illustrations/Page_commentjouer.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         # Mettre à jour l'affichage
                         pygame.display.update()
                     if (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690): # si appuie sur fleche retour
                         self.Page_demarrage()
-                        self.set_etat_de_jeu("demarrage_jeu")
                         pygame.display.update()
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
@@ -179,7 +193,81 @@ class Interface:
                 
         # Mettre à jour l'affichage
         pygame.display.update()
+    
+    def Page_statistiques(self):    
+        # Affiche l'image de fond 
+        image.Image(0,0,'assets/img/illustrations/Page_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+        # Mettre à jour l'affichage
+        pygame.display.update()
+        
+        # Faire un systeme pour la selection de la position du clic pour la selection du personnage
+        start = False
+        # Boucle while pour voir quand le joueur clique sur start
+        while (start != True):
+            mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+            # Pour tous les evenements
+            for event in pygame.event.get():
+                # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
+                if (event.type == pygame.MOUSEBUTTONDOWN):
+                    if (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690): # si appuie sur fleche retour
+                        self.Page_demarrage()
+                        self.set_etat_de_jeu("demarrage_jeu")
+                        pygame.display.update()
+                # Si le joueur quitte la fenetre
+                if (event.type == pygame.QUIT):
+                    pygame.quit()
+                    exit()
             
+    def Page_nb_ia(self):
+        self.set_nb_ia(0)
+        image.Image(0,0,'assets/img/illustrations/Page_nbia.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+        # Dessiner la partie basse
+        pygame.draw.rect(self.get_fenetre(),self.get_couleur().get_Gris(),(10,580,780,102))
+        
+        
+        if self.get_nb_joueur() == 4 :
+            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
+        elif self.get_nb_joueur() > 0 and self.get_nb_joueur() < 4 :
+            # Texte pour choisir le nombre de joueur
+            texte.Texte("Combien d'IA souhaitent tu ajouter au jeu ? ", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
+            if self.get_nb_joueur() == 3:
+                image.Image(400,595,"./assets/img/illustrations/1.png").affiche(self.get_fenetre())
+            elif self.get_nb_joueur() == 2:
+                # Ajouter les photos des chifres
+                image.Image(400,595,"./assets/img/illustrations/1.png").affiche(self.get_fenetre())
+                image.Image(500,595,"./assets/img/illustrations/2.png").affiche(self.get_fenetre())
+            elif self.get_nb_joueur() == 1:
+                # Ajouter les photos des chifres
+                image.Image(400,595,"./assets/img/illustrations/1.png").affiche(self.get_fenetre())
+                image.Image(500,595,"./assets/img/illustrations/2.png").affiche(self.get_fenetre())
+                image.Image(600,595,"./assets/img/illustrations/3.png").affiche(self.get_fenetre())
+
+        pygame.display.update()
+
+        #Tant que le prenom n'est pas selectionne
+        while (self.get_nb_joueur() == 0):
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
+                    mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
+                        self.set_nb_ia(-1)
+                        self.Page_demarrage()
+                    # Si le personnage sur lequel on clique est J2   
+                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 :
+                        self.set_nb_ia(2)
+                    # Si le personnage sur lequel on clique est J4
+                    if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 :   
+                        self.set_nb_ia(4)
+                    # Si le personnage sur lequel on clique est J1
+                    if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 :   
+                        self.set_nb_ia(1)
+                    # Si le personnage sur lequel on clique est J3
+                    if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 :   
+                        self.set_nb_ia(3)
+                if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
+                    pygame.quit()
+                    exit()
+
     def Page_nb_joueur(self):
         self.set_nb_joueur(0)
 
