@@ -22,7 +22,7 @@ class Image:
     def get_lien(self):
         """Getter du lien de l'image."""
         return self.__lien
-
+    
     def affiche(self, surface):
         """Affiche l'image sur l'interface pygame (Surface surface)."""
         nouvelle_image = pygame.image.load(self.get_lien())

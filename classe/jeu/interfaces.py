@@ -132,6 +132,7 @@ class Interface:
                         pygame.display.update()
                     if (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690): # si appuie sur fleche retour
                         self.Page_demarrage()
+                        self.set_etat_de_jeu("demarrage_jeu")
                         pygame.display.update()
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):

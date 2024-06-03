@@ -718,6 +718,8 @@ class Plateau:
                         coord_case_indigo = interface.get_plateau_de_jeu().get_case_indigo(joueur)
                         joueur.set_plateaux(coord_case_indigo[0])
                         joueur.set_plateauy(coord_case_indigo[1])
+                        interface.set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[coord_case_indigo[0],coord_case_indigo[1]]])
+
                         interface.Mise_a_jour(joueur)
                         selection_teleporte = True
                         
