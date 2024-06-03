@@ -19,7 +19,7 @@
 # ----------------------- Jeu de plateau - Bibliotheques  ------------------------ #
 
 # Bibliotheques utilisees pour le code
-import pygame # Importation de la bibliotheque pygame
+import pygame
 from classe.jeu import interfaces
 from classe.visuel import texte, couleur, image
 from classe.personnage import joueur

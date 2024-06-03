@@ -238,7 +238,7 @@ class Interface:
             image.Image(400,595,"./assets/img/illustrations/1.png").affiche(self.get_fenetre())
             image.Image(500,595,"./assets/img/illustrations/2.png").affiche(self.get_fenetre())
             image.Image(600,595,"./assets/img/illustrations/3.png").affiche(self.get_fenetre())
-        elif self.get_nb_joueur() != 4:
+        if self.get_nb_joueur() != 4:
             # Texte pour choisir le nombre de joueur
             texte.Texte("Combien d'IA souhaites-tu intégrer au jeu ?", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
         
@@ -251,7 +251,7 @@ class Interface:
                     mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
                         self.set_nb_ia(-1)
-                        self.Page_demarrage()
+                        self.Page_nb_joueur()
                     # Si le personnage sur lequel on clique est J1
                     if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 :   
                         self.set_nb_ia(1)
