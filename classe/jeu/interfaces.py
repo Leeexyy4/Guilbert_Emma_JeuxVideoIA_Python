@@ -137,10 +137,11 @@ class Interface:
                         self.Page_statistiques()
                         pygame.display.update()
                     if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # si appuie bouton en local
-                        self.set_etat_de_jeu("demarrage_jeu")
+                        self.Page_nb_joueur()
+                        self.Page_nb_ia()
                         pygame.display.update()
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
-                        self.set_etat_de_jeu("demarrage_jeu")
+                        self.Page_nb_joueur()
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         image.Image(0,0,'assets/img/illustrations/Page_commentjouer.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         # Mettre à jour l'affichage
@@ -209,10 +210,8 @@ class Interface:
             for event in pygame.event.get():
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
-                    if (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690): # si appuie sur fleche retour
+                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
                         self.Page_demarrage()
-                        self.set_etat_de_jeu("demarrage_jeu")
-                        pygame.display.update()
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
                     pygame.quit()
