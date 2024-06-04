@@ -31,9 +31,9 @@ if __name__ == "__main__":
     pygame.init()
     
     page = interfaces.Interface()
+    page.Page_demarrage()
     # Pour tous les joueurs encore en vie
     while page.get_etat_de_jeu() != "fin_du_jeu": 
-        page.Page_demarrage()
         # Gerer les etats du jeu
         if page.get_etat_de_jeu() == "demarrage_jeu": # si le jeu demarre
             if page.get_nb_joueur() > 0:  # si le nombre de joueur est choisi

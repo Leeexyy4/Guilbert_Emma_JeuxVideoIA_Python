@@ -394,7 +394,7 @@ class Joueur:
                             combat_en_cours = False
                         pygame.display.update()
                         pygame.time.delay(2500)
-                        if self.get_pv() >0 and joueur_adv.get_pv()>0:
+                        if self.get_pv() >0 and joueur_adv.get_pv()>0 and combat_en_cours == True:
                             temp = self ; self = joueur_adv ; joueur_adv = temp
                             interface.Mise_a_jour(self)
                             interface.Mise_a_jour(joueur_adv)

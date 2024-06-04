@@ -444,7 +444,7 @@ class Plateau:
                             combat_en_cours = False
                         pygame.display.update()
                         pygame.time.delay(1500)
-                        if joueur.get_pv() >0 and un_ennemis.get_pv()>0:
+                        if joueur.get_pv() >0 and un_ennemis.get_pv()>0 and combat_en_cours == True:
                             interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
                             image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
                             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
