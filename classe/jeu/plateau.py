@@ -53,6 +53,9 @@ class Plateau:
         }
 
         self.__cases_decouvertes = []
+        for ligne in range(10):
+            for colonne in range(17):
+                self.__cases_decouvertes.append((ligne, colonne))
         
         self.remplir_plateau_aleatoirement()
         
@@ -441,7 +444,7 @@ class Plateau:
                             combat_en_cours = False
                         pygame.display.update()
                         pygame.time.delay(1500)
-                        if joueur.get_pv() >0 and un_ennemis.get_pv()>0:
+                        if joueur.get_pv() >0 and un_ennemis.get_pv()>0 and combat_en_cours == True:
                             interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
                             image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
                             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
@@ -718,6 +721,8 @@ class Plateau:
                         coord_case_indigo = interface.get_plateau_de_jeu().get_case_indigo(joueur)
                         joueur.set_plateaux(coord_case_indigo[0])
                         joueur.set_plateauy(coord_case_indigo[1])
+                        interface.set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[coord_case_indigo[0],coord_case_indigo[1]]])
+
                         interface.Mise_a_jour(joueur)
                         selection_teleporte = True
                         

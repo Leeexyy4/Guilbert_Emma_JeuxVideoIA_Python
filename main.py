@@ -19,9 +19,9 @@
 # ----------------------- Jeu de plateau - Bibliotheques  ------------------------ #
 
 # Bibliotheques utilisees pour le code
-import pygame # Importation de la bibliotheque pygame
+import pygame
 from classe.jeu import interfaces
-from classe.visuel import texte, couleur, image, rectangle
+from classe.visuel import texte, couleur, image
 from classe.personnage import joueur
 
 # ----------------------- Jeu de plateau - Logique du jeu ------------------------ #
@@ -31,13 +31,11 @@ if __name__ == "__main__":
     pygame.init()
     
     page = interfaces.Interface()
+    page.Page_demarrage()
     # Pour tous les joueurs encore en vie
     while page.get_etat_de_jeu() != "fin_du_jeu": 
-        
         # Gerer les etats du jeu
         if page.get_etat_de_jeu() == "demarrage_jeu": # si le jeu demarre
-            page.Page_demarrage()
-            page.Page_nb_joueur()
             if page.get_nb_joueur() > 0:  # si le nombre de joueur est choisi
                 for numero_joueur in range(page.get_nb_joueur()):
                     # Afficher la proposition pour choisir le personnage
