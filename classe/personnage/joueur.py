@@ -3,6 +3,19 @@
 # Bibliotheques utilisees pour le code
 import pygame, random
 from classe.visuel import texte, couleur, image, rectangle
+from classe.jeu import logique
+from enum import Enum
+
+class Nom(Enum):
+    WATER = "Ondine"
+    GRASS = "Flora"
+    ROCK = "Pierre"
+    TOWN = "Kevin"
+class Element(Enum):
+    WATER = "de la Riviere"
+    GRASS = "de la Foret"
+    ROCK = "du Rocher"
+    TOWN = "de la Ville"
 
 class Joueur:
     """La classe Joueur est une classe qui permet d'utiliser un personnage."""
@@ -23,13 +36,18 @@ class Joueur:
         self.__pv = pv
         self.__attaque = attaque
         self.__inventaire = inventaire
-    
+        self.__state:logique.Player_State = logique.Player_State.WAIT_PLAYER
     # Definir les getters
     def get_x(self):
         """_summary_
             Getter de la position x
         """
         return self.__x
+    def get_state(self):
+        """_summary_
+            Getter de l'etat du joueur
+        """
+        return self.__state
     
     def get_y(self):
         """_summary_
@@ -96,6 +114,13 @@ class Joueur:
                 Getter de l'attaque sur le plateau
             """
             return self.__attaque
+        
+        
+    def set_state(self,state:logique.Player_State):
+        """_summary_
+            Setter l'etat du joueur
+        """
+        self.__state = state
         
     # Definir les setters
     def set_x(self,x):
