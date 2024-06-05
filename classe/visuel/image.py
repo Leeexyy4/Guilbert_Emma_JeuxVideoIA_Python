@@ -20,6 +20,7 @@ class Page(Enum):
     CHOIX_NB_JOUEUR = pygame.image.load("./assets/img/illustrations/Page_nbjoueurs.png")
     BAS_PLATEAU = pygame.image.load("./assets/img/illustrations/Page_plateau.png")
     STATS = pygame.image.load("./assets/img/illustrations/Page_statistiques.png")
+    ARENE= pygame.image.load("./assets/img/ennemis/Arene.png")
 class BtnAttaque(Enum):
     BASIQUE = pygame.image.load("./assets/img/illustrations/Basique.png")
     DEFENSE = pygame.image.load("./assets/img/illustrations/Defense.png")
@@ -52,14 +53,16 @@ class Interaction(Enum):
     PV = pygame.image.load("./assets/img/interraction/Pv.png")
     ATTAQUER = pygame.image.load("./assets/img/interraction/Attaquer.png")
     CLES = pygame.image.load("./assets/img/interraction/Cles.png")
+    CHANCE = pygame.image.load("./assets/img/interraction/Chance.png")
     MALUS = pygame.image.load("./assets/img/interraction/Malus.png")
     RETOUR = pygame.image.load("./assets/img/interraction/Retour.png")
     TP = pygame.image.load("./assets/img/interraction/Teleportation.png")
+    DE = pygame.image.load("./assets/img/interraction/De.png")
 class Personnages(Enum):
-    WATER = pygame.image.load(image.Personnages.WATER)
-    GRASS = pygame.image.load(image.Personnages.GRASS)
-    ROCK = pygame.image.load(image.Personnages.ROCK)
-    TOWN = pygame.image.load("./assets/img/interraction/Kevin.png")
+    WATER = pygame.image.load("./assets/img/personnages/Ondine.png")
+    GRASS = pygame.image.load("./assets/img/personnages/Flora.png")
+    ROCK = pygame.image.load("./assets/img/personnages/Pierre.png")
+    TOWN = pygame.image.load("./assets/img/personnages/Kevin.png")
 
 class Image:
     """La classe Image est une classe qui permet d'afficher l'image sur l'interface"""

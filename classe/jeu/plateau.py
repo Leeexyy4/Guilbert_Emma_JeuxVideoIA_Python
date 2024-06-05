@@ -150,7 +150,7 @@ class Plateau:
                 texte.Texte(self.__nom_case[couleur_case], couleur.Couleur().get_Noir(), x + 9, y + 15).affiche(font, interface.get_fenetre())
 
     def Action_couleur_Bleu(self, interface, joueur):
-        image.Image(0,468,'assets/img/illustrations/Page_choixdouble.png').affiche(interface.get_fenetre())
+        image.Image(0,468,image.Page.CHOIX_DOUBLE).affiche(interface.get_fenetre())
         interface.Menu_bas(joueur)
         # Dessiner le rectangle pour les dialogues
         rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
@@ -159,9 +159,9 @@ class Plateau:
         texte.Texte("ou 200 pv.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
         
         # Afficher les logos et texte des cles et des pv
-        pv = pygame.image.load("./assets/img/interraction/Pv.png")
+        pv = image.Interaction.PV
         interface.get_fenetre().blit(pv, (220, 480))
-        cles = pygame.image.load("./assets/img/interraction/Cles.png")
+        cles = image.Interaction.CLES
         interface.get_fenetre().blit(cles, (510, 480))
         texte.Texte("200 PV",couleur.Couleur().get_Blanc(),235,545).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("1 clee",couleur.Couleur().get_Blanc(),525,545).affiche(interface.get_police(),interface.get_fenetre())
@@ -228,7 +228,7 @@ class Plateau:
         texte.Texte("Clique pour savoir quel sort",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("le jeu te reserve.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
             
-        malus = pygame.image.load("./assets/img/interraction/Malus.png")
+        malus = image.Interaction.MALUS
         interface.get_fenetre().blit(malus, (360,475))
         texte.Texte("Malus",couleur.Couleur().get_Noir(),372,545).affiche(interface.get_police(),interface.get_fenetre())
         pygame.display.update()
@@ -292,7 +292,7 @@ class Plateau:
             un_ennemis = ennemis.Choix_ennemis(joueur)
             # Mettre la fenetre combat
             interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
-            image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
+            image_Arene = pygame.image.load(image.Page.ARENE)
             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
             interface.get_fenetre().blit(image_redimensionnee, (0, 0))
                 
@@ -309,7 +309,7 @@ class Plateau:
             pygame.time.delay(2500)
 
             interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
-            image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
+            image_Arene = pygame.image.load(image.Page.ARENE)
             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
             interface.get_fenetre().blit(image_redimensionnee, (0, 0))
             interface.Menu_bas(joueur)
@@ -318,16 +318,16 @@ class Plateau:
             texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(), interface.get_fenetre())
             texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(), interface.get_fenetre())
             texte.Texte("la fuite ?", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(), interface.get_fenetre())
-            image.Image(100, 508, 'assets/img/illustrations/Basique.png').affiche(interface.get_fenetre())
-            image.Image(250, 508, 'assets/img/illustrations/Speciale.png').affiche(interface.get_fenetre())
-            image.Image(400, 508, 'assets/img/illustrations/Defense.png').affiche(interface.get_fenetre())
-            image.Image(550, 508, 'assets/img/illustrations/Fuite.png').affiche(interface.get_fenetre())
+            image.Image(100, 508, image.BtnAttaque.BASIQUE).affiche(interface.get_fenetre())
+            image.Image(250, 508, image.BtnAttaque.SPECIALE).affiche(interface.get_fenetre())
+            image.Image(400, 508, image.BtnAttaque.DEFENSE).affiche(interface.get_fenetre())
+            image.Image(550, 508, image.BtnAttaque.FUITE).affiche(interface.get_fenetre())
             pygame.display.update()
             combat_en_cours = True
         else:
             # Mettre la interface.get_fenetre() combat
             interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
-            image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
+            image_Arene = pygame.image.load(image.Page.ARENE)
             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
             interface.get_fenetre().blit(image_redimensionnee, (0, 0))
             interface.Menu_bas(joueur)
@@ -446,7 +446,7 @@ class Plateau:
                         pygame.time.delay(1500)
                         if joueur.get_pv() >0 and un_ennemis.get_pv()>0 and combat_en_cours == True:
                             interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
-                            image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
+                            image_Arene = pygame.image.load(image.Page.ARENE)
                             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
                             interface.get_fenetre().blit(image_redimensionnee, (0, 0))
                             interface.Menu_bas(joueur)
@@ -468,7 +468,7 @@ class Plateau:
                             # Actualisation de l'interface
                             interface.Mise_a_jour(joueur)
                             interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
-                            image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
+                            image_Arene = pygame.image.load(image.Page.ARENE)
                             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
                             interface.get_fenetre().blit(image_redimensionnee, (0, 0))
                             interface.Menu_bas(joueur)
@@ -477,10 +477,10 @@ class Plateau:
                             texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(), interface.get_fenetre())
                             texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(), interface.get_fenetre())
                             texte.Texte("la fuite ?", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(), interface.get_fenetre())
-                            image.Image(100, 508, 'assets/img/illustrations/Basique.png').affiche(interface.get_fenetre())
-                            image.Image(250, 508, 'assets/img/illustrations/Speciale.png').affiche(interface.get_fenetre())
-                            image.Image(400, 508, 'assets/img/illustrations/Defense.png').affiche(interface.get_fenetre())
-                            image.Image(550, 508, 'assets/img/illustrations/Fuite.png').affiche(interface.get_fenetre())
+                            image.Image(100, 508, image.BtnAttaque.BASIQUE).affiche(interface.get_fenetre())
+                            image.Image(250, 508, image.BtnAttaque.SPECIALE).affiche(interface.get_fenetre())
+                            image.Image(400, 508, image.BtnAttaque.DEFENSE).affiche(interface.get_fenetre())
+                            image.Image(550, 508, image.BtnAttaque.FUITE).affiche(interface.get_fenetre())
                             pygame.display.update()
         
 
@@ -492,7 +492,7 @@ class Plateau:
         texte.Texte("Clique pour decouvrir le pouvoir",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("que le jeu va te donner.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
         
-        chance = pygame.image.load("./assets/img/interraction/Chance.png")
+        chance = image.Interaction.CHANCE
         interface.get_fenetre().blit(chance, (360,475))
         texte.Texte("Chance",couleur.Couleur().get_Noir(),369,545).affiche(interface.get_police(),interface.get_fenetre())
         pygame.display.update()
@@ -547,9 +547,9 @@ class Plateau:
         texte.Texte("deux cles que tu n'as pas ou de tout perdre.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())  
 
         # Afficher les logos et texte des cles et des pv
-        cles = pygame.image.load("./assets/img/interraction/Cles.png")
+        cles = image.Interaction.CLES
         interface.get_fenetre().blit(cles, (220, 480))
-        retour = pygame.image.load("./assets/img/interraction/Retour.png")
+        retour = image.Interaction.RETOUR
         interface.get_fenetre().blit(retour, (510,480))
         texte.Texte("1 clee",couleur.Couleur().get_Blanc(),215,545).affiche(interface.get_police(),interface.get_fenetre())
         
@@ -618,7 +618,7 @@ class Plateau:
         texte.Texte("Tu es sur une case Rejoue !",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Relance le de pour avoir un",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("deuxieme lance",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
-        de_face1 = pygame.image.load("./assets/img/de/Face1.png")
+        de_face1 = image.De.FACE1
         interface.get_fenetre().blit(de_face1,(350,475))
         pygame.display.update()    
         interface.Page_direction(joueur)
@@ -627,7 +627,7 @@ class Plateau:
         interface.Page_action(joueur)
 
     def Action_couleur_Beige(self, interface, joueur):
-        image.Image(0,468,'assets/img/illustrations/Page_choixdouble.png').affiche(interface.get_fenetre())
+        image.Image(0,468,image.Page.CHOIX_DOUBLE).affiche(interface.get_fenetre())
         interface.Menu_bas(joueur)
         # Dessiner le rectangle pour les dialogues
         rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
@@ -636,9 +636,9 @@ class Plateau:
         texte.Texte("des cles des quatre boss ?",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
 
         # Afficher les logos et texte des cles et des pv
-        pv = pygame.image.load("./assets/img/interraction/Cles.png")
+        pv = image.Interaction.CLES
         interface.get_fenetre().blit(pv, (220, 480))
-        retour = pygame.image.load("./assets/img/interraction/Retour.png")
+        retour = image.Interaction.RETOUR
         interface.get_fenetre().blit(retour, (510,480))
         texte.Texte("Ouvrir la porte",couleur.Couleur().get_Blanc(),212,545).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Passer son chemin",couleur.Couleur().get_Blanc(),485,545).affiche(interface.get_police(),interface.get_fenetre())
@@ -683,7 +683,7 @@ class Plateau:
                         selection_sorciere = True
 
     def Action_couleur_Indigo(self, interface, joueur):
-        image.Image(0,468,'assets/img/illustrations/Page_choixdouble.png').affiche(interface.get_fenetre())
+        image.Image(0,468,image.Page.CHOIX_DOUBLE).affiche(interface.get_fenetre())
         interface.Menu_bas(joueur)
         # Dessiner le rectangle pour les dialogues
         rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
@@ -692,9 +692,9 @@ class Plateau:
         
         
         # Afficher les logos et texte des cles et des pv
-        pv = pygame.image.load("./assets/img/interraction/Teleportation.png")
+        pv = image.Interaction.TP
         interface.get_fenetre().blit(pv, (220, 480))
-        retour = pygame.image.load("./assets/img/interraction/Retour.png")
+        retour = image.Interaction.RETOUR
         interface.get_fenetre().blit(retour, (510,480))
         texte.Texte("Se teleporter",couleur.Couleur().get_Blanc(),212,545).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Non merci",couleur.Couleur().get_Blanc(),502,545).affiche(interface.get_police(),interface.get_fenetre())
