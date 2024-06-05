@@ -37,7 +37,7 @@ if __name__ == "__main__":
                     page.get_plateau_de_jeu().plateau_cache(page)
                     page.Page_action(un_joueur)
             if page.get_nb_ia() > 0:
-                for numero_ia in range(page.get_nb_ia()-1):
+                for numero_ia in range(page.get_nb_ia()):
                     prenom, element = page.Page_choixperso()
                     une_ia = intelA.IntelA(numero_joueur + page.get_nb_joueur(),prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
                     page.set_liste_joueur(page.get_liste_joueur() + [[une_ia.get_id(), une_ia.get_prenom(), une_ia.get_element(), une_ia.get_plateaux(), une_ia.get_plateauy(), une_ia.get_pv(), une_ia.get_attaque(), une_ia.get_inventaire()]])
@@ -47,7 +47,7 @@ if __name__ == "__main__":
                     page.Mise_a_jour(une_ia)
                     page.get_plateau_de_jeu().plateau_cache(page)
                     page.Page_action(une_ia)
-                page.set_etat_de_jeu("partie_en_cours")
+            page.set_etat_de_jeu("partie_en_cours")
 
         if page.get_etat_de_jeu() == "partie_en_cours":
             if page.get_liste_joueur() != []:
