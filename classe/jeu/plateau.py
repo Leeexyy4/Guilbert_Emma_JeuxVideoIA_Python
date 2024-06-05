@@ -153,7 +153,7 @@ class Plateau:
         image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(interface.get_fenetre())
         interface.Menu_bas(joueur)
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es tombe dans la case Puit... Pour t'en",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())        
         texte.Texte("sortir, tu dois sacrifier une de tes cles",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())        
         texte.Texte("ou 200 pv.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -184,24 +184,24 @@ class Plateau:
                             joueur.supprimer_pv(interface.get_liste_joueur(),200,interface.get_fenetre())                        
                             selection_utilisateur = True
                         else :
-                            rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                            rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                             texte.Texte("Tu n'as pas de cles, donne moi 200 pv",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                             pygame.display.update()
                             
                     elif 510 < mouse_x < 574 and 480 < mouse_y < 544:
                         if joueur.get_inventaire() != []:
-                            rectangle.Rectangle(500,590,130,35).affiche(interface.get_fenetre(),couleur.Couleur().get_Vert())
+                            rectangle.Rectangle(500,590,130,35,couleur.Couleur().get_Vert()).affiche(interface.get_fenetre())
                             texte.Texte(joueur.get_pv(),couleur.Couleur().get_Noir(),538,598).affiche(interface.get_police(),interface.get_fenetre())
                             pygame.display.update()
                             selection_utilisateur = True  
                         
                         elif joueur.get_inventaire() == [] and joueur.get_pv() > 200:
-                            rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                            rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                             texte.Texte("Tu n'as pas de cles, donne moi 200 pv",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                             pygame.display.update()
                         else :
-                            rectangle.Rectangle(500,590,130,35).affiche(interface.get_fenetre(),couleur.Couleur().get_Vert())
-                            rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                            rectangle.Rectangle(500,590,130,35,couleur.Couleur().get_Vert()).affiche(interface.get_fenetre())
+                            rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                             joueur.set_pv(0)
                             interface.Mise_a_jour(joueur)
                             texte.Texte(joueur.get_pv(),couleur.Couleur().get_Noir(),538,598).affiche(interface.get_police(),interface.get_fenetre())
@@ -213,7 +213,7 @@ class Plateau:
         
     def Action_couleur_Noir(self, interface, joueur):
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu n'as pas de chance...",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Tu es tombe sur la case de Mort...",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("La partie est finie pour toi.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -223,7 +223,7 @@ class Plateau:
         
     def Action_couleur_Orange(self, interface, joueur):
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es sur une case Malus.",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Clique pour savoir quel sort",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("le jeu te reserve.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -246,7 +246,7 @@ class Plateau:
                     if 360 < mouse_x < 424 and 475 < mouse_y < 539:
                         liste_malus = ["perdre 20 pv","perdre 50 pv","perdre 80 pv","perdre 120 pv"]
                         malus = random.choice(liste_malus)
-                        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                         texte.Texte("Tou-dou-dou-doum",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                         texte.Texte("Tu vas {}".format(malus),couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                         if malus == "perdre 20 pv":
@@ -487,7 +487,7 @@ class Plateau:
                     
     def Action_couleur_Rose(self, interface, joueur):
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es sur une case Chance",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Clique pour decouvrir le pouvoir",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("que le jeu va te donner.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -510,7 +510,7 @@ class Plateau:
                     if 360 < mouse_x < 424 and 475 < mouse_y < 539:
                         liste_chance = ["gagner 100 pv","gagner 200 pv","gagner 500 pv", "gagner 150 pv","gagner 400 pv","gagner 1050 pv"]
                         chance = random.choice(liste_chance)
-                        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                         texte.Texte("Tou-dou-dou-doum",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                         texte.Texte("Tu vas {}".format(chance),couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                         # Definir les nouveaux pv suite à l'echange
@@ -541,7 +541,7 @@ class Plateau:
                 
     def Action_couleur_Gris(self, interface, joueur):
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es sur une case Speciale ! Si tu tente",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("ta chance, tu as une chance sur deux gagner",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("deux cles que tu n'as pas ou de tout perdre.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())  
@@ -574,7 +574,7 @@ class Plateau:
                             tirage = random.choice(choix_tirage)   
                             if tirage == "bravo":
                                 # Cacher les anciens dialogues
-                                rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                                rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                                 texte.Texte("Bravo tu as gagner !!!",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                                 texte.Texte("Voilà deux cles supplementaires que tu peux",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                                 texte.Texte("voir apparaître dans ton inventaire.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -585,7 +585,7 @@ class Plateau:
                             
                             else:
                                 # Cacher les anciens dialogues
-                                rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                                rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                                 texte.Texte("Oh non dommage...",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                                 texte.Texte("Tu peux retenter ta chance si tu as",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                                 texte.Texte("d'autres cles :)",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -595,7 +595,7 @@ class Plateau:
                                 
                         else:
                             # Cacher les anciens dialogues
-                            rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                            rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                             texte.Texte("Tu ne possede pas de cles.",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("Obtient-en une en tuant un boss sur les",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("cases rouges.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -606,7 +606,7 @@ class Plateau:
                     elif 510 < mouse_x < 574 and 480 < mouse_y < 544:
                         # Si le joueur veut passer sont tour
                         # Cacher les anciens dialogues
-                        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                         texte.Texte("Pas de soucis, retente ta chance une autre fois",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                         pygame.display.update() # Mettre à jour l'affichage 
                         selection_speciale = True
@@ -614,7 +614,7 @@ class Plateau:
                 
     def Action_couleur_Violet(self, interface, joueur):
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es sur une case Rejoue !",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Relance le de pour avoir un",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("deuxieme lance",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -630,7 +630,7 @@ class Plateau:
         image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(interface.get_fenetre())
         interface.Menu_bas(joueur)
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es devant la Hutte de la sorciere.",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Veux-tu essayer de l'ouvrir à l'aide",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("des cles des quatre boss ?",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -657,7 +657,7 @@ class Plateau:
                     if 220 < mouse_x < 284 and 480 < mouse_y < 544:
                         if joueur.avoir_tt_cles() == True:
                             # Cacher les anciens dialogues
-                            rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                            rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                             texte.Texte("Bravo tu as trouve toutes les cles",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("Ouvre la porte et apprete toi à",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("affronter la sorciere.",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -666,7 +666,7 @@ class Plateau:
                             selection_sorciere = True
                         else:
                             # Cacher les anciens dialogues
-                            rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                            rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                             texte.Texte("Tu n'as pas encore recuperer toutes",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("les cles afin d'ouvrir la porte de",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("la sorciere. Depeche-toi !",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -676,7 +676,7 @@ class Plateau:
                     elif 510 < mouse_x < 574 and 480 < mouse_y < 544:
                         # Si le joueur veut passer sont tour
                         # Cacher les anciens dialogues
-                        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                         texte.Texte("Pas de soucis, recupere les cles afin",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                         texte.Texte("d'ouvrir la porte en premier !",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                         pygame.display.update() # Mettre à jour l'affichage 
@@ -686,7 +686,7 @@ class Plateau:
         image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(interface.get_fenetre())
         interface.Menu_bas(joueur)
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es sur une case de Teleportation.",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Veux-tu etre teleporter ?",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         
@@ -712,7 +712,7 @@ class Plateau:
                 if event.type == pygame.MOUSEBUTTONDOWN:  
                     if 220 < mouse_x < 284 and 480 < mouse_y < 544:
                         # Cacher les anciens dialogues
-                        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                         texte.Texte("Tou-dou-dou-doum",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                         texte.Texte("Teleportation sur la deuxieme case",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                         texte.Texte("de teleportation" ,couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
@@ -730,7 +730,7 @@ class Plateau:
                     elif 510 < mouse_x < 574 and 480 < mouse_y < 544:
                         # Si le joueur veut passer sont tour
                         # Cacher les anciens dialogues
-                        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+                        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
                         texte.Texte("Pas de soucis, essaye une prochaine",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
                         texte.Texte("fois si tu en as l'envie.",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
                         
@@ -739,7 +739,7 @@ class Plateau:
         
     def Action_couleur_Turquoise(self, interface):
         # Dessiner le rectangle pour les dialogues
-        rectangle.Rectangle(100, 590, 390, 80).affiche(interface.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(interface.get_fenetre())
         texte.Texte("Tu es sur une case Grrr",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("Un tremblement de terre surgit de nul part",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("et teleporte tous les joueurs !!!",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())

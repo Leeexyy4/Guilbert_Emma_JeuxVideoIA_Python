@@ -162,21 +162,21 @@ class Interface:
         pygame.draw.rect(self.get_fenetre(),self.get_couleur().get_Gris(),(10,580,780,102))
         
         # Dessiner la place pour montrer les cles
-        rectangle.Rectangle(650,585,130,90).affiche(self.get_fenetre(),self.get_couleur().get_Rose())
+        rectangle.Rectangle(650,585,130,90,self.get_couleur().get_Rose()).affiche(self.get_fenetre())
         self.affichage_cle(joueur_actuel)
         
         # Dessiner le rectangle pour les pv du joueur
-        rectangle.Rectangle(500,590,130,35).affiche(self.get_fenetre(),self.get_couleur().get_Vert())
+        rectangle.Rectangle(500,590,130,35,self.get_couleur().get_Vert()).affiche(self.get_fenetre())
         texte.Texte("PV joueur : ", self.get_couleur().get_Noir(), 500,590).affiche(self.get_police(),self.get_fenetre())
         
         # Dessiner les bords de la place pour les pv de l'adversaire
-        rectangle.Rectangle(500,635,130,35).affiche(self.get_fenetre(),self.get_couleur().get_Rouge())
+        rectangle.Rectangle(500,635,130,35,self.get_couleur().get_Rouge()).affiche(self.get_fenetre())
 
         # Dessiner le rectangle pour les textes
-        rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(),self.get_couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80,self.get_couleur().get_Beige()).affiche(self.get_fenetre())
         
         # Cadre pour mettre le personnage choisi
-        rectangle.Rectangle(20,590,70,80).affiche(self.get_fenetre(),self.get_couleur().get_Rose())
+        rectangle.Rectangle(20,590,70,80,self.get_couleur().get_Rose()).affiche(self.get_fenetre())
         
         # Prendre la variable du personnage choisi de "Position_choix_perso()""
         if joueur_actuel.get_prenom() == joueur.Nom.ROCK.value:
@@ -344,7 +344,7 @@ class Interface:
         K_click = True
         image.Image(0,0,image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
         # Dessiner le cadre du bas afin de cacher les anciennes ecritures
-        rectangle.Rectangle(10,580,780,100).affiche(self.get_fenetre(),self.get_couleur().get_Gris())
+        rectangle.Rectangle(10,580,780,100,self.get_couleur().get_Gris()).affiche(self.get_fenetre())
         
         # Texte pour choisir le personnage
         texte.Texte("Bienvenue à toi jeune aventurier !",self.get_couleur().get_Noir() ,30,590).affiche(self.get_police(), self.get_fenetre())
@@ -432,7 +432,7 @@ class Interface:
         image.Image(0,468, image.Page.BAS_PLATEAU.value).affiche(self.get_fenetre())
         self.Menu_bas(joueur)
         # cacher le Texte
-        rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(),self.get_couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80,self.get_couleur().get_Beige()).affiche(self.get_fenetre())
         texte.Texte("Tu es le joueur " + str(joueur.get_id() + 1) + ", clique sur le de afin de faire",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
         texte.Texte("ton deplacement",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
         
@@ -445,7 +445,7 @@ class Interface:
     def Page_mouvement(self, joueur):
         image.Image(0,468, image.Page.CHOIX_DOUBLE.value).affiche(self.get_fenetre())
         self.Menu_bas(joueur)
-        rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(),self.get_couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80,self.get_couleur().get_Beige()).affiche(self.get_fenetre())
         texte.Texte("Joueur " + str(joueur.get_id() + 1) + " : " + joueur.get_prenom() + " clique sur le de afin ",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
         texte.Texte("d'attaquer un joueur ou de lancer le de",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
         
@@ -495,7 +495,7 @@ class Interface:
         face_choisie = self.get_de_jeu().get_face_choisie()
                 
         # Rectangle : Reinitialise la fenetre de Texte
-        rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(),self.get_couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80,self.get_couleur().get_Beige()).affiche(self.get_fenetre())
 
         # Texte : Lancer le de
         texte.Texte("Bravo ! Tu peux avancer de {} cases ! Où ".format(face_choisie),self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
@@ -569,7 +569,7 @@ class Interface:
                             
     def Page_rejouer(self, face_choisie):
             # Dessiner le rectangle pour les dialogues
-            rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(), self.get_couleur().get_Beige())
+            rectangle.Rectangle(100, 590, 390, 80, self.get_couleur().get_Beige()).affiche(self.get_fenetre())
             # Texte pour dire au joueur de rejouer
             texte.Texte("Tu ne peux pas aller par là, tu as atteint un bord", self.get_couleur().get_Noir(), 110, 600).affiche(self.get_police(),self.get_fenetre())
             texte.Texte("ou il n'y a pas de cases dans cette direction", self.get_couleur().get_Noir(), 110, 620).affiche(self.get_police(),self.get_fenetre())
@@ -579,7 +579,7 @@ class Interface:
 
     def Page_action(self, joueur):
             # Dessiner le rectangle pour les dialogues
-            rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(), self.get_couleur().get_Beige())
+            rectangle.Rectangle(100, 590, 390, 80, self.get_couleur().get_Beige()).affiche(self.get_fenetre())
             # Texte pour dire au joueur de rejouer
             texte.Texte("Tu as atterris sur une case {}".format(self.get_plateau_de_jeu().get_nom(joueur.get_plateaux(),joueur.get_plateauy())), self.get_couleur().get_Noir(), 110, 600).affiche(self.get_police(),self.get_fenetre())
             pygame.display.update()
@@ -592,7 +592,7 @@ class Interface:
                     
                 elif couleur_case == self.get_couleur().get_Blanc():
                     # Dessiner le rectangle pour les dialogues
-                    rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(), self.get_couleur().get_Beige())
+                    rectangle.Rectangle(100, 590, 390, 80, self.get_couleur().get_Beige()).affiche(self.get_fenetre())
                     texte.Texte("Tu es dans une case Vide.",self.get_couleur().get_Noir(),110, 600).affiche(self.get_police(),self.get_fenetre())
                     texte.Texte("Il ne t'arrivera rien tu peux etre rassure.",self.get_couleur().get_Noir(),110, 620).affiche(self.get_police(),self.get_fenetre())
                     
@@ -607,7 +607,7 @@ class Interface:
                     
                 elif couleur_case == self.get_couleur().get_Jaune():
                     # Dessiner le rectangle pour les dialogues
-                    rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(), self.get_couleur().get_Beige())
+                    rectangle.Rectangle(100, 590, 390, 80, self.get_couleur().get_Beige()).affiche(self.get_fenetre())
                     texte.Texte("Tu es la case de Depart.",self.get_couleur().get_Noir(),110, 600).affiche(self.get_police(),self.get_fenetre())
                     texte.Texte("Depeche toi de recuperer les cles",self.get_couleur().get_Noir(),110, 620).affiche(self.get_police(),self.get_fenetre())
                     texte.Texte("avant les autres joueurs.",self.get_couleur().get_Noir(),110, 640).affiche(self.get_police(),self.get_fenetre())
@@ -638,9 +638,9 @@ class Interface:
         # Page de la sorcière quan don a réussi le jeu
         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
         self.Menu_bas(joueur)
-        texte.Texte("Tu es chez la sorciere, mais j'ai l'impression",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("qu'elle est sortie de sa taniere...",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("profite-en pour fouiller dans ses affaires :)",couleur.Couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+        texte.Texte("Tu es chez la sorciere, mais j'ai l'impression",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+        texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+        texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
         pygame.display.update()
         selection_potion = False
         while selection_potion != True:
@@ -655,44 +655,44 @@ class Interface:
                     if 500 < mouse_x < 725 and 150 < mouse_y < 450:
                         image.Image(0,0,image.Sorciere.MAISON_SYMBOLE.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("C'est un symbole astral, si c'est chez la",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("sorciere, il vaut mieux ne pas y toucher",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("C'est un symbole astral, si c'est chez la",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("sorciere, il vaut mieux ne pas y toucher",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                         pygame.time.delay(2500)
                         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu es chez la sorciere, mais on dirait",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("qu'elle est sortie de sa taniere...",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("profite-en pour fouiller dans ses affaires :)",couleur.Couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("Tu es chez la sorciere, mais on dirait",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                     elif 90 < mouse_x < 190 and 180 < mouse_y < 350:
                         image.Image(0,0,image.Sorciere.MAISON_DRAGON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Un dragon de pierre... ce n'est pas très",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("rassurant, trouvons vite un remède et sortons",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("d'ici très vite",couleur.Couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("Un dragon de pierre... ce n'est pas très",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("rassurant, trouvons vite un remède et sortons",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("d'ici très vite",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                         pygame.time.delay(2500)
                         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu es chez la sorciere, mais on dirait",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("qu'elle est sortie de sa taniere...",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("profite-en pour fouiller dans ses affaires :)",couleur.Couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("Tu es chez la sorciere, mais on dirait",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                     elif 330 < mouse_x < 430 and 480 < mouse_y < 580:
                         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu as trouvé une potion... Potion inverstium",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("Tu décides de la boire afin d'inverser le",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("sortilège",couleur.Couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("Tu as trouvé une potion... Potion inverstium",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("Tu décides de la boire afin d'inverser le",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("sortilège",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         joueur.set_inventaire(["Potion inverstium"])
                         self.affichage_potion()
                         pygame.display.update()
                         pygame.time.delay(2500)
                         image.Image(0,0,image.Page.FIN_JEU).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu as terminé le jeu bravo à toi jeune aventurier",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("Tu es le premier a t'être libéré du sort !!",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("Tu as terminé le jeu bravo à toi jeune aventurier",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        texte.Texte("Tu es le premier a t'être libéré du sort !!",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                         pygame.time.delay(2500)
     
@@ -708,10 +708,10 @@ class Interface:
         self.get_fenetre().blit(image, (x, y))
         
         # Dessiner le rectangle pour les pv du joueur
-        rectangle.Rectangle(500,590,130,35).affiche(self.get_fenetre(),couleur.Couleur().get_Vert())
+        rectangle.Rectangle(500,590,130,35,self.get_couleur().get_Vert()).affiche(self.get_fenetre())
     
         # Charger les pv
-        texte.Texte(joueur.get_pv(),couleur.Couleur().get_Noir(),538,598).affiche(self.get_police(),self.get_fenetre())
+        texte.Texte(joueur.get_pv(),self.get_couleur().get_Noir(),538,598).affiche(self.get_police(),self.get_fenetre())
         
         # Mettre à jour l'affichage
         pygame.display.update()
@@ -720,8 +720,8 @@ class Interface:
         """Affiche l'image de l'ennemi dans le menu."""
         image = pygame.image.load(joueur.get_lien())
         self.get_fenetre().blit(image, (x,y))
-        rectangle.Rectangle(500, 635, 130, 35).affiche(self.get_fenetre(), couleur.Couleur().get_Rouge())
-        texte.Texte(joueur.get_pv(), couleur.Couleur().get_Noir(), 538, 645).affiche(self.get_police(), self.get_fenetre())
+        rectangle.Rectangle(500, 635, 130, 35, self.get_couleur().get_Rouge()).affiche(self.get_fenetre())
+        texte.Texte(joueur.get_pv(), self.get_couleur().get_Noir(), 538, 645).affiche(self.get_police(), self.get_fenetre())
         pygame.display.update()
 
     def affichage_cle(self,joueur):
@@ -737,8 +737,8 @@ class Interface:
                 image.Image(725,595,image.Cle.GRASS.value).affichage_image_redimensionnee(48,30,self.get_fenetre())
             elif i == "cle du Rocher" :
                 image.Image(725,640,image.Cle.ROCK.value).affichage_image_redimensionnee(48,30,self.get_fenetre())
-        pygame.draw.line(self.get_fenetre(), couleur.Couleur().get_Noir(), (660, 632), (770, 632), 2)
-        pygame.draw.line(self.get_fenetre(), couleur.Couleur().get_Noir(), (715, 595), (715, 670), 2)
+        pygame.draw.line(self.get_fenetre(), self.get_couleur().get_Noir(), (660, 632), (770, 632), 2)
+        pygame.draw.line(self.get_fenetre(), self.get_couleur().get_Noir(), (715, 595), (715, 670), 2)
         # Mettre à jour l'affichage
         pygame.display.update()
     

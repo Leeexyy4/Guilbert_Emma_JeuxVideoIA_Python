@@ -56,50 +56,50 @@ class IntelA (joueur.Joueur):
             pygame.time.delay(450)
             de_cliquer = True 
         # Choisir la face aleatoire
-        interface.set_face_choisie(randint(1,6))
+        interface.get_de_jeu().set_face_choisie(randint(1,6))
 
-        if interface.get_face_choisie() == 1:
+        if interface.get_de_jeu().get_face_choisie() == 1:
             # Affiche le de sur la face 1
             de_face1 = image.De.FACE1.value
             interface.get_fenetre().blit(de_face1,(350,475))
             # Mettre à jour l'affichage
             pygame.display.update()
 
-        elif interface.get_face_choisie() == 2:
+        elif interface.get_de_jeu().get_face_choisie() == 2:
             # Affiche le de sur la face 2
             de_face2 = image.De.FACE2.value
             interface.get_fenetre().blit(de_face2,(350,475))
             # Mettre à jour l'affichage
             pygame.display.update()
 
-        elif interface.get_face_choisie() == 3:
+        elif interface.get_de_jeu().get_face_choisie() == 3:
             # Affiche le de sur la face 3
             de_face3 = image.De.FACE3.value
             interface.get_fenetre().blit(de_face3,(350,475))
             # Mettre à jour l'affichage
             pygame.display.update()
 
-        elif interface.get_face_choisie() == 4:
+        elif interface.get_de_jeu().get_face_choisie() == 4:
             # Affiche le de sur la face 4
             de_face4 = image.De.FACE4.value
             interface.get_fenetre().blit(de_face4,(350,475))
             # Mettre à jour l'affichage
             pygame.display.update()
 
-        elif interface.get_face_choisie() == 5:
+        elif interface.get_de_jeu().get_face_choisie() == 5:
             # Affiche le de sur la face 5
             de_face5 = image.De.FACE5.value
             interface.get_fenetre().blit(de_face5,(350,475))
             # Mettre à jour l'affichage
             pygame.display.update()
 
-        elif interface.get_face_choisie() == 6:
+        elif interface.get_de_jeu().get_face_choisie() == 6:
             # Affiche le de sur la face 6
             de_face6 = image.De.FACE6.value
             interface.get_fenetre().blit(de_face6,(350,475))
             # Mettre à jour l'affichage
             pygame.display.update()
 
-        return interface.get_face_choisie()
+        return interface.get_de_jeu().get_face_choisie()
                 
 

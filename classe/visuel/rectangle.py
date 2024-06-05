@@ -2,6 +2,7 @@
 
 # Bibliotheques utilisees pour le code
 import pygame 
+from classe.visuel import couleur
 
 pygame.init()
 
@@ -9,7 +10,7 @@ class Rectangle:
     """La classe Rectangle est une classe qui permet de creer les rectangles du menu"""
     
     # Initialisation du plateau        
-    def __init__(self,x,y,largeur,hauteur) -> None:
+    def __init__(self,x:int,y:int,largeur:int,hauteur:int,couleur:couleur) -> None:
         """_summary_
             Initialisation du Rectangle
         """
@@ -17,6 +18,7 @@ class Rectangle:
         self.__y = y
         self.__largeur = largeur
         self.__hauteur = hauteur
+        self.__couleur = couleur
     
     # Definition des getters
     def get_x(self):
@@ -50,42 +52,42 @@ class Rectangle:
         return self.__couleur
     
     # Definition des setters
-    def set_x(self,x):
+    def set_x(self,x:int):
         """_summary_
             Setter de la position x
         """
         self.__x = x
     
-    def set_y(self,y):
+    def set_y(self,y:int):
         """_summary_
             Setter de la position y
         """
         self.__y = y
         
-    def set_largeur(self,largeur):
+    def set_largeur(self,largeur:int):
         """_summary_
             Setter de la largeur du rectangle
         """
         self.__largeur = largeur
     
-    def set_hauteur(self, hauteur):
+    def set_hauteur(self, hauteur:int):
         """_summary_
             Setter de la hauteur du rectangle
         """
         self.__hauteur = hauteur
     
-    def set_couleur(self, couleur):
+    def set_couleur(self, couleur:couleur):
         """_summary_
             Setter de la couleur du rectangle
         """
         self.__couleur = couleur
     
     # Definir l'affichage du rectangle sur l'interface'
-    def affiche(self,surface,couleur):
+    def affiche(self,surface):
         """_summary_
             La fonction affiche affiche le rectangle et ses contours noirs sur l'interface pygame(Surface surface, Triplet int couleur)
         """
-        pygame.draw.rect(surface,couleur,(self.__x,self.__y,self.__largeur,self.__hauteur))
+        pygame.draw.rect(surface,self.__couleur,(self.__x,self.__y,self.__largeur,self.__hauteur))
         
         # Dessiner les bords de la place pour les cles
         pygame.draw.line(surface,(0, 0, 0),(self.__x,self.__y),(self.__x + self.__largeur,self.__y),2)
@@ -96,7 +98,7 @@ class Rectangle:
 
     def affiche_contour(self,surface,contour):
         """_summary_
-            La fonction affiche affiche le rectangle et ses contours noirs sur l'interface pygame(Surface surface, Triplet int couleur)
+            La fonction affiche affiche le rectangle et ses contours noirs sur l'interface pygame(Surface surface)
         """        
         # Dessiner les bords de la place pour les cles
         pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x + self.__largeur,self.__y),5)
@@ -105,12 +107,12 @@ class Rectangle:
         pygame.draw.line(surface,contour,(self.__x ,self.__y + self.__hauteur),(self.__x + self.__largeur,self.__y + self.__hauteur),5)
         return
     
-    def affiche_contour_couleur(self,surface,contour,couleur):
+    def affiche_contour_couleur(self,surface,contour):
         """_summary_
-            La fonction affiche affiche le rectangle et ses contours colores sur l'interface pygame(Surface surface, Triplet int couleur)
+            La fonction affiche affiche le rectangle et ses contours colores sur l'interface pygame(Surface surface)
         """     
         
-        pygame.draw.rect(surface,couleur,(self.__x,self.__y,self.__largeur,self.__hauteur))
+        pygame.draw.rect(surface,self.__couleur,(self.__x,self.__y,self.__largeur,self.__hauteur))
            
         # Dessiner les bords de la place pour les cles
         pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x + self.__largeur,self.__y),5)
