@@ -310,10 +310,10 @@ class Joueur:
         texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
         texte.Texte("la fuite ?", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
-        image.Image(100,508,'assets/img/illustrations/Basique.png').affiche(interface.get_fenetre())
-        image.Image(250,508,'assets/img/illustrations/Speciale.png').affiche(interface.get_fenetre())
-        image.Image(400,508,'assets/img/illustrations/Defense.png').affiche(interface.get_fenetre())
-        image.Image(550,508,'assets/img/illustrations/Fuite.png').affiche(interface.get_fenetre())
+        image.Image(100,508,'assets/img/illustrations/Basique.png').affiche(interface)
+        image.Image(250,508,'assets/img/illustrations/Speciale.png').affiche(interface)
+        image.Image(400,508,'assets/img/illustrations/Defense.png').affiche(interface)
+        image.Image(550,508,'assets/img/illustrations/Fuite.png').affiche(interface)
         pygame.display.update()
         
         combat_en_cours = True
@@ -434,10 +434,10 @@ class Joueur:
                             texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
                             texte.Texte("la fuite ?", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
-                            image.Image(100,508,'assets/img/illustrations/Basique.png').affiche(interface.get_fenetre())
-                            image.Image(250,508,'assets/img/illustrations/Speciale.png').affiche(interface.get_fenetre())
-                            image.Image(400,508,'assets/img/illustrations/Defense.png').affiche(interface.get_fenetre())
-                            image.Image(550,508,'assets/img/illustrations/Fuite.png').affiche(interface.get_fenetre())
+                            image.Image(100,508,'assets/img/illustrations/Basique.png').affiche(interface)
+                            image.Image(250,508,'assets/img/illustrations/Speciale.png').affiche(interface)
+                            image.Image(400,508,'assets/img/illustrations/Defense.png').affiche(interface)
+                            image.Image(550,508,'assets/img/illustrations/Fuite.png').affiche(interface)
                             pygame.display.update()
 
     def avoir_tt_cles(self) -> bool : 
