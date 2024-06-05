@@ -37,7 +37,7 @@ if __name__ == "__main__":
                     page.get_plateau_de_jeu().plateau_cache(page)
                     page.Page_action(un_joueur)
             if page.get_nb_ia() > 0:
-                for numero_ia in range(page.get_nb_ia()):
+                for numero_ia in range(page.get_nb_ia()-1):
                     prenom, element = page.Page_choixperso()
                     une_ia = intelA.IntelA(numero_joueur + page.get_nb_joueur(),prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
                     page.set_liste_joueur(page.get_liste_joueur() + [[une_ia.get_id(), une_ia.get_prenom(), une_ia.get_element(), une_ia.get_plateaux(), une_ia.get_plateauy(), une_ia.get_pv(), une_ia.get_attaque(), une_ia.get_inventaire()]])
