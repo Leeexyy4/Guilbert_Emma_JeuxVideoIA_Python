@@ -230,16 +230,19 @@ class Interface:
         if self.get_nb_joueur() == 4 :
             texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
         elif self.get_nb_joueur() == 3:
-            image.Image(400,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
+            image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
+            image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
             deux_visible = False; trois_visible = False; quatre_visible = False
         elif self.get_nb_joueur() == 2:
-            image.Image(400,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
-            image.Image(500,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
+            image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
+            image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
+            image.Image(600,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
             trois_visible = False; quatre_visible = False
         elif self.get_nb_joueur() == 1:
-            image.Image(400,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
-            image.Image(500,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
-            image.Image(600,595,image.BtnMenu.BTN_3.value).affiche(self.get_fenetre())
+            image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
+            image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
+            image.Image(600,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
+            image.Image(700,595,image.BtnMenu.BTN_3.value).affiche(self.get_fenetre())
             quatre_visible = False
         if self.get_nb_joueur() != 4:
             # Texte pour choisir le nombre de joueur
@@ -257,19 +260,19 @@ class Interface:
                         self.Page_nb_joueur()
                     # Si le personnage sur lequel on clique est J1
                     if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and un_visible == True:   
-                        self.set_nb_ia(1)
+                        self.set_nb_ia(0)
                         self.set_etat_de_jeu("demarrage_jeu")
                     # Si le personnage sur lequel on clique est J2   
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and deux_visible == True:
-                        self.set_nb_ia(2)
+                        self.set_nb_ia(1)
                         self.set_etat_de_jeu("demarrage_jeu")
                     # Si le personnage sur lequel on clique est J3
                     if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and trois_visible == True:   
-                        self.set_nb_ia(3)
+                        self.set_nb_ia(2)
                         self.set_etat_de_jeu("demarrage_jeu")
                     # Si le personnage sur lequel on clique est J4
                     if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and quatre_visible == True:   
-                        self.set_nb_ia(4)
+                        self.set_nb_ia(3)
                         self.set_etat_de_jeu("demarrage_jeu")
                 if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
                     pygame.quit()
@@ -335,7 +338,7 @@ class Interface:
                     pygame.quit()
                     exit()
 
-    def Page_choixperso(self, numero_joueur):  
+    def Page_choixperso(self):  
         P_click = True
         O_click = True
         F_click = True
@@ -489,7 +492,7 @@ class Interface:
             event.key touche_fleche: Retourne la touche appuyer par le joueur pour faire le deplacement
         """    
         # Lance le de
-        self.get_de_jeu().Choix_de(self.get_fenetre())
+        self.get_de_jeu().Choix_de(self,joueur)
         face_choisie = self.get_de_jeu().get_face_choisie()
                 
         # Rectangle : Reinitialise la fenetre de Texte
@@ -505,7 +508,7 @@ class Interface:
         
         
         # Tant que : Le joueur n'a pas choisi de direction (haut, bas, gauche, droite)
-        while face_choisie != 0 :
+        while self.get_de_jeu().get_face_choisie() != 0 :
             # Pour tout : Les evenements de pygame
             for event in pygame.event.get():
                 
@@ -525,7 +528,7 @@ class Interface:
                         self.get_plateau_de_jeu().plateau_cache(self)
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
-                            face_choisie = face_choisie - 1
+                            self.get_de_jeu().desincrement_face_choisie(1)
                         else:
                             self.Page_rejouer(face_choisie)
                     
@@ -537,7 +540,7 @@ class Interface:
                         self.get_plateau_de_jeu().plateau_cache(self)
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
-                            face_choisie = face_choisie - 1
+                            self.get_de_jeu().desincrement_face_choisie(1)
                         else:
                             self.Page_rejouer(face_choisie)
                     
@@ -549,7 +552,7 @@ class Interface:
                         self.get_plateau_de_jeu().plateau_cache(self)
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
-                            face_choisie = face_choisie - 1
+                            self.get_de_jeu().desincrement_face_choisie(1)
                         else:
                             self.Page_rejouer(face_choisie)
 
@@ -561,7 +564,7 @@ class Interface:
                         self.get_plateau_de_jeu().plateau_cache(self)
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
-                            face_choisie = face_choisie - 1
+                            self.get_de_jeu().desincrement_face_choisie(1)
                         else:
                             self.Page_rejouer(face_choisie)
                             

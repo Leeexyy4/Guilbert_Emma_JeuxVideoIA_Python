@@ -1,19 +1,7 @@
-#Guilbert
-#Emma
-
-
-
-# ----------------------- Jeu de plateau - SAE C1 Main ------------------------ #
-
-#pour les images : Pierre et Pierre2 creees par Freepik - site web Flaticon
-#                  Flora et Flora2 creees par Freepik - site web Flaticon
-#                  Ondine et Ondine2 = creees par Freepik - site web Flaticon
-#                  Kevin et Kevin2  = creees par Freepik - site web Flaticon
-#                  Crapaud et Crapaud2 = creees par Freepik - site web Flaticon
-#                  Ecureil et Ecureil2 = creees par Freepik - site web Flaticon
-#                  Lezard et Lezard2 = creees par Freepik - site web Flaticon
-#                  Rat et Rat2 = creees par Freepik - site web Flaticon
-#                  J1, J2, J3 et J4 = site web Alarmy Stock Photo
+#BEAUREPAIRE Paul
+#GUILBERT Emma
+#VAXELAIRE Yohem
+#VERFAILLIE Alexis
 
 
 # ----------------------- Jeu de plateau - Bibliotheques  ------------------------ #
@@ -22,7 +10,7 @@
 import pygame
 from classe.jeu import interfaces
 from classe.visuel import texte, couleur, image
-from classe.personnage import joueur
+from classe.personnage import joueur, intelA
 
 # ----------------------- Jeu de plateau - Logique du jeu ------------------------ #
      
@@ -39,7 +27,7 @@ if __name__ == "__main__":
             if page.get_nb_joueur() > 0:  # si le nombre de joueur est choisi
                 for numero_joueur in range(page.get_nb_joueur()):
                     # Afficher la proposition pour choisir le personnage
-                    prenom, element = page.Page_choixperso(numero_joueur)
+                    prenom, element = page.Page_choixperso()
                     un_joueur = joueur.Joueur(numero_joueur,prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
                     page.set_liste_joueur(page.get_liste_joueur() + [[un_joueur.get_id(), un_joueur.get_prenom(), un_joueur.get_element(), un_joueur.get_plateaux(), un_joueur.get_plateauy(), un_joueur.get_pv(), un_joueur.get_attaque(), un_joueur.get_inventaire()]])
                     page.Page_premier_mouvement(un_joueur)
@@ -48,8 +36,17 @@ if __name__ == "__main__":
                     page.Mise_a_jour(un_joueur)
                     page.get_plateau_de_jeu().plateau_cache(page)
                     page.Page_action(un_joueur)
-                    numero_joueur = numero_joueur + 1
-                    prenom = ""  
+            if page.get_nb_ia() > 0:
+                for numero_ia in range(page.get_nb_ia()):
+                    prenom, element = page.Page_choixperso()
+                    une_ia = intelA.IntelA(numero_joueur,prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
+                    page.set_liste_joueur(page.get_liste_joueur() + [[une_ia.get_id(), une_ia.get_prenom(), une_ia.get_element(), une_ia.get_plateaux(), une_ia.get_plateauy(), une_ia.get_pv(), une_ia.get_attaque(), une_ia.get_inventaire()]])
+                    page.Page_premier_mouvement(une_ia)
+                    page.get_plateau_de_jeu().plateau_cache(page)
+                    page.Page_direction(une_ia)
+                    page.Mise_a_jour(une_ia)
+                    page.get_plateau_de_jeu().plateau_cache(page)
+                    page.Page_action(une_ia)
                 page.set_etat_de_jeu("partie_en_cours")
 
         if page.get_etat_de_jeu() == "partie_en_cours":
