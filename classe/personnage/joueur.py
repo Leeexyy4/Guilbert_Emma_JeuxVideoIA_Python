@@ -37,6 +37,7 @@ class Joueur:
         self.__attaque = attaque
         self.__inventaire = inventaire
         self.__state:logique.Player_State = logique.Player_State.WAIT_PLAYER
+
     # Definir les getters
     def get_x(self):
         """_summary_

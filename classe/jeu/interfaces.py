@@ -222,7 +222,7 @@ class Interface:
                     exit()
             
     def Page_nb_ia(self):
-        un_visible = True; deux_visible = True; trois_visible = True; quatre_visible = True
+        zero_visible = True; un_visible = True; deux_visible = True; trois_visible = True
         self.set_nb_ia(0)
         image.Image(0,0,image.Page.CHOIX_NB_IA.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
         pygame.draw.rect(self.get_fenetre(),self.get_couleur().get_Gris(),(10,580,780,102))
@@ -232,18 +232,17 @@ class Interface:
         elif self.get_nb_joueur() == 3:
             image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
             image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
-            deux_visible = False; trois_visible = False; quatre_visible = False
+            deux_visible = False; trois_visible = False
         elif self.get_nb_joueur() == 2:
             image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
             image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
             image.Image(600,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
-            trois_visible = False; quatre_visible = False
+            trois_visible = False
         elif self.get_nb_joueur() == 1:
             image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
             image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
             image.Image(600,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
             image.Image(700,595,image.BtnMenu.BTN_3.value).affiche(self.get_fenetre())
-            quatre_visible = False
         if self.get_nb_joueur() != 4:
             # Texte pour choisir le nombre de joueur
             texte.Texte("Combien d'IA souhaites-tu intégrer au jeu ?", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
@@ -259,19 +258,19 @@ class Interface:
                         self.set_nb_ia(-1)
                         self.Page_nb_joueur()
                     # Si le personnage sur lequel on clique est J1
-                    if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and un_visible == True:   
+                    if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and zero_visible == True:   
                         self.set_nb_ia(0)
                         self.set_etat_de_jeu("demarrage_jeu")
                     # Si le personnage sur lequel on clique est J2   
-                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and deux_visible == True:
+                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and un_visible == True:
                         self.set_nb_ia(1)
                         self.set_etat_de_jeu("demarrage_jeu")
                     # Si le personnage sur lequel on clique est J3
-                    if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and trois_visible == True:   
+                    if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and deux_visible == True:   
                         self.set_nb_ia(2)
                         self.set_etat_de_jeu("demarrage_jeu")
                     # Si le personnage sur lequel on clique est J4
-                    if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and quatre_visible == True:   
+                    if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and trois_visible == True:   
                         self.set_nb_ia(3)
                         self.set_etat_de_jeu("demarrage_jeu")
                 if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
