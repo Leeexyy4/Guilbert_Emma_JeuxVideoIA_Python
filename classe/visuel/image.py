@@ -28,10 +28,10 @@ class BtnAttaque(Enum):
     FUITE = pygame.image.load("./assets/img/illustrations/Fuite.png")
 class BtnMenu(Enum):
     BTN_0 = pygame.image.load("./assets/img/illustrations/0.png")
-    BTN_1 = pygame.image.load(image.BtnMenu.BTN_1)
-    BTN_2 = pygame.image.load(image.BtnMenu.BTN_2)
-    BTN_3 = pygame.image.load(image.BtnMenu.BTN_3)
-    BTN_4 = pygame.image.load(image.BtnMenu.BTN_4)
+    BTN_1 = pygame.image.load("./assets/img/illustrations/1.png")
+    BTN_2 = pygame.image.load("./assets/img/illustrations/2.png")
+    BTN_3 = pygame.image.load("./assets/img/illustrations/3.png")
+    BTN_4 = pygame.image.load("./assets/img/illustrations/4.png")
 class De(Enum):
     FACE1 = pygame.image.load("./assets/img/de/Face1.png")
     FACE2 = pygame.image.load("./assets/img/de/Face2.png")
