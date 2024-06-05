@@ -13,7 +13,7 @@ from classe.visuel import texte, couleur, image
 from classe.personnage import joueur, intelA
 
 # ----------------------- Jeu de plateau - Logique du jeu ------------------------ #
-     
+
 if __name__ == "__main__":
     # Initialisation de Pygame
     pygame.init()

@@ -223,7 +223,7 @@ class Interface:
             
     def Page_nb_ia(self):
         zero_visible = True; un_visible = True; deux_visible = True; trois_visible = True
-        self.set_nb_ia(0)
+        self.set_nb_ia(-1)
         image.Image(0,0,image.Page.CHOIX_NB_IA.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
         pygame.draw.rect(self.get_fenetre(),self.get_couleur().get_Gris(),(10,580,780,102))
     
@@ -250,7 +250,7 @@ class Interface:
         pygame.display.update()
 
         #Tant que le prenom n'est pas selectionne
-        while (self.get_nb_ia() == 0):
+        while (self.get_nb_ia() == -1):
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                     mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
@@ -278,7 +278,7 @@ class Interface:
                     exit()
 
     def Page_nb_joueur(self):
-        self.set_nb_joueur(0)
+        self.set_nb_joueur(-1)
 
         image.Image(0,0,image.Page.CHOIX_NB_JOUEUR.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
         # Dessiner la partie basse
@@ -298,12 +298,12 @@ class Interface:
         pygame.display.update()
 
         #Tant que le prenom n'est pas selectionne
-        while (self.get_nb_joueur() == 0):
+        while (self.get_nb_joueur() == -1):
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                     mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
-                        self.set_nb_joueur(-1)
+                        self.set_nb_joueur(0)
                         self.Page_demarrage()
                     # Si le personnage sur lequel on clique est J2   
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 :
