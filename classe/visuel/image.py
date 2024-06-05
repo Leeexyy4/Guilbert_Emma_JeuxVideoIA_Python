@@ -28,10 +28,10 @@ class BtnAttaque(Enum):
     FUITE = pygame.image.load("./assets/img/illustrations/Fuite.png")
 class BtnMenu(Enum):
     BTN_0 = pygame.image.load("./assets/img/illustrations/0.png")
-    BTN_1 = pygame.image.load(image.BtnMenu.BTN_1)
-    BTN_2 = pygame.image.load(image.BtnMenu.BTN_2)
-    BTN_3 = pygame.image.load(image.BtnMenu.BTN_3)
-    BTN_4 = pygame.image.load(image.BtnMenu.BTN_4)
+    BTN_1 = pygame.image.load("./assets/img/illustrations/1.png")
+    BTN_2 = pygame.image.load("./assets/img/illustrations/2.png")
+    BTN_3 = pygame.image.load("./assets/img/illustrations/3.png")
+    BTN_4 = pygame.image.load("./assets/img/illustrations/4.png")
 class De(Enum):
     FACE1 = pygame.image.load("./assets/img/de/Face1.png")
     FACE2 = pygame.image.load("./assets/img/de/Face2.png")
@@ -67,7 +67,7 @@ class Personnages(Enum):
 class Image:
     """La classe Image est une classe qui permet d'afficher l'image sur l'interface"""
     
-    def __init__(self, x, y, surface) -> None:
+    def __init__(self, x:int, y:int, surface:pygame.Surface) -> None:
         """Initialisation de l'image."""
         self.__x = x
         self.__y = y
@@ -81,7 +81,7 @@ class Image:
         """Getter de la position y."""
         return self.__y
     
-    def get_surface(self):
+    def get_surface(self)-> pygame.Surface:
         """Getter du surface de l'image."""
         return self.__surface
     
@@ -93,7 +93,7 @@ class Image:
     
     def affichage_image_redimensionnee(self, x, y, surface):
         """Affiche une image redimensionnee sur l'interface (int x, int y, Surface surface)."""
-        image = pygame.image.load(self.get_surface())
+        image = self.get_surface()
         image_redimensionnee = pygame.transform.scale(image, (x, y))
         surface.blit(image_redimensionnee, (self.get_x(), self.get_y()))
         pygame.display.update()
