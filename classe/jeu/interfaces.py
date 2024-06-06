@@ -270,25 +270,27 @@ class Interface:
         image.Image(0,0,image.Page.CHOIX_NB_IA.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
         pygame.draw.rect(self.get_fenetre(),self.get_couleur().get_Gris(),(10,580,780,102))
     
-        if self.get_nb_joueur() == 4 :
-            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
-        elif self.get_nb_joueur() == 3:
+        if self.get_nb_joueur() == 1:
             image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
             image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
-            deux_visible = False; trois_visible = False
+            image.Image(600,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
+            image.Image(700,595,image.BtnMenu.BTN_3.value).affiche(self.get_fenetre())
         elif self.get_nb_joueur() == 2:
             image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
             image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
             image.Image(600,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
             trois_visible = False
-        elif self.get_nb_joueur() == 1:
+        elif self.get_nb_joueur() == 3:
             image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
             image.Image(500,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
-            image.Image(600,595,image.BtnMenu.BTN_2.value).affiche(self.get_fenetre())
-            image.Image(700,595,image.BtnMenu.BTN_3.value).affiche(self.get_fenetre())
+            deux_visible = False; trois_visible = False
         if self.get_nb_joueur() != 4:
             # Texte pour choisir le nombre de joueur
             texte.Texte("Combien d'IA souhaites-tu intégrer au jeu ?", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
+        else:
+            image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
+            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
+        
         
         pygame.display.update()
 
