@@ -8,9 +8,34 @@ from classe.personnage import joueur
 class Interface:
     """La classe Interface est une classe qui permet de gérer les pages."""
     
+    
+    def plateau_cache(self):
+        """Cache le plateau en le dessinant entièrement en noir."""
+        for ligne in range(10):
+            for colonne in range(17):
+                x = colonne * self.__taille_case  # Coordonnée X du coin supérieur gauche du rectangle
+                y = ligne * self.__taille_case  # Coordonnée Y du coin supérieur gauche du rectangle          
+                rectangle = pygame.Rect(x, y, self.__taille_case, self.__taille_case)  # Créer un rectangle
+                pygame.draw.rect(self.get_fenetre(), couleur.Couleur().get_Noir(), rectangle)  # Dessiner le rectangle avec la couleur
+        self.mise_a_jour_plateau()
+        self.affiche_tt_joueur()
+
+    def mise_a_jour_plateau(self):
+        """Met à jour le plateau en affichant les cases découvertes."""
+        font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
+        for i in self.get_plateau_de_jeu().get_cases_decouvertes():
+            couleur_case = self.get_plateau_de_jeu().get_plateau()[i[0]][i[1]]  # Obtenir la couleur de la case
+            x = i[1] * self.__taille_case  # Coordonnée X du coin supérieur gauche du rectangle
+            y = i[0] * self.__taille_case  # Coordonnée Y du coin supérieur gauche du rectangle          
+            rectangle = pygame.Rect(x, y, self.__taille_case, self.__taille_case)  # Créer un rectangle
+            pygame.draw.rect(self.get_fenetre(), couleur_case, rectangle)  # Dessiner le rectangle avec la couleur
+            if (self.get_plateau_de_jeu().get_nom_case()[couleur_case] != "Vide") and (self.get_plateau_de_jeu().get_nom_case()[couleur_case] != "Mort") and (self.get_plateau_de_jeu().get_nom_case()[couleur_case] != "Départ/arrivée"):
+                texte.Texte(self.get_plateau_de_jeu().get_nom_case()[couleur_case], couleur.Couleur().get_Noir(), x + 9, y + 15).affiche(font, self.get_fenetre())
     def __init__(self) -> None:
         """Initialisation de l'interface."""
         
+        self.__dialogues:list = []
+        self.__taille_case = 800 // 17
         self.__etat_jeu = "menu_jeu"
         self.__jeuHLouEL = "HL"
         # Creation de la fenetre
@@ -39,6 +64,20 @@ class Interface:
     def set_fenetre(self, fenetre):
         """Setter de la fenetre."""
         self.__fenetre = fenetre
+        
+    def get_dialogues(self)->list[str]:
+        """Getter de la dialogues."""
+        return self.__dialogues
+
+    def set_dialogues(self, dialogues:list[str]):
+        """Setter de la dialogues."""
+        self.__dialogues = dialogues
+    
+    def draw_dialogues(self):
+        """dessiner les dialogues."""
+        rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(), couleur.Couleur().get_Beige())
+        for idDialogue in range(len(self.__dialogues)):
+            texte.Texte(self.__dialogues[idDialogue],couleur.Couleur().get_Noir(),110, 600+(20*idDialogue)).affiche(self.get_police(),self.get_fenetre())
         
     def get_police(self):
         """Getter de la police."""
@@ -524,7 +563,7 @@ class Interface:
                         avancer = joueur.haut(47)
                         self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
                         self.Mise_a_jour(joueur)
-                        self.get_plateau_de_jeu().plateau_cache(self)
+                        self.plateau_cache()
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
@@ -536,7 +575,7 @@ class Interface:
                         avancer = joueur.bas(47)
                         self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
                         self.Mise_a_jour(joueur)
-                        self.get_plateau_de_jeu().plateau_cache(self)
+                        self.plateau_cache()
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
@@ -548,7 +587,7 @@ class Interface:
                         avancer = joueur.droite(47) 
                         self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
                         self.Mise_a_jour(joueur) 
-                        self.get_plateau_de_jeu().plateau_cache(self)
+                        self.plateau_cache()
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
@@ -560,7 +599,7 @@ class Interface:
                         avancer = joueur.gauche(47) 
                         self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])  
                         self.Mise_a_jour(joueur)                
-                        self.get_plateau_de_jeu().plateau_cache(self)
+                        self.plateau_cache()
                         self.affichage_image_plateau(joueur)
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
@@ -574,7 +613,7 @@ class Interface:
             texte.Texte("Tu ne peux pas aller par là, tu as atteint un bord", self.get_couleur().get_Noir(), 110, 600).affiche(self.get_police(),self.get_fenetre())
             texte.Texte("ou il n'y a pas de cases dans cette direction", self.get_couleur().get_Noir(), 110, 620).affiche(self.get_police(),self.get_fenetre())
             texte.Texte("rejoue ! Tu peux avancer de {} cases ! ".format(face_choisie), self.get_couleur().get_Noir(), 110, 640).affiche(self.get_police(),self.get_fenetre())
-            self.get_plateau_de_jeu().plateau_cache(self)
+            self.plateau_cache()
             pygame.display.update()
 
     def Page_action(self, joueur):

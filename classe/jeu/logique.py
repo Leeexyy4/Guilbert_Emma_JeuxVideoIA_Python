@@ -29,6 +29,8 @@ class Player_State(Enum):
 
     DO_FIGHT_ACTION = 5 # envoi l'action chois
     
+    DEAD = 6 # envoi l'action chois
+    
 class CASE_ACTION(Enum):
     LUCK = 3 # click pour savoir le résultat
     UNLUCK = 4 # click pour savoir le résultat
