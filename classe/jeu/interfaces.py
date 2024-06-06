@@ -20,6 +20,7 @@ class Interface:
         self.mise_a_jour_plateau()
         self.affiche_tt_joueur()
 
+
     def mise_a_jour_plateau(self):
         """Met à jour le plateau en affichant les cases découvertes."""
         font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
@@ -72,13 +73,13 @@ class Interface:
     def set_dialogues(self, dialogues:list[str]):
         """Setter de la dialogues."""
         self.__dialogues = dialogues
-    
+
     def draw_dialogues(self):
         """dessiner les dialogues."""
-        rectangle.Rectangle(100, 590, 390, 80).affiche(self.get_fenetre(), couleur.Couleur().get_Beige())
+        rectangle.Rectangle(100, 590, 390, 80, couleur.Couleur().get_Beige()).affiche(self.get_fenetre())
         for idDialogue in range(len(self.__dialogues)):
-            texte.Texte(self.__dialogues[idDialogue],couleur.Couleur().get_Noir(),110, 600+(20*idDialogue)).affiche(self.get_police(),self.get_fenetre())
-        
+            texte.Texte(self.__dialogues[idDialogue],couleur.Couleur().get_Noir(), 110, 600+(20*idDialogue)).affiche(self.get_police(),self.get_fenetre())
+
     def get_police(self):
         """Getter de la police."""
         return self.__police
@@ -286,10 +287,14 @@ class Interface:
             deux_visible = False; trois_visible = False
         if self.get_nb_joueur() != 4:
             # Texte pour choisir le nombre de joueur
-            texte.Texte("Combien d'IA souhaites-tu intégrer au jeu ?", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
+            self.set_dialogues(["Combien d'IA souhaites-tu intégrer au jeu ?"])
+            self.draw_dialogues()
+            #texte.Texte("Combien d'IA souhaites-tu intégrer au jeu ?", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
         else:
             image.Image(400,595,image.BtnMenu.BTN_0.value).affiche(self.get_fenetre())
-            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
+            self.set_dialogues(["Le nombre de joueurs est complet tu ne peux pas ajouter d'IA"])
+            self.draw_dialogues()
+            #texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30,600).affiche(self.get_police(),self.get_fenetre())
         
         
         pygame.display.update()
@@ -329,9 +334,9 @@ class Interface:
         # Dessiner la partie basse
         pygame.draw.rect(self.get_fenetre(),self.get_couleur().get_Gris(),(10,580,780,102))
         # Texte pour choisir le nombre de joueur
-        texte.Texte("La sorciere du village vous a lancé un sort, pour", self.get_couleur().get_Noir(), 30,590).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("vous en sortir récuper la potion chez elle.", self.get_couleur().get_Noir(), 30,620).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("Combien de joueurs souhaitent jouer au jeu ? ", self.get_couleur().get_Noir(), 30,650).affiche(self.get_police(),self.get_fenetre())
+        self.set_dialogues(["La sorciere du village vous a lancé un sort, pour", "vous en sortir récuper la potion chez elle.", "Combien de joueurs souhaitent jouer au jeu ? "])
+        self.draw_dialogues()
+
 
         # Ajouter les photos des chifres
         image.Image(400,595,image.BtnMenu.BTN_1.value).affiche(self.get_fenetre())
@@ -392,9 +397,8 @@ class Interface:
         rectangle.Rectangle(10,580,780,100,self.get_couleur().get_Gris()).affiche(self.get_fenetre())
         
         # Texte pour choisir le personnage
-        texte.Texte("Bienvenue à toi jeune aventurier !",self.get_couleur().get_Noir() ,30,590).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Je t'invite à choisir un personnage parmi la liste suivante :",self.get_couleur().get_Noir() ,30,620).affiche(self.get_police(), self.get_fenetre())
-
+        self.set_dialogues(["Bienvenue à toi jeune aventurier !", "Je t'invite à choisir un personnage parmi la liste suivante :"])
+        self.draw_dialogues()
         texte.Texte(joueur.Nom.ROCK.value+", "+joueur.Nom.WATER.value+", "+joueur.Nom.TOWN.value+" ou "+joueur.Nom.GRASS.value,self.get_couleur().get_Noir() ,30,650).affiche(self.get_police(),self.get_fenetre())
         
         noms_joueurs = []
@@ -435,7 +439,9 @@ class Interface:
             texte.Texte(joueur.Nom.GRASS.value,self.get_couleur().get_Noir(), 715, 650).affiche(self.get_police(),self.get_fenetre())
 
         # Texte pour animer la page
-        texte.Texte("Amusez-vous bien ici demarre une nouvelle aventure !",self.get_couleur().get_Blanc(),230, 530).affiche(self.get_police(),self.get_fenetre())
+        self.set_dialogues(["Amusez-vous bien ici demarre une nouvelle aventure !"])
+        self.draw_dialogues()
+        #texte.Texte("Amusez-vous bien ici demarre une nouvelle aventure !",self.get_couleur().get_Blanc(),230, 530).affiche(self.get_police(),self.get_fenetre())
         
         # Mettre à jour l'affichage
         pygame.display.update()
@@ -616,8 +622,9 @@ class Interface:
             # Dessiner le rectangle pour les dialogues
             rectangle.Rectangle(100, 590, 390, 80, self.get_couleur().get_Beige()).affiche(self.get_fenetre())
             # Texte pour dire au joueur de rejouer
-            texte.Texte("Tu ne peux pas aller par là, tu as atteint un bord", self.get_couleur().get_Noir(), 110, 600).affiche(self.get_police(),self.get_fenetre())
-            texte.Texte("ou il n'y a pas de cases dans cette direction", self.get_couleur().get_Noir(), 110, 620).affiche(self.get_police(),self.get_fenetre())
+            self.set_dialogues(["Tu ne peux pas aller par là, tu as atteint un bord","ou il n'y a pas de cases dans cette direction"])
+            #texte.Texte("Tu ne peux pas aller par là, tu as atteint un bord", self.get_couleur().get_Noir(), 110, 600).affiche(self.get_police(),self.get_fenetre())
+            #texte.Texte("ou il n'y a pas de cases dans cette direction", self.get_couleur().get_Noir(), 110, 620).affiche(self.get_police(),self.get_fenetre())
             texte.Texte("rejoue ! Tu peux avancer de {} cases ! ".format(face_choisie), self.get_couleur().get_Noir(), 110, 640).affiche(self.get_police(),self.get_fenetre())
             self.plateau_cache()
             pygame.display.update()
@@ -638,8 +645,10 @@ class Interface:
                 elif couleur_case == self.get_couleur().get_Blanc():
                     # Dessiner le rectangle pour les dialogues
                     rectangle.Rectangle(100, 590, 390, 80, self.get_couleur().get_Beige()).affiche(self.get_fenetre())
-                    texte.Texte("Tu es dans une case Vide.",self.get_couleur().get_Noir(),110, 600).affiche(self.get_police(),self.get_fenetre())
-                    texte.Texte("Il ne t'arrivera rien tu peux etre rassure.",self.get_couleur().get_Noir(),110, 620).affiche(self.get_police(),self.get_fenetre())
+                    self.set_dialogues(["Tu es dans une case Vide.", "Il ne t'arrivera rien tu peux etre rassure."])
+                    self.draw_dialogues()
+                    #texte.Texte("Tu es dans une case Vide.",self.get_couleur().get_Noir(),110, 600).affiche(self.get_police(),self.get_fenetre())
+                    #texte.Texte("Il ne t'arrivera rien tu peux etre rassure.",self.get_couleur().get_Noir(),110, 620).affiche(self.get_police(),self.get_fenetre())
                     
                 elif couleur_case == self.get_couleur().get_Bleu():
                     self.get_plateau_de_jeu().Action_couleur_Bleu(self, joueur)
@@ -653,9 +662,11 @@ class Interface:
                 elif couleur_case == self.get_couleur().get_Jaune():
                     # Dessiner le rectangle pour les dialogues
                     rectangle.Rectangle(100, 590, 390, 80, self.get_couleur().get_Beige()).affiche(self.get_fenetre())
-                    texte.Texte("Tu es la case de Depart.",self.get_couleur().get_Noir(),110, 600).affiche(self.get_police(),self.get_fenetre())
-                    texte.Texte("Depeche toi de recuperer les cles",self.get_couleur().get_Noir(),110, 620).affiche(self.get_police(),self.get_fenetre())
-                    texte.Texte("avant les autres joueurs.",self.get_couleur().get_Noir(),110, 640).affiche(self.get_police(),self.get_fenetre())
+                    self.set_dialogues(["Tu es la case de Depart.","Depeche toi de recuperer les cles","avant les autres joueurs."])
+                    self.draw_dialogues()
+                    #texte.Texte("Tu es la case de Depart.",self.get_couleur().get_Noir(),110, 600).affiche(self.get_police(),self.get_fenetre())
+                    #texte.Texte("Depeche toi de recuperer les cles",self.get_couleur().get_Noir(),110, 620).affiche(self.get_police(),self.get_fenetre())
+                    #texte.Texte("avant les autres joueurs.",self.get_couleur().get_Noir(),110, 640).affiche(self.get_police(),self.get_fenetre())
                     
                 elif couleur_case == self.get_couleur().get_Noir():
                     self.get_plateau_de_jeu().Action_couleur_Noir(self, joueur)     
@@ -683,9 +694,11 @@ class Interface:
         # Page de la sorcière quan don a réussi le jeu
         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
         self.Menu_bas(joueur)
-        texte.Texte("Tu es chez la sorciere, mais j'ai l'impression",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+        self.set_dialogues("Tu es chez la sorciere, mais j'ai l'impression","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)")
+        self.draw_dialogues()
+        #texte.Texte("Tu es chez la sorciere, mais j'ai l'impression",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+        #texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+        #texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
         pygame.display.update()
         selection_potion = False
         while selection_potion != True:
@@ -700,44 +713,56 @@ class Interface:
                     if 500 < mouse_x < 725 and 150 < mouse_y < 450:
                         image.Image(0,0,image.Sorciere.MAISON_SYMBOLE.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("C'est un symbole astral, si c'est chez la",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("sorciere, il vaut mieux ne pas y toucher",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        self.set_dialogues(["C'est un symbole astral, si c'est chez la","sorciere, il vaut mieux ne pas y toucher"])
+                        self.draw_dialogues()
+                        #texte.Texte("C'est un symbole astral, si c'est chez la",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("sorciere, il vaut mieux ne pas y toucher",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                         pygame.time.delay(2500)
                         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu es chez la sorciere, mais on dirait",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        self.set_dialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+                        self.draw_dialogues()
+                        #texte.Texte("Tu es chez la sorciere, mais on dirait",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                     elif 90 < mouse_x < 190 and 180 < mouse_y < 350:
                         image.Image(0,0,image.Sorciere.MAISON_DRAGON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Un dragon de pierre... ce n'est pas très",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("rassurant, trouvons vite un remède et sortons",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("d'ici très vite",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        self.set_dialogues(["Un dragon de pierre... ce n'est pas très","rassurant, trouvons vite un remède et sortons","d'ici très vite"])
+                        self.draw_dialogues()
+                        #texte.Texte("Un dragon de pierre... ce n'est pas très",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("rassurant, trouvons vite un remède et sortons",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("d'ici très vite",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                         pygame.time.delay(2500)
                         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu es chez la sorciere, mais on dirait",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        self.set_dialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+                        self.draw_dialogues()
+                        #texte.Texte("Tu es chez la sorciere, mais on dirait",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("qu'elle est sortie de sa taniere...",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("profite-en pour fouiller dans ses affaires :)",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                     elif 330 < mouse_x < 430 and 480 < mouse_y < 580:
                         image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu as trouvé une potion... Potion inverstium",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("Tu décides de la boire afin d'inverser le",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("sortilège",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
+                        self.set_dialogues(["Tu as trouvé une potion... Potion inverstium","Tu décides de la boire afin d'inverser le","sortilège"])
+                        self.draw_dialogues()
+                        #texte.Texte("Tu as trouvé une potion... Potion inverstium",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("Tu décides de la boire afin d'inverser le",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("sortilège",self.get_couleur().get_Noir(),110,640).affiche(self.get_police(),self.get_fenetre())
                         joueur.set_inventaire(["Potion inverstium"])
                         self.affichage_potion()
                         pygame.display.update()
                         pygame.time.delay(2500)
                         image.Image(0,0,image.Page.FIN_JEU).affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         self.Menu_bas(joueur)
-                        texte.Texte("Tu as terminé le jeu bravo à toi jeune aventurier",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("Tu es le premier a t'être libéré du sort !!",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        self.set_dialogues(["Tu as terminé le jeu bravo à toi jeune aventurier","Tu es le premier a t'être libéré du sort !!"])
+                        self.draw_dialogues()
+                        #texte.Texte("Tu as terminé le jeu bravo à toi jeune aventurier",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("Tu es le premier a t'être libéré du sort !!",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
                         pygame.display.update()
                         pygame.time.delay(2500)
     
