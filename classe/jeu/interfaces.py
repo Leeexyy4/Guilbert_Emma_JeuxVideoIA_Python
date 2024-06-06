@@ -125,6 +125,7 @@ class Interface:
             self.get_liste_joueur()[joueur.get_id()][7] = joueur.get_inventaire()
         else:
             self.get_liste_joueur().pop(joueur.get_id())
+            self.set_nb_joueur(self.get_nb_joueur() - 1)
     
     def Page_demarrage(self):    
         # Affiche l'image de fond 
