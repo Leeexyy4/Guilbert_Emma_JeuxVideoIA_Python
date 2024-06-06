@@ -4,7 +4,7 @@
 import pygame
 from classe.visuel import image, couleur, rectangle, texte
 from classe.jeu import plateau, de
-from classe.personnage import joueur
+from classe.personnage import joueur, intelA
 class Interface:
     """La classe Interface est une classe qui permet de gérer les pages."""
     
@@ -125,7 +125,10 @@ class Interface:
             self.get_liste_joueur()[joueur.get_id()][7] = joueur.get_inventaire()
         else:
             self.get_liste_joueur().pop(joueur.get_id())
-            self.set_nb_joueur(self.get_nb_joueur() - 1)
+            if isinstance(joueur,intelA):
+                self.set_nb_joueur(self.get_nb_joueur() - 1)
+            else:
+                self.set_nb_ia(self.get_nb_ia() -1)
     
     def Page_demarrage(self):    
         # Affiche l'image de fond 
