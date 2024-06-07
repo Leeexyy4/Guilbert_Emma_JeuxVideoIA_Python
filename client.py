@@ -45,14 +45,13 @@ class Main():
         self.change_state(Client_State.MENU)
     def change_state(self, client_state:Client_State):
         self.__stateClient = client_state
-        if self.__stateClient == Client_State.MENU: self.__interface = None
+        if self.__stateClient == Client_State.MENU and self.__stateMenu not in [Menu_State.NB_PLAYER, Menu_State.NB_IA]: self.__interface = None
         print(self.__stateClient)
 
     def draw(self):
-        
+
         match self.__stateClient :
             case Client_State.MENU:
-                print(self.__stateMenu)
                 match self.__stateMenu :
                     case Menu_State.INDEX:
                         # Affiche l'image de fond 
@@ -89,7 +88,7 @@ class Main():
         self.__clock.tick(60)
         pygame.display.update()
             
-    def mouse_on_btn_back(self):
+    def mouse_on_btn_back():
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690)
 
