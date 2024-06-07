@@ -1,42 +1,4 @@
-from enum import Enum
-class Server_State(Enum):
 
-    INIT = 1 # creation d'une instance de serveur
-    
-    STARTING = 2 # création de la map, envoi des donné au joueur
-
-    WAIT_CONNECION = 3 # attente que le MAX_PLAYER sois atteint
-    
-    IN_GAME = 4 # boucle de jeu principal
-
-    ENDING = 5 # fin du serveur envoi des donné à la bd pour les stat
-class Menu(Enum):
-
-    INDEX = 1 # creation d'une instance de serveur
-    
-    LOCAL = 2 # création de la map, envoi des donné au joueur
-
-    ONLINE = 3 # attente que le MAX_PLAYER sois atteint
-    
-    GLOBALS_STATS = 4 # boucle de jeu principal
-
-    HELPER = 5 # fin du serveur envoi des donné à la bd pour les stat
-    NB_PLAYER = 6
-    NB_IA = 7
-class Client_State(Enum):
-
-    MENU = 1 # creation d'une instance de serveur
-    
-    CHOSE_CONNECTION = 2
-    CHOSE_CONNECTION = 2
-    
-    STARTING = 2 # création de la map, envoi des donné au joueur
-
-    WAIT_CONNECION = 3 # attente que le MAX_PLAYER sois atteint
-    
-    IN_GAME = 4 # boucle de jeu principal
-
-    ENDING = 5 # fin du serveur envoi des donné à la bd pour les stat
 
 class Player_State(Enum):
 

@@ -1,6 +1,8 @@
+from utils import couleur 
+
 class Plateau():
-    nom_case = {
-            couleur.Couleur().get_Rouge(): "Boss",
+    nom_case:dict = {
+            couleur.Couleur().get_Rousge(): "Boss",
             couleur.Couleur().get_Rose(): "Chance",
             couleur.Couleur().get_Orange(): "Malus",
             couleur.Couleur().get_Indigo(): "Pouf",
@@ -13,7 +15,7 @@ class Plateau():
             couleur.Couleur().get_Noir(): "Mort",
             couleur.Couleur().get_Jaune(): "Départ"
         }
-    max_couleur = {
+    max_couleur:dict = {
             couleur.Couleur().get_Rouge(): 4,
             couleur.Couleur().get_Rose(): 26,
             couleur.Couleur().get_Orange(): 29,
@@ -28,18 +30,14 @@ class Plateau():
             couleur.Couleur().get_Blanc():55
         }
     taille_case = 800 // 17
-    def __init__(self, nb_player, nb_IA) -> None:
+    def __init__(self) -> None:
         """_summary_
             Initialisation du Plateau
         """
         # Définir le plateau
-        self.__plateau = []
-        self.__nb_player = nb_player
-        self.__nb_IA = nb_IA
-        self.__user = []
-        
+        self.__plateau:list = []
         # Définir la taille d'une case
-        self.__cases_decouvertes = []
+        self.__cases_decouvertes:list = []
         for ligne in range(10):
             for colonne in range(17):
                 self.__cases_decouvertes.append((ligne, colonne))
@@ -119,5 +117,3 @@ class Plateau():
         
             self.__plateau.append(ligne_plateau)
         return self.__plateau
-    def plateau_logical (self):
-        
