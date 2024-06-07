@@ -52,13 +52,39 @@ class Main():
         
         match self.__stateClient :
             case Client_State.MENU:
+                print(self.__stateMenu)
                 match self.__stateMenu :
                     case Menu_State.INDEX:
                         # Affiche l'image de fond 
                         image.Image(0,0,image.Page.DEBUT_JEU.value).affichage_image_redimensionnee(800, 700,self.__screen)
                     case Menu_State.GLOBALS_STATS:
                         image.Image(0,0,image.Page.STATS.value).affichage_image_redimensionnee(800, 700,self.__screen)
-        
+                    case Menu_State.HELPER:
+                        image.Image(0, 0, image.Page.COMMANDES.value).affichage_image_redimensionnee(800, 700,self.__screen)
+                    case Menu_State.NB_IA:
+                        image.Image(0, 0, image.Page.CHOIX_NB_IA.value).affichage_image_redimensionnee(800, 700,self.__screen)
+                        if 1 in selectable_nb_ia :
+                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
+                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                            image.Image(600, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
+                            image.Image(700, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
+                        if 2 in selectable_nb_ia :
+                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
+                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                            image.Image(600, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
+                        if 3 in selectable_nb_ia :
+                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
+                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                        if 4 in selectable_nb_ia :
+                            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30, 600).affiche(self.get_police(),self.__screen)
+
+
+                    case Menu_State.NB_PLAYER:
+                        image.Image(0, 0, image.Page.CHOIX_NB_JOUEUR.value).affichage_image_redimensionnee(800, 700,self.__screen)
+                        image.Image(400, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                        image.Image(500, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
+                        image.Image(600, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
+                        image.Image(700, 595, image.BtnMenu.BTN_4.value).affiche(self.__screen)
         self.__clock.tick(60)
         pygame.display.update()
             
