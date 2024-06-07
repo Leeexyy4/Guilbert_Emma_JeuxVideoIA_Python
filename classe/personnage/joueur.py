@@ -93,10 +93,10 @@ class Joueur:
         return self.__element
     
     def get_inventaire(self):
-            """_summary_
-                Getter de l'inventaire du joueur
-            """
-            return self.__inventaire
+        """_summary_
+            Getter de l'inventaire du joueur
+        """
+        return self.__inventaire
     
     def get_plateaux(self):
             """_summary_

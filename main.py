@@ -37,9 +37,9 @@ if __name__ == "__main__":
                     interface.plateau_cache()
                     interface.Page_action(un_joueur)
             if interface.get_nb_ia() > 0:
-                for numero_ia in range(interface.get_nb_ia()-1):
+                for numero_ia in range(interface.get_nb_ia()):
                     prenom, element = interface.Page_choixperso()
-                    une_ia = intelA.IntelA(numero_joueur + interface.get_nb_joueur(),prenom,element,interface.get_plateau_de_jeu().get_case_jaune()[0],interface.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
+                    une_ia = intelA.IntelA(numero_ia + interface.get_nb_joueur(),prenom,element,interface.get_plateau_de_jeu().get_case_jaune()[0],interface.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
                     interface.set_liste_joueur(interface.get_liste_joueur() + [[une_ia.get_id(), une_ia.get_prenom(), une_ia.get_element(), une_ia.get_plateaux(), une_ia.get_plateauy(), une_ia.get_pv(), une_ia.get_attaque(), une_ia.get_inventaire()]])
                     interface.Page_premier_mouvement(une_ia)
                     interface.plateau_cache()
@@ -67,10 +67,8 @@ if __name__ == "__main__":
                                     un_joueur.combat_joueurs(interface, ordre_adv)
                             else:
                                 interface.Menu_bas(un_joueur) # Affiche le plateau de jeu avec le personnage choisi
-                                texte.Texte("Personne n'est assez proche de toi pour ",couleur.Couleur().get_Noir(),110,600).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("être attaquer. Clique sur le dé",couleur.Couleur().get_Noir(),110,620).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("pour avancer dans la partie.",couleur.Couleur().get_Noir(),110,640).affiche(interface.get_police(),interface.get_fenetre())
-                                pygame.display.update()
+                                interface.set_dialogues(["Personne n'est assez proche de toi pour","être attaquer. Clique sur le dé","pour avancer dans la partie."])
+                                interface.draw_dialogues()
                                 interface.plateau_cache()
                                 de_face1 = pygame.image.load("./assets/img/de/Face1.png")
                                 interface.get_fenetre().blit(de_face1,(350,475))
@@ -115,9 +113,7 @@ if __name__ == "__main__":
                 image.Image(0,0,'assets/img/illustrations/Page_findujeu.png').affichage_image_redimensionnee(800, 700,interface.get_fenetre())
                 # Dessiner la partie basse
                 pygame.draw.rect(interface.get_fenetre(),interface.get_couleur().get_Gris(),(10,580,780,102))
-                texte.Texte("Aucun des joueurs n'a réussi à finir le jeu",couleur.Couleur().get_Noir(),30,600).affiche(interface.get_police(),interface.get_fenetre())
-                texte.Texte("Retentez votre chance une prochaine fois",couleur.Couleur().get_Noir(),30,620).affiche(interface.get_police(),interface.get_fenetre())
-                texte.Texte("pour profiter de cette aventure :)",couleur.Couleur().get_Noir(),30,640).affiche(interface.get_police(),interface.get_fenetre())
-                pygame.display.update()
+                interface.set_dialogues(["Aucun des joueurs n'a réussi à finir le jeu","Retentez votre chance une prochaine fois","pour profiter de cette aventure :)"])
+                interface.draw_dialogues()
                 pygame.time.delay(2500)
                 pygame.quit()
