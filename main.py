@@ -37,9 +37,9 @@ if __name__ == "__main__":
                     interface.plateau_cache()
                     interface.Page_action(un_joueur)
             if interface.get_nb_ia() > 0:
-                for numero_ia in range(interface.get_nb_ia()-1):
+                for numero_ia in range(interface.get_nb_ia()):
                     prenom, element = interface.Page_choixperso()
-                    une_ia = intelA.IntelA(numero_joueur + interface.get_nb_joueur(),prenom,element,interface.get_plateau_de_jeu().get_case_jaune()[0],interface.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
+                    une_ia = intelA.IntelA(numero_ia + interface.get_nb_joueur(),prenom,element,interface.get_plateau_de_jeu().get_case_jaune()[0],interface.get_plateau_de_jeu().get_case_jaune()[1],700,110,[])
                     interface.set_liste_joueur(interface.get_liste_joueur() + [[une_ia.get_id(), une_ia.get_prenom(), une_ia.get_element(), une_ia.get_plateaux(), une_ia.get_plateauy(), une_ia.get_pv(), une_ia.get_attaque(), une_ia.get_inventaire()]])
                     interface.Page_premier_mouvement(une_ia)
                     interface.plateau_cache()
