@@ -2,7 +2,7 @@
 from enum import Enum
 import pygame
 from interface import Interface
-from utils import image
+from utils import image, texte
 
 class Client_State(Enum):
 
@@ -62,6 +62,7 @@ class Main():
                     case Menu_State.HELPER:
                         image.Image(0, 0, image.Page.COMMANDES.value).affichage_image_redimensionnee(800, 700,self.__screen)
                     case Menu_State.NB_IA:
+                        selectable_nb_ia = self.__interface.selectable_nb_ia()
                         image.Image(0, 0, image.Page.CHOIX_NB_IA.value).affichage_image_redimensionnee(800, 700,self.__screen)
                         if 1 in selectable_nb_ia :
                             image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
@@ -88,7 +89,7 @@ class Main():
         self.__clock.tick(60)
         pygame.display.update()
             
-    def mouse_on_btn_back():
+    def mouse_on_btn_back(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690)
 
