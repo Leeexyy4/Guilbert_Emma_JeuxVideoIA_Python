@@ -443,33 +443,51 @@ class Interface:
         prenom = ""
         
         #Tant que le prenom n'est pas selectionne
-        while (prenom != joueur.Nom.ROCK.value) or (prenom != joueur.Nom.WATER.value) or (prenom != joueur.Nom.GRASS.value) or (prenom != joueur.Nom.TOWN.value) :
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
-                    mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
-                    # Si le personnage sur lequel on clique est Ondine   
-                    if (500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and O_click == True):
-                        prenom = joueur.Nom.WATER.value
-                        element = joueur.Element.WATER.value
-                        return prenom, element
-                    # Si le personnage sur lequel on clique est Flora
-                    if (700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and F_click == True): 
-                        prenom = joueur.Nom.GRASS.value
-                        element = joueur.Element.GRASS.value
-                        return prenom, element
-                    # Si le personnage sur lequel on clique est Pierre
-                    if (400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and P_click == True): 
-                        prenom = joueur.Nom.ROCK.value
-                        element = joueur.Element.ROCK.value
-                        return prenom, element
-                    # Si le personnage sur lequel on clique est Kevin
-                    if (600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and K_click == True):
-                        prenom = joueur.Nom.TOWN.value
-                        element = joueur.Element.TOWN.value
-                        return prenom, element
-                if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
-                    pygame.quit()
-                    exit()
+        if (len(self.get_liste_joueur()) == self.get_nb_joueur()):
+            if joueur.Nom.WATER.value not in noms_joueurs:
+                prenom = joueur.Nom.WATER.value
+                element = joueur.Element.WATER.value
+                return prenom, element
+            elif joueur.Nom.GRASS.value not in noms_joueurs:
+                prenom = joueur.Nom.GRASS.value
+                element = joueur.Element.GRASS.value
+                return prenom, element
+            elif joueur.Nom.ROCK.value not in noms_joueurs:
+                prenom = joueur.Nom.ROCK.value
+                element = joueur.Element.ROCK.value
+                return prenom, element
+            elif joueur.Nom.TOWN.value not in noms_joueurs:
+                prenom = joueur.Nom.TOWN.value
+                element = joueur.Element.TOWN.value
+                return prenom, element
+        else:
+            while (prenom != joueur.Nom.ROCK.value) or (prenom != joueur.Nom.WATER.value) or (prenom != joueur.Nom.GRASS.value) or (prenom != joueur.Nom.TOWN.value) :
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
+                        mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+                        # Si le personnage sur lequel on clique est Ondine   
+                        if (500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and O_click == True):
+                            prenom = joueur.Nom.WATER.value
+                            element = joueur.Element.WATER.value
+                            return prenom, element
+                        # Si le personnage sur lequel on clique est Flora
+                        if (700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and F_click == True): 
+                            prenom = joueur.Nom.GRASS.value
+                            element = joueur.Element.GRASS.value
+                            return prenom, element
+                        # Si le personnage sur lequel on clique est Pierre
+                        if (400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and P_click == True): 
+                            prenom = joueur.Nom.ROCK.value
+                            element = joueur.Element.ROCK.value
+                            return prenom, element
+                        # Si le personnage sur lequel on clique est Kevin
+                        if (600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and K_click == True):
+                            prenom = joueur.Nom.TOWN.value
+                            element = joueur.Element.TOWN.value
+                            return prenom, element
+                    if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
+                        pygame.quit()
+                        exit()
         
     def Page_premier_mouvement(self, joueur):
         self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[self.get_plateau_de_jeu().get_case_jaune()[0],self.get_plateau_de_jeu().get_case_jaune()[1]]])
