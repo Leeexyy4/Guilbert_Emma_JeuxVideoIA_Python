@@ -572,67 +572,69 @@ class Interface:
         # Mise à jour de l'affichage
         pygame.display.update()
         
-        
-        # Tant que : Le joueur n'a pas choisi de direction (haut, bas, gauche, droite)
-        while self.get_de_jeu().get_face_choisie() != 0 :
-            # Pour tout : Les evenements de pygame
-            for event in pygame.event.get():
-                
-                # Si le joueur quitte la fenetre
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+        if isinstance(joueur, intelA.IntelA):
+            joueur.choix_case_IA(self)
+        else:
+            # Tant que : Le joueur n'a pas choisi de direction (haut, bas, gauche, droite)
+            while self.get_de_jeu().get_face_choisie() != 0 :
+                # Pour tout : Les evenements de pygame
+                for event in pygame.event.get():
                     
-                elif event.type == pygame.KEYDOWN:
-                    touche_fleche = event.key
+                    # Si le joueur quitte la fenetre
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        exit()
+                        
+                    elif event.type == pygame.KEYDOWN:
+                        touche_fleche = event.key
 
-                    if touche_fleche == pygame.K_UP:
-                        # La touche fleche vers le haut a ete enfoncee
-                        avancer = joueur.haut(47)
-                        self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
-                        self.Mise_a_jour(joueur)
-                        self.plateau_cache()
-                        self.affichage_image_plateau(joueur)
-                        if avancer == True :
-                            self.get_de_jeu().desincrement_face_choisie(1)
-                        else:
-                            self.Page_rejouer(face_choisie)
-                    
-                    elif touche_fleche == pygame.K_DOWN:
-                        # La touche fleche vers le bas a ete enfoncee
-                        avancer = joueur.bas(47)
-                        self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
-                        self.Mise_a_jour(joueur)
-                        self.plateau_cache()
-                        self.affichage_image_plateau(joueur)
-                        if avancer == True :
-                            self.get_de_jeu().desincrement_face_choisie(1)
-                        else:
-                            self.Page_rejouer(face_choisie)
-                    
-                    elif touche_fleche == pygame.K_RIGHT:
-                        # La touche fleche vers la droite a ete enfoncee
-                        avancer = joueur.droite(47) 
-                        self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
-                        self.Mise_a_jour(joueur) 
-                        self.plateau_cache()
-                        self.affichage_image_plateau(joueur)
-                        if avancer == True :
-                            self.get_de_jeu().desincrement_face_choisie(1)
-                        else:
-                            self.Page_rejouer(face_choisie)
+                        if touche_fleche == pygame.K_UP:
+                            # La touche fleche vers le haut a ete enfoncee
+                            avancer = joueur.haut(47)
+                            self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
+                            self.Mise_a_jour(joueur)
+                            self.plateau_cache()
+                            self.affichage_image_plateau(joueur)
+                            if avancer == True :
+                                self.get_de_jeu().desincrement_face_choisie(1)
+                            else:
+                                self.Page_rejouer(face_choisie)
+                        
+                        elif touche_fleche == pygame.K_DOWN:
+                            # La touche fleche vers le bas a ete enfoncee
+                            avancer = joueur.bas(47)
+                            self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
+                            self.Mise_a_jour(joueur)
+                            self.plateau_cache()
+                            self.affichage_image_plateau(joueur)
+                            if avancer == True :
+                                self.get_de_jeu().desincrement_face_choisie(1)
+                            else:
+                                self.Page_rejouer(face_choisie)
+                        
+                        elif touche_fleche == pygame.K_RIGHT:
+                            # La touche fleche vers la droite a ete enfoncee
+                            avancer = joueur.droite(47) 
+                            self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])
+                            self.Mise_a_jour(joueur) 
+                            self.plateau_cache()
+                            self.affichage_image_plateau(joueur)
+                            if avancer == True :
+                                self.get_de_jeu().desincrement_face_choisie(1)
+                            else:
+                                self.Page_rejouer(face_choisie)
 
-                    elif touche_fleche == pygame.K_LEFT:
-                        # La touche fleche vers la gauche a ete enfoncee
-                        avancer = joueur.gauche(47) 
-                        self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])  
-                        self.Mise_a_jour(joueur)                
-                        self.plateau_cache()
-                        self.affichage_image_plateau(joueur)
-                        if avancer == True :
-                            self.get_de_jeu().desincrement_face_choisie(1)
-                        else:
-                            self.Page_rejouer(face_choisie)
+                        elif touche_fleche == pygame.K_LEFT:
+                            # La touche fleche vers la gauche a ete enfoncee
+                            avancer = joueur.gauche(47) 
+                            self.get_plateau_de_jeu().set_cases_decouvertes(self.get_plateau_de_jeu().get_cases_decouvertes() + [[joueur.get_plateaux(),joueur.get_plateauy()]])  
+                            self.Mise_a_jour(joueur)                
+                            self.plateau_cache()
+                            self.affichage_image_plateau(joueur)
+                            if avancer == True :
+                                self.get_de_jeu().desincrement_face_choisie(1)
+                            else:
+                                self.Page_rejouer(face_choisie)
                             
     def Page_rejouer(self, face_choisie):
             # Dessiner le rectangle pour les dialogues
