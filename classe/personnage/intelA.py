@@ -101,12 +101,6 @@ class IntelA (joueur.Joueur):
         return interface.get_de_jeu().get_face_choisie()
                 
     def choix_case_IA(self, interface):
-        # mettre en place Dijkstra
-            # var : la case où l'on est
-            # liste : 4 cases accessibles via cette case
-            # liste : cases voulues (violet, rose, rouge)
-            # liste : cases à éviter (malus, puit, mort)
-            # dictionnaire (Sommet, Distance de l'origine, Case précédente)
         case_depart = [self.get_plateaux(),self.get_plateauy()]
         case_recompense = {
             "case_rose": {
