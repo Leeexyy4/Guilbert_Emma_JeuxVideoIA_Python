@@ -135,7 +135,7 @@ class Interface:
             self.get_liste_joueur()[joueur.get_id()][7] = joueur.get_inventaire()
         else:
             self.get_liste_joueur().pop(joueur.get_id())
-            if isinstance(joueur,intelA):
+            if isinstance(joueur,intelA.IntelA):
                 self.set_nb_joueur(self.get_nb_joueur() - 1)
             else:
                 self.set_nb_ia(self.get_nb_ia() -1)
@@ -554,20 +554,22 @@ class Interface:
         """    
         # Lance le de
         self.get_de_jeu().Choix_de(self,joueur)
-        face_choisie = self.get_de_jeu().get_face_choisie()
+        self.get_de_jeu().get_face_choisie()
                 
         # Rectangle : Reinitialise la fenetre de Texte
         self.Menu_bas(joueur)
 
         # Texte : Lancer le de
-        texte.Texte("Bravo ! Tu peux avancer de {} cases ! Où ".format(face_choisie),self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+        texte.Texte("Bravo ! Tu peux avancer de {} cases ! Où ".format(self.get_de_jeu().get_face_choisie()),self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
         texte.Texte("veux-tu aller ? (haut, bas, gauche, droite)",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
         
 
         # Mise à jour de l'affichage
         pygame.display.update()
         
-        
+        if isinstance(joueur,intelA.IntelA):
+            joueur.choix_case_IA(self)
+            self.get_plateau_de_jeu()
         # Tant que : Le joueur n'a pas choisi de direction (haut, bas, gauche, droite)
         while self.get_de_jeu().get_face_choisie() != 0 :
             # Pour tout : Les evenements de pygame
@@ -591,7 +593,7 @@ class Interface:
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
                         else:
-                            self.Page_rejouer(face_choisie)
+                            self.Page_rejouer(self.get_de_jeu().get_face_choisie())
                     
                     elif touche_fleche == pygame.K_DOWN:
                         # La touche fleche vers le bas a ete enfoncee
@@ -603,7 +605,7 @@ class Interface:
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
                         else:
-                            self.Page_rejouer(face_choisie)
+                            self.Page_rejouer(self.get_de_jeu().get_face_choisie())
                     
                     elif touche_fleche == pygame.K_RIGHT:
                         # La touche fleche vers la droite a ete enfoncee
@@ -615,7 +617,7 @@ class Interface:
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
                         else:
-                            self.Page_rejouer(face_choisie)
+                            self.Page_rejouer(self.get_de_jeu().get_face_choisie())
 
                     elif touche_fleche == pygame.K_LEFT:
                         # La touche fleche vers la gauche a ete enfoncee
@@ -627,14 +629,14 @@ class Interface:
                         if avancer == True :
                             self.get_de_jeu().desincrement_face_choisie(1)
                         else:
-                            self.Page_rejouer(face_choisie)
+                            self.Page_rejouer(self.get_de_jeu().get_face_choisie())
                             
-    def Page_rejouer(self, face_choisie):
+    def Page_rejouer(self):
             # Dessiner le rectangle pour les dialogues
             self.Menu_bas(joueur)
             # Texte pour dire au joueur de rejouer
             self.set_dialogues(["Tu ne peux pas aller par là, tu as atteint un bord","ou il n'y a pas de cases dans cette direction"])
-            texte.Texte("rejoue ! Tu peux avancer de {} cases ! ".format(face_choisie), self.get_couleur().get_Noir(), 110, 640).affiche(self.get_police(),self.get_fenetre())
+            texte.Texte("rejoue ! Tu peux avancer de {} cases ! ".format(self.get_de_jeu().get_face_choisie()), self.get_couleur().get_Noir(), 110, 640).affiche(self.get_police(),self.get_fenetre())
             self.plateau_cache()
             pygame.display.update()
 
@@ -684,7 +686,7 @@ class Interface:
                     self.get_plateau_de_jeu().Action_couleur_Rouge(self, joueur)
                     
                 elif couleur_case == self.get_couleur().get_Turquoise():
-                    self.get_plateau_de_jeu().Action_couleur_Turquoise(self)
+                    self.get_plateau_de_jeu().Action_couleur_Turquoise(self, joueur)
                     
                 elif couleur_case == self.get_couleur().get_Violet():
                     self.get_plateau_de_jeu().Action_couleur_Violet(self, joueur)

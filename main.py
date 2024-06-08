@@ -48,6 +48,8 @@ if __name__ == "__main__":
                     interface.plateau_cache()
                     interface.Page_action(une_ia)
                 interface.set_etat_de_jeu("partie_en_cours")
+            else:
+                interface.set_etat_de_jeu("partie_en_cours")
 
         if interface.get_etat_de_jeu() == "partie_en_cours":
             if interface.get_liste_joueur() != []:
