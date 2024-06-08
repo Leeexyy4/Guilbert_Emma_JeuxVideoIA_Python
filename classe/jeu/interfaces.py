@@ -507,9 +507,11 @@ class Interface:
     def Page_mouvement(self, joueur):
         image.Image(0,468, image.Page.CHOIX_DOUBLE.value).affiche(self.get_fenetre())
         self.Menu_bas(joueur)
-        
-        texte.Texte("Joueur " + str(joueur.get_id() + 1) + " : " + joueur.get_prenom() + " clique sur le de afin ",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("d'attaquer un joueur ou de lancer le de",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+        temp_texte=("Joueur " + str(joueur.get_id() + 1) + " : " + joueur.get_prenom() + " clique sur le de afin ")
+        self.set_dialogues([temp_texte,"d'attaquer un joueur ou de lancer le de"])
+        self.draw_dialogues()
+        #texte.Texte("Joueur " + str(joueur.get_id() + 1) + " : " + joueur.get_prenom() + " clique sur le de afin ",self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+        #texte.Texte("d'attaquer un joueur ou de lancer le de",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
         
         # Affiche le de sur la face 1
         image.Image(220,480,image.Interaction.ATTAQUER.value).affiche(self.get_fenetre())
@@ -560,8 +562,11 @@ class Interface:
         self.Menu_bas(joueur)
 
         # Texte : Lancer le de
-        texte.Texte("Bravo ! Tu peux avancer de {} cases ! Où ".format(face_choisie),self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-        texte.Texte("veux-tu aller ? (haut, bas, gauche, droite)",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+        temp_texte=("Bravo ! Tu peux avancer de {} cases ! Où ".format(face_choisie))
+        self.set_dialogues([temp_texte, "veux-tu aller ? (haut, bas, gauche, droite)"])
+        self.draw_dialogues()
+        #texte.Texte("Bravo ! Tu peux avancer de {} cases ! Où ".format(face_choisie),self.get_couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+        #texte.Texte("veux-tu aller ? (haut, bas, gauche, droite)",self.get_couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
         
 
         # Mise à jour de l'affichage
