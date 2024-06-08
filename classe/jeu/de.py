@@ -33,7 +33,7 @@ class De:
             int face_choisie: Retourne la face aleatoire choisie
         """
         if isinstance(joueur,intelA.IntelA):
-            joueur.lancement_de(interface)
+            joueur.lancement_de_IA(interface)
         else:
             de_cliquer = False
             while de_cliquer == False:

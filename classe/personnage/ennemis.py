@@ -74,10 +74,10 @@ class Ennemis:
         """Setter de l'attaque de l'ennemi."""
         self.__attaque = attaque
     
-def Choix_ennemis(un_joueur):
+def Choix_ennemis(joueur):
     """Choisit un ennemi en fonction des clés obtenues par le joueur."""
     liste_ennemis = ["Ecureuil", "Crapaud", "Lezard", "Rat"]
-    for i in un_joueur.get_inventaire():
+    for i in joueur.get_inventaire():
         if i == "cle du Rocher":
             liste_ennemis.remove("Lezard")
         elif i == "cle de la Forêt":

@@ -203,6 +203,7 @@ class Plateau:
         
     def Action_couleur_Orange(self, interface, joueur):
         # Dessiner le rectangle pour les dialogues
+        interface.Menu_bas(joueur)
         interface.set_dialogues(["Tu es sur une case Malus.", "Clique pour savoir quel sort", "le jeu te reserve."])
         interface.draw_dialogues()
             
@@ -230,9 +231,9 @@ class Plateau:
                                 joueur.supprimer_pv(interface.get_liste_joueur(),20,interface.get_fenetre())
                                 selection_malus = True
                                 
-                                dias[1] = "Tu vas {}".format(malus)
+                                dias[0] = "Tu vas {}".format(malus)
                             else:
-                                dias[1] = "Tu n'as plus assez de vie."
+                                dias[0] = "Tu n'as plus assez de vie."
                                 interface.set_dialogues(dias)
                                 interface.draw_dialogues()
                                 self.Action_couleur_Noir()
@@ -242,10 +243,10 @@ class Plateau:
                                 # Definir les nouveaux pv suite à l'echange
                                 joueur.supprimer_pv(interface.get_liste_joueur(),50,interface.get_fenetre())
                                 selection_malus = True
-                                dias[1] = "Tu vas {}".format(malus)
+                                dias[0] = "Tu vas {}".format(malus)
                                 
                             else:
-                                dias[1] = "Tu n'as plus assez de vie."
+                                dias[0] = "Tu n'as plus assez de vie."
                                 interface.set_dialogues(dias)
                                 interface.draw_dialogues()
                                 self.Action_couleur_Noir()
@@ -254,10 +255,10 @@ class Plateau:
                             if joueur.get_pv() > 80:
                                 joueur.supprimer_pv(interface.get_liste_joueur(),80,interface.get_fenetre())
                                 selection_malus = True
-                                dias[1] = "Tu vas {}".format(malus)
+                                dias[0] = "Tu vas {}".format(malus)
                                 
                             else:
-                                dias[1] = "Tu n'as plus assez de vie."
+                                dias[0] = "Tu n'as plus assez de vie."
                                 interface.set_dialogues(dias)
                                 interface.draw_dialogues()
                                 self.Action_couleur_Noir()
@@ -267,10 +268,10 @@ class Plateau:
                                 # Definir les nouveaux pv suite à l'echange
                                 joueur.supprimer_pv(interface.get_liste_joueur(),100,interface.get_fenetre())
                                 selection_malus = True
-                                dias[1] = "Tu vas {}".format(malus)
+                                dias[0] = "Tu vas {}".format(malus)
                                 
                             else:
-                                dias[1] = "Tu n'as plus assez de vie."
+                                dias[0] = "Tu n'as plus assez de vie."
                                 interface.set_dialogues(dias)
                                 interface.draw_dialogues()
                                 self.Action_couleur_Noir()
@@ -609,7 +610,6 @@ class Plateau:
 
     def Action_couleur_Beige(self, interface, joueur):
         image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(interface.get_fenetre())
-        interface.Menu_bas(joueur)
         # Dessiner le rectangle pour les dialogues
         interface.Menu_bas(joueur)
         texte.Texte("Tu es devant la Hutte de la sorciere.",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
@@ -718,11 +718,11 @@ class Plateau:
                         pygame.display.update() # Mettre à jour l'affichage 
                         selection_teleporte = True
         
-    def Action_couleur_Turquoise(self, interface):
+    def Action_couleur_Turquoise(self, interface, joueur):
         # Dessiner le rectangle pour les dialogues
+        interface.Menu_bas(joueur)
         interface.set_dialogues(["Tu es sur une case Grrr", "Un tremblement de terre surgit de nul part", "et teleporte tous les joueurs !!!"])
         interface.draw_dialogues()
-        
         
         for i in interface.get_liste_joueur():
             i[3] = random.randint(0,9)
