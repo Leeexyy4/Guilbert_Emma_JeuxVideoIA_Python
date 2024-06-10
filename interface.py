@@ -1,3 +1,5 @@
+
+from game import Game
 class Interface():
     def __init__(self, is_online:bool) -> None:
         self.__is_online = is_online
@@ -24,3 +26,6 @@ class Interface():
     def set_nb_joueur(self, nb_joueur:int):
         self.__nb_joueur = nb_joueur
         print(str(nb_joueur) +" players")
+    
+    def generate_Game(self)->Game:
+        return Game(self.__nb_joueur, self.__nb_IA)

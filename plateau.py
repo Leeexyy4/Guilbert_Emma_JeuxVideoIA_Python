@@ -1,33 +1,33 @@
-from utils import couleur 
-
+from utils.logique import CASE_TYPE
+import random
 class Plateau():
     nom_case:dict = {
-            couleur.Couleur().get_Rousge(): "Boss",
-            couleur.Couleur().get_Rose(): "Chance",
-            couleur.Couleur().get_Orange(): "Malus",
-            couleur.Couleur().get_Indigo(): "Pouf",
-            couleur.Couleur().get_Violet(): "Rejoue",
-            couleur.Couleur().get_Turquoise(): "Grrr",
-            couleur.Couleur().get_Beige(): "Hutte",
-            couleur.Couleur().get_Gris(): "Spéciale",
-            couleur.Couleur().get_Bleu(): "Puit",
-            couleur.Couleur().get_Blanc(): "Vide",
-            couleur.Couleur().get_Noir(): "Mort",
-            couleur.Couleur().get_Jaune(): "Départ"
+            CASE_TYPE.BOSS: "Boss",
+            CASE_TYPE.LUCK: "Chance",
+            CASE_TYPE.UNLUCK: "Malus",
+            CASE_TYPE.TP: "Pouf",
+            CASE_TYPE.REPLAY: "Rejoue",
+            CASE_TYPE.RANDOM_TP: "Grrr",
+            CASE_TYPE.WITCH: "Hutte",
+            CASE_TYPE.SPECIAL: "Spéciale",
+            CASE_TYPE.WELL: "Puit",
+            CASE_TYPE.NOTHING: "Vide",
+            CASE_TYPE.DEATH: "Mort",
+            CASE_TYPE.SPAWN: "Départ"
         }
-    max_couleur:dict = {
-            couleur.Couleur().get_Rouge(): 4,
-            couleur.Couleur().get_Rose(): 26,
-            couleur.Couleur().get_Orange(): 29,
-            couleur.Couleur().get_Indigo(): 2,
-            couleur.Couleur().get_Violet(): 20,
-            couleur.Couleur().get_Turquoise(): 20,
-            couleur.Couleur().get_Beige(): 1,
-            couleur.Couleur().get_Gris(): 10,
-            couleur.Couleur().get_Bleu(): 1,
-            couleur.Couleur().get_Noir(): 1,
-            couleur.Couleur().get_Jaune():1,
-            couleur.Couleur().get_Blanc():55
+    max_cases:dict = {
+            CASE_TYPE.BOSS: 4,
+            CASE_TYPE.LUCK: 26,
+            CASE_TYPE.UNLUCK: 29,
+            CASE_TYPE.TP: 2,
+            CASE_TYPE.REPLAY: 20,
+            CASE_TYPE.RANDOM_TP: 20,
+            CASE_TYPE.WITCH: 1,
+            CASE_TYPE.SPECIAL: 10,
+            CASE_TYPE.WELL: 1,
+            CASE_TYPE.DEATH: 1,
+            CASE_TYPE.SPAWN:1,
+            CASE_TYPE.NOTHING:55
         }
     taille_case = 800 // 17
     def __init__(self) -> None:
@@ -35,7 +35,7 @@ class Plateau():
             Initialisation du Plateau
         """
         # Définir le plateau
-        self.__plateau:list = []
+        self.__plateau:list[CASE_TYPE] = []
         # Définir la taille d'une case
         self.__cases_decouvertes:list = []
         for ligne in range(10):

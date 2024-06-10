@@ -1,35 +1,34 @@
+from enum import Enum
 
 
-class Player_State(Enum):
 
-    SELECT_ACTION = 1 # si !0 = dée sinn fight
+class Couleur(Enum):
+    """La classe Couleur est une classe qui permet de recuperer la couleur voulue grâce au getter."""
     
-    USE_DIE = 2 # envoi NB MOVE
-    
-    MOVE_PLAYER = 3 # envoi nb déplacement restant + pos
-    
-    STAY_ON_CASE = 4 # envoi CASE_ACTION + changement en question
+    NOIR = (0, 0, 0)
+    BLANC = (255, 255, 255)
+    JAUNE = (255, 255, 0)
+    VERT = (0, 255, 0)
+    VIOLET = (238, 130, 238)
+    ROUGE = (255, 24, 40)
+    GRIS = (192, 192, 192)
+    ROSE = (255, 192, 203)
+    TURQUOISE = (175, 238, 238)
+    INDIGO = (60, 0, 225)
+    ORANGE = (255, 127, 0)
+    BLEU = (0, 204, 204)
+    BEIGE = (255, 255, 204)
 
-    WAIT_PLAYER = 2 # attente d'action d'un joueur (idJOueur + Player_State action)
-
-    FIGHT = 3 # envoi les 2joueur dans l'ordre d'action
-    
-    WAIT_FIGHT_ACTION = 4 # att les action de l'autre joueur
-
-    DO_FIGHT_ACTION = 5 # envoi l'action chois
-    
-    DEAD = 6 # envoi l'action chois
-    
-class CASE_ACTION(Enum):
-    LUCK = 3 # click pour savoir le résultat
-    UNLUCK = 4 # click pour savoir le résultat
-    REPLAY = 5 # rejour à partir du lancé de dée
-    SPECIAL = 6 # choisit de prendre le risque ou pas, SI choisit, att 2eme click
-    RANDOM_TP = 1 # click pour être tp aléatoirement
-    NOTHING = 0 # Se pas rien, pas de click
-    DEATH = 0 # mort, pas de click
-    WITCH = 0 # choix entre use clef si non rien, pour finir la partie
-    WELL = 0 # Choisit quoi abandoné, Si n'as pas de clef, boucle sur lui meme
-    BOSS = 7  # début du fight
-    TP = 2 # click pour être tp
-
+class CASE_TYPE(Enum):
+    LUCK = Couleur.ROSE # click pour savoir le résultat
+    UNLUCK = Couleur.ORANGE # click pour savoir le résultat
+    SPECIAL = Couleur.GRIS # choisit de prendre le risque ou pas, SI choisit, att 2eme click
+    NOTHING = Couleur.BLANC # Se pas rien, pas de click
+    DEATH = Couleur.NOIR
+    WITCH = Couleur.BEIGE # choix entre use clef si non rien, pour finir la partie
+    RANDOM_TP = Couleur.TURQUOISE# click pour être tp aléatoirement
+    REPLAY = Couleur.VIOLET# rejour à partir du lancé de dée
+    WELL = Couleur.BLEU # Choisit quoi abandoné, Si n'as pas de clef, boucle sur lui meme
+    TP = Couleur.INDIGO # click pour être tp
+    SPAWN = Couleur.JAUNE # Se pas rien, pas de click
+    BOSS = Couleur.ROUGE  # début du fight

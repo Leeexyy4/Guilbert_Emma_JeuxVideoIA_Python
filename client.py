@@ -2,7 +2,9 @@
 from enum import Enum
 import pygame
 from interface import Interface
-from utils import image, texte
+from game import Game, Game_State
+from utils import image, texte, logique
+from input import inputs, direction
 
 class Client_State(Enum):
 
@@ -36,7 +38,9 @@ class Main():
         self.__screen = pygame.display.set_mode((800, 700))
         self.__stateMenu:Menu_State = None
         self.__stateClient:Client_State = None
-        self.__interface:Interface = None
+        self.__game = self.__interface.generate_Game()
+        self.__local_player = [i for i in range(self.__game.get_players())]
+        self.reset_out_of_game()
         self.main()
         
     def go_to_menu(self, menu_state:Menu_State):
@@ -45,12 +49,41 @@ class Main():
         self.change_state(Client_State.MENU)
     def change_state(self, client_state:Client_State):
         self.__stateClient = client_state
-        if self.__stateClient == Client_State.MENU and self.__stateMenu not in [Menu_State.NB_PLAYER, Menu_State.NB_IA]: self.__interface = None
+        if self.__stateClient == Client_State.MENU and self.__stateMenu not in [Menu_State.NB_PLAYER, Menu_State.NB_IA]: self.reset_out_of_game()
+        if client_state == Client_State.LOCAL : 
+            self.__game = self.__interface.generate_Game()
+            self.__local_player =[i for i in range(self.__game.get_players())]
         print(self.__stateClient)
-
+    def reset_out_of_game(self):
+        self.__interface = None
+        self.__game = None
+        self.__local_player:list[int] = []
     def draw(self):
-
+        self.__screen.fill(logique.Couleur.NOIR.value)
         match self.__stateClient :
+            case Client_State.LOCAL:
+                match self.__game:
+                    case Game_State.SELECT_AVARTAR:
+                        pass
+                    case Game_State.SELECT_ACTION:
+                        pass
+                    case Game_State.USE_DIE:
+                        pass
+                    case Game_State.MOVE_PLAYER:
+                        pass
+                    case Game_State.STAY_ON_CASE:
+                        pass
+                    case Game_State.FIGHT:
+                        pass
+                    case Game_State.WAIT_FIGHT_ACTION:
+                        pass
+                    case Game_State.DO_FIGHT_ACTION:
+                        pass
+                    case Game_State.DEAD:
+                        pass
+                    case Game_State.SWITCH_PLAYER:
+                        pass
+
             case Client_State.MENU:
                 match self.__stateMenu :
                     case Menu_State.INDEX:
@@ -185,11 +218,18 @@ class Main():
     def game_logical(self,mouse_x:int, mouse_y:int, is_cliked:bool):
         if self.__interface == None:
             self.go_to_menu(Menu_State.INDEX)
+            
             return
+    def game_draw(self):
+        
+        image.Image(0,0,image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
+        # Dessiner le cadre du bas afin de cacher les anciennes ecritures
+        rectangle.Rectangle(10,580,780,100,self.get_couleur().get_Gris()).affiche(self.get_fenetre())
     def main(self):
         self.go_to_menu(Menu_State.INDEX)
         while (self.__stateClient != Client_State.QUIT):
             click = False
+            dir = direction.ANY
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
@@ -201,7 +241,21 @@ class Main():
                     
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_z:
-                        pass
+                        dir = direction.NORTH
+                    elif event.key == pygame.K_up:
+                        dir = direction.NORTH
+                    elif event.key == pygame.K_d:
+                        dir = direction.EAST
+                    elif event.key == pygame.K_RIGHT:
+                        dir = direction.EAST
+                    elif event.key == pygame.K_s:
+                        dir = direction.SOUTH
+                    elif event.key == pygame.K_DOWN:
+                        dir = direction.SOUTH
+                    elif event.key == pygame.K_q:
+                        dir = direction.WEST
+                    elif event.key == pygame.K_LEFT:
+                        dir = direction.WEST
                     
                     
                     
@@ -210,13 +264,13 @@ class Main():
                 case Client_State.MENU:
                     self.menu_logical(mouse_x, mouse_y, click)
                 case Client_State.LOCAL:
-                    pass
+                    self.__game.loop(inputs(mouse_x, mouse_y, click, dir))
                 case Client_State.ONLINE:
+                    # envoyé les inputs au server
                     pass
                 case Client_State.QUIT:
                     pass
             self.draw()
-            
             
             
             
