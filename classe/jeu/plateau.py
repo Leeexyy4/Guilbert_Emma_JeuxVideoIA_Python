@@ -617,7 +617,7 @@ class Plateau:
         texte.Texte("des cles des quatre boss ?",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
 
         # Afficher les logos et texte des cles et des pv
-        pv = image.Interaction.CLES
+        pv = image.Interaction.CLES.value
         interface.get_fenetre().blit(pv, (220, 480))
         retour = image.Interaction.RETOUR.value
         interface.get_fenetre().blit(retour, (510,480))

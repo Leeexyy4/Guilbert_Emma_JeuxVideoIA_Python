@@ -54,7 +54,10 @@ if __name__ == "__main__":
         if interface.get_etat_de_jeu() == "partie_en_cours":
             if interface.get_liste_joueur() != []:
                 for i in interface.get_liste_joueur():
-                    un_joueur = joueur.Joueur(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
+                    if i[0] < interface.get_nb_joueur() :
+                        un_joueur = joueur.Joueur(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
+                    else:
+                        un_joueur = intelA.IntelA(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
                     if un_joueur.get_pv()>=0:
                         interface.plateau_cache()
                         action_joueur = interface.Page_mouvement(un_joueur)
@@ -69,17 +72,15 @@ if __name__ == "__main__":
                                     un_joueur.combat_joueurs(interface, ordre_adv)
                             else:
                                 interface.Menu_bas(un_joueur) # Affiche le plateau de jeu avec le personnage choisi
-                                interface.set_dialogues(["Personne n'est assez proche de toi pour","être attaquer. Clique sur le dé","pour avancer dans la partie."])
-                                interface.draw_dialogues()
-                                interface.plateau_cache()
-                                de_face1 = pygame.image.load("./assets/img/de/Face1.png")
-                                interface.get_fenetre().blit(de_face1,(350,475))
+                                texte.Texte("Clique sur le de ! ",couleur.Couleur().get_Noir(),110,600).affiche(interface.get_police(),interface.get_fenetre())
                                 pygame.display.update()
+                                interface.plateau_cache()
                                 interface.Page_direction(un_joueur)
                                 interface.Mise_a_jour(un_joueur)
                                 interface.plateau_cache()
                                 interface.Page_action(un_joueur)
                                 interface.Menu_bas(un_joueur)
+                                interface.plateau_cache()
                                 interface.plateau_cache()
                                 if un_joueur.a_gagne(interface.get_plateau_de_jeu()) == True:
                                     interface.set_etat_de_jeu("fin_du_jeu")

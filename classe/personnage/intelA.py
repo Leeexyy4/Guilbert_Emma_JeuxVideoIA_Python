@@ -101,7 +101,7 @@ class IntelA (joueur.Joueur):
         return interface.get_de_jeu().get_face_choisie()
                 
     def choix_case_IA(self, interface):
-        case_depart = [self.get_plateaux(),self.get_plateauy()]
+        case_depart = [self.get_plateaux(), self.get_plateauy()]
         case_recompense = {
             "case_rose": {
                 "coord": [],
@@ -168,55 +168,62 @@ class IntelA (joueur.Joueur):
         # Les cases où l'IA peut se déplacer
         for i in interface.get_plateau_de_jeu().get_cases_decouvertes():
             distance = sqrt((case_depart[0] - i[0])**2 + (case_depart[1] - i[1])**2)
-            if (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Rose() and distance < case_recompense["case_rose"]["distance"]):
-                case_recompense["case_rose"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_rose"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Rouge() and distance < case_recompense["case_rouge"]["distance"]):
-                case_recompense["case_rouge"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_rouge"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Violet() and distance < case_recompense["case_violet"]["distance"]):
-                case_recompense["case_violet"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_violet"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Bleu() and distance < case_recompense["case_bleu"]["distance"]):
-                case_recompense["case_bleu"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_bleu"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Noir() and distance < case_recompense["case_noir"]["distance"]):
-                case_recompense["case_noir"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_noir"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Orange() and distance < case_recompense["case_orange"]["distance"]):
-                case_recompense["case_orange"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_orange"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Blanc() and distance < case_recompense["case_blanc"]["distance"]):
-                case_recompense["case_blanc"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_blanc"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Indigo() and distance < case_recompense["case_indigo"]["distance"]):
-                case_recompense["case_indigo"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_indigo"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Turquoise() and distance < case_recompense["case_turquoise"]["distance"]):
-                case_recompense["case_turquoise"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_turquoise"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Jaune() and distance < case_recompense["case_jaune"]["distance"]):
-                case_recompense["case_jaune"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_jaune"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Gris() and distance < case_recompense["case_gris"]["distance"]):
-                case_recompense["case_gris"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_gris"]["distance"] = distance
-            elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Beige() and distance < case_recompense["case_beige"]["distance"]):
-                case_recompense["case_beige"]["coord"] = ([i[0],i[1]])
-                case_recompense["case_beige"]["distance"] = distance
+            if (distance == interface.get_de_jeu().get_face_choisie()):
+                if (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Rose() and distance < case_recompense["case_rose"]["distance"]):
+                    case_recompense["case_rose"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_rose"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Rouge() and distance < case_recompense["case_rouge"]["distance"]):
+                    case_recompense["case_rouge"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_rouge"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Violet() and distance < case_recompense["case_violet"]["distance"]):
+                    case_recompense["case_violet"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_violet"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Bleu() and distance < case_recompense["case_bleu"]["distance"]):
+                    case_recompense["case_bleu"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_bleu"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Noir() and distance < case_recompense["case_noir"]["distance"]):
+                    case_recompense["case_noir"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_noir"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Orange() and distance < case_recompense["case_orange"]["distance"]):
+                    case_recompense["case_orange"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_orange"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Blanc() and distance < case_recompense["case_blanc"]["distance"]):
+                    case_recompense["case_blanc"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_blanc"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Indigo() and distance < case_recompense["case_indigo"]["distance"]):
+                    case_recompense["case_indigo"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_indigo"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Turquoise() and distance < case_recompense["case_turquoise"]["distance"]):
+                    case_recompense["case_turquoise"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_turquoise"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Jaune() and distance < case_recompense["case_jaune"]["distance"]):
+                    case_recompense["case_jaune"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_jaune"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Gris() and distance < case_recompense["case_gris"]["distance"]):
+                    case_recompense["case_gris"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_gris"]["distance"] = distance
+                elif (interface.get_plateau_de_jeu().get_cases(i[0],i[1]) == interface.get_couleur().get_Beige() and distance < case_recompense["case_beige"]["distance"]):
+                    case_recompense["case_beige"]["coord"] = ([i[0],i[1]])
+                    case_recompense["case_beige"]["distance"] = distance
         
 
-        liste_case = list(case_recompense.keys())
-        # Si l'IA n'a pas toutes les clés ne pas se rendre sur la case sorcière
-        if (self.avoir_tt_cles() != True):
-            liste_case.pop(10)
+        liste_case = case_recompense.keys()
+        liste_temp = []
+        # Condition pour que l'IA se déplace sur les cases accessibles en fonction de la situation du jeu
+        for i in liste_case:
+            if case_recompense[i]["distance"] != 17:
+                liste_temp.append(i)
+        liste_case = liste_temp
+        if (self.avoir_tt_cles() != True and "case_beige" in liste_case):
+            liste_case.remove("case_beige")
+        if (interface.get_plateau_de_jeu().get_cases(self.get_plateaux(),self.get_plateauy()) == interface.get_couleur().get_Jaune() and "case_jaune" in liste_case):
+            liste_case.remove("case_jaune")
+        case_recompense["case_rose"]["coord"]
 
         liste_proba = [case_recompense[choice]['probabilite'] for choice in liste_case]
         
         # Faire un choix aléatoire en utilisant random.choices avec les probabilités
         case_arrivee = case_recompense[random.choices(liste_case, weights=liste_proba)[0]]["coord"]
-
-        print(case_arrivee)
 
         while interface.get_de_jeu().get_face_choisie() != 0:
             if self.get_plateaux() < case_arrivee[0]:
@@ -255,4 +262,3 @@ class IntelA (joueur.Joueur):
                 interface.affichage_image_plateau(self)
                 interface.get_de_jeu().desincrement_face_choisie(1)      
             pygame.display.update()   
-            pygame.time.delay(1000) 

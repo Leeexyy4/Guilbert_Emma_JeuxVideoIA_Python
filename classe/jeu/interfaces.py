@@ -135,7 +135,7 @@ class Interface:
             self.get_liste_joueur()[joueur.get_id()][7] = joueur.get_inventaire()
         else:
             self.get_liste_joueur().pop(joueur.get_id())
-            if isinstance(joueur,intelA):
+            if isinstance(joueur,intelA.IntelA):
                 self.set_nb_joueur(self.get_nb_joueur() - 1)
             else:
                 self.set_nb_ia(self.get_nb_ia() -1)
@@ -691,7 +691,7 @@ class Interface:
                     self.get_plateau_de_jeu().Action_couleur_Rouge(self, joueur)
                     
                 elif couleur_case == self.get_couleur().get_Turquoise():
-                    self.get_plateau_de_jeu().Action_couleur_Turquoise(self)
+                    self.get_plateau_de_jeu().Action_couleur_Turquoise(self, joueur)
                     
                 elif couleur_case == self.get_couleur().get_Violet():
                     self.get_plateau_de_jeu().Action_couleur_Violet(self, joueur)
