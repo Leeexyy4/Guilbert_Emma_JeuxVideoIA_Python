@@ -21,7 +21,7 @@ class inputs:
         return self.__cursor_x
     def get_cursor_y(self)->int:
         return self.__cursor_y
-    def get_clicked(self)->bool:
+    def is_clicked(self)->bool:
         return self.__clicked
     def get_direction(self)->direction:
         return self.__direction

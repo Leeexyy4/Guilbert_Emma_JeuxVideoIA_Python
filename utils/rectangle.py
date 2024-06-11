@@ -2,15 +2,13 @@
 
 # Bibliotheques utilisees pour le code
 import pygame 
-from classe.visuel import couleur
-
-pygame.init()
+from logique import Couleur
 
 class Rectangle:
     """La classe Rectangle est une classe qui permet de creer les rectangles du menu"""
     
     # Initialisation du plateau        
-    def __init__(self,x:int,y:int,largeur:int,hauteur:int,couleur:couleur) -> None:
+    def __init__(self,x:int,y:int,largeur:int,hauteur:int,couleur:Couleur) -> None:
         """_summary_
             Initialisation du Rectangle
         """

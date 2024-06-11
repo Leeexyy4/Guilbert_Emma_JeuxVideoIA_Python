@@ -12,6 +12,7 @@ class Client_State(Enum):
     LOCAL = 2 # création de la map, envoi des donné au joueur
 
     ONLINE = 3 # attente que le MAX_PLAYER sois atteint
+    
     MENU = 1 # creation d'une instance de serveur
     
     STARTING = 2 # création de la map, envoi des donné au joueur
@@ -38,8 +39,8 @@ class Main():
         self.__screen = pygame.display.set_mode((800, 700))
         self.__stateMenu:Menu_State = None
         self.__stateClient:Client_State = None
-        self.__game = self.__interface.generate_Game()
-        self.__local_player = [i for i in range(self.__game.get_players())]
+        # self.__game = self.__interface.generate_Game()
+        # self.__local_player = [i for i in range(self.__game.get_players())]
         self.reset_out_of_game()
         self.main()
         
@@ -52,7 +53,7 @@ class Main():
         if self.__stateClient == Client_State.MENU and self.__stateMenu not in [Menu_State.NB_PLAYER, Menu_State.NB_IA]: self.reset_out_of_game()
         if client_state == Client_State.LOCAL : 
             self.__game = self.__interface.generate_Game()
-            self.__local_player =[i for i in range(self.__game.get_players())]
+            self.__local_player =[i for i in range(len(self.__game.get_players()))]
         print(self.__stateClient)
     def reset_out_of_game(self):
         self.__interface = None
@@ -242,7 +243,7 @@ class Main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_z:
                         dir = direction.NORTH
-                    elif event.key == pygame.K_up:
+                    elif event.key == pygame.K_UP:
                         dir = direction.NORTH
                     elif event.key == pygame.K_d:
                         dir = direction.EAST

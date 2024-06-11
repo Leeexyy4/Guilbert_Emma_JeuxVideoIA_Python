@@ -75,7 +75,7 @@ class Plateau():
         """Renvoie les coordonnées correspondant à la case jaune."""
         for ligne in range(10):
             for colonne in range(17):
-                if self.get_plateau()[ligne][colonne] == couleur.Couleur().get_Jaune():
+                if self.get_plateau()[ligne][colonne] == CASE_TYPE.SPAWN:
                     coord_case_jaune = (ligne, colonne)
         return coord_case_jaune
 
@@ -83,7 +83,7 @@ class Plateau():
         """Renvoie les coordonnées correspondant aux cases indigo."""
         for ligne in range(10):
             for colonne in range(17):
-                if self.get_plateau()[ligne][colonne] == couleur.Couleur().get_Indigo():
+                if self.get_plateau()[ligne][colonne] == CASE_TYPE.TP:
                     if joueur.get_plateaux() == ligne and joueur.get_plateauy() == colonne:
                         pass
                     else:
@@ -103,7 +103,7 @@ class Plateau():
         """Remplit le plateau de manière aléatoire en fonction de max_couleur."""
         # Crée une liste des couleurs disponibles en fonction de max_couleur
         couleurs_disponibles = []
-        for couleurs, nombre_max in self.__max_couleur.items():
+        for couleurs, nombre_max in Plateau.max_cases.items():
             couleurs_disponibles.extend([couleurs] * nombre_max)
 
          # Remplit le plateau de manière aléatoire

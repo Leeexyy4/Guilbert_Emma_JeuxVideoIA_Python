@@ -2,7 +2,7 @@
 
 # Bibliotheques utilisees pour le code
 import pygame, random
-from utils import texte, couleur, image, rectangle, logique
+# from utils import texte, couleur, image, rectangle, logique
 
 from enum import Enum
 class Nom(Enum):
@@ -20,8 +20,13 @@ class Element(Enum):
 class Joueur:
     """La classe Joueur est une classe qui permet d'utiliser un personnage."""
     
+    water_is_used = False 
+    grass_is_used = False 
+    town_is_used = False 
+    rock_is_used = False 
+    
     # Definir un joueur
-    def __init__(self,id,plateaux,plateauy) -> None:
+    def __init__(self,id:int, plateaux:int, plateauy:int,element:Element) -> None:
         """_summary_
             Initialisation du joueur
         """
@@ -51,17 +56,17 @@ class Joueur:
         """_summary_
             Getter du prenom du joueur
         """
-        if(self.element == Element.GRASS): return Nom.GRASS.value
-        if(self.element == Element.WATER): return Nom.WATER.value
-        if(self.element == Element.TOWN): return Nom.TOWN.value
-        if(self.element == Element.ROCK): return Nom.ROCK.value
+        if(self.__element == Element.GRASS): return Nom.GRASS.value
+        if(self.__element == Element.WATER): return Nom.WATER.value
+        if(self.__element == Element.TOWN): return Nom.TOWN.value
+        if(self.__element == Element.ROCK): return Nom.ROCK.value
         return None
     
     def get_image(self):
-        if(self.element == Element.GRASS): return image.Personnages.GRASS.value
-        if(self.element == Element.WATER): return image.Personnages.WATER.value
-        if(self.element == Element.TOWN): return image.Personnages.TOWN.value
-        if(self.element == Element.ROCK): return image.Personnages.ROCK.value
+        if(self.__element == Element.GRASS): return image.Personnages.GRASS.value
+        if(self.__element == Element.WATER): return image.Personnages.WATER.value
+        if(self.__element == Element.TOWN): return image.Personnages.TOWN.value
+        if(self.__element == Element.ROCK): return image.Personnages.ROCK.value
         return None
 
     def get_id(self):
@@ -84,7 +89,7 @@ class Joueur:
     
     def get_element(self):
         """_summary_
-            Getter de l'element du joueur
+            Getter de l'__element du joueur
         """
         return self.__element
     
@@ -128,9 +133,18 @@ class Joueur:
     
     def set_element(self, element):
         """_summary_
-            Setter de l'element du joueur
+            Setter de l'__element du joueur
         """
-        self.element = element
+        if(self.__element == None): pass
+        elif(self.__element == Element.GRASS): Joueur.grass_is_used = False
+        elif(self.__element == Element.WATER): Joueur.water_is_used = False
+        elif(self.__element == Element.TOWN): Joueur.town_is_used = False
+        else: Joueur.rock_is_used = False
+        self.__element = element
+        if(self.__element == Element.ROCK): Joueur.rock_is_used = True
+        elif(self.__element == Element.GRASS): Joueur.grass_is_used = True
+        elif(self.__element == Element.WATER): Joueur.water_is_used = True
+        elif(self.__element == Element.TOWN): Joueur.town_is_used = True
         
     def set_inventaire(self,inventaire):
         """_summary_
