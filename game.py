@@ -4,17 +4,18 @@ import joueur
 from input import inputs, direction
 from enum import Enum
 class Game_State(Enum):
+    """la classe Game_State regroupe les états de la partie selon les actions du joueur"""
     WAIT_PLAYER = 0 # attente d'action d'un joueur (idJOueur + Game_State action)
     
     SELECT_AVATAR = 1 # si !0 = dée sinn fight
     
     SELECT_ACTION = 2 # si !0 = dée sinn fight
     
-    USE_DIE = 3 # envoi NB MOVE
+    USE_DIE = 3 # envoie NB MOVE
     
-    MOVE_PLAYER = 4 # envoi nb déplacement restant + pos
+    MOVE_PLAYER = 4 # envoie nb déplacement restant + pos
     
-    STAY_ON_CASE = 5 # envoi CASE_ACTION + changement en question
+    STAY_ON_CASE = 5 # envoie CASE_ACTION + changement en question
 
 
     FIGHT = 6 # envoi les 2joueur dans l'ordre d'action
@@ -59,12 +60,15 @@ class Game():
     
     
     def get_plateau(self)->Plateau:
+        """Renvoie l'état du plateau"""
         return self.__plateau
     
     def next_player(self):
+        """Fonction qui décide quel est le joueur qui joue au prochain tour"""
         self.__current_player = self.__current_player+1 if self.__current_player < len(self.__players)-2 else 0
     
     def player_selectable(self):
+        """Renvoie la liste des personnages sélectionnables"""
         elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
         for player in self.__players:
             if isinstance(player, joueur.Joueur):

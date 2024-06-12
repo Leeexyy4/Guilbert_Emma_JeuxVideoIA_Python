@@ -7,11 +7,13 @@ from utils import image
 
 from enum import Enum
 class Nom(Enum):
+    """La classe Nom regroupe le nom des personnages jouables."""
     WATER = "Ondine"
     GRASS = "Flora"
     ROCK = "Pierre"
     TOWN = "Kevin"
 class Element(Enum):
+    """La classe Element regroupe les 'titres' des personnages jouables"""
     WATER = "de la Riviere"
     GRASS = "de la Foret"
     ROCK = "du Rocher"

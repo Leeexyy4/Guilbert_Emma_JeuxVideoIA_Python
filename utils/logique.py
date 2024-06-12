@@ -1,7 +1,7 @@
 from enum import Enum
 
 class Couleur(Enum):
-    """La classe Couleur est une classe qui permet de recuperer la couleur voulue grâce au getter."""
+    """La classe Couleur est une classe qui permet de récuperer la couleur choisie grâce au getter."""
     
     NOIR = (0, 0, 0)
     BLANC = (255, 255, 255)
@@ -18,6 +18,7 @@ class Couleur(Enum):
     BEIGE = (255, 255, 204)
 
 class CASE_TYPE(Enum):
+    """La classe CASE_TYPE définit le type de case présent sur le plateau."""
     LUCK = Couleur.ROSE # click pour savoir le résultat
     UNLUCK = Couleur.ORANGE # click pour savoir le résultat
     SPECIAL = Couleur.GRIS # choisit de prendre le risque ou pas, SI choisit, att 2eme click

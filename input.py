@@ -2,6 +2,7 @@ import pygame
 from enum import Enum
 
 class direction(Enum):
+    """La classe direction définit la liste des mouvement possible, haut/bas/gauche/droite"""
     ANY = 0
     NORTH = 1
     EAST = 2
@@ -10,6 +11,7 @@ class direction(Enum):
     
 
 class inputs:
+    """La classe inputs permet de récuperer les actions claviers/souris du joueur"""
     
     def __init__(self, cursor_x:int, cursor_y:int, clicked:bool = False, direction:direction = direction.ANY) -> None:
         self.__cursor_x:int = cursor_x
