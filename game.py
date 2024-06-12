@@ -6,7 +6,7 @@ from enum import Enum
 class Game_State(Enum):
     WAIT_PLAYER = 0 # attente d'action d'un joueur (idJOueur + Game_State action)
     
-    SELECT_AVARTAR = 1 # si !0 = dée sinn fight
+    SELECT_AVATAR = 1 # si !0 = dée sinn fight
     
     SELECT_ACTION = 2 # si !0 = dée sinn fight
     
@@ -33,7 +33,7 @@ class Game():
         self.__plateau:Plateau = Plateau()
         self.__current_player:int = 0
         self.__die_value:int = 0
-        self.__state:Game_State = Game_State.SELECT_AVARTAR
+        self.__state:Game_State = Game_State.SELECT_AVATAR
         
     def get_players(self):
         """_summary_
@@ -73,11 +73,11 @@ class Game():
     
     def loop(self, input:inputs):
         if self.__players[self.__current_player] == None:
-            self.__state = Game_State.SELECT_AVARTAR
+            self.__state = Game_State.SELECT_AVATAR
         
         player:joueur.Joueur = self.__players[self.__current_player]
         match self.__state:
-            case Game_State.SELECT_AVARTAR:
+            case Game_State.SELECT_AVATAR:
                 if input.is_clicked(): 
                     start:tuple[int, int] = self.__plateau.get_case_jaune()
                     if (500 <= input.get_cursor_x() <= 600 and 582 <= input.get_cursor_y() <= 652 and not joueur.Joueur.water_is_used):

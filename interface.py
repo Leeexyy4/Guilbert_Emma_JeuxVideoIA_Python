@@ -16,13 +16,17 @@ class Interface():
         
     def is_online(self)->int:
         return self.__is_online
+    
     def get_nb_IA(self)->bool:
         return self.__nb_IA
+    
     def set_nb_IA(self, nb_ia:int):
         self.__nb_IA = nb_ia
         print(str(nb_ia) +" IAs")
+
     def get_nb_joueur(self)->int:
         return self.__nb_joueur
+    
     def set_nb_joueur(self, nb_joueur:int):
         self.__nb_joueur = nb_joueur
         print(str(nb_joueur) +" players")

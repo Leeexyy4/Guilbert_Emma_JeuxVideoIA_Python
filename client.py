@@ -43,6 +43,110 @@ class Client():
         self.__dialogues = ""
         self.reset_out_of_game()
 
+    # Permets de switcher entre les affichage des pages
+    def draw(self):
+        self.__screen.fill(logique.Couleur.NOIR.value)
+        match self.__stateClient :
+            
+            # Boucle du Menu
+            case Client_State.MENU:
+                match self.__stateMenu : # Gestion de l'etat du menu
+                    
+                    # Page du menu
+                    case Menu_State.INDEX:
+                        image.Image(0,0,image.Page.DEBUT_JEU.value).affiche(self.__screen)
+                    
+                    # Page de statistiques
+                    case Menu_State.GLOBALS_STATS:
+                        image.Image(0,0,image.Page.STATS.value).affiche(self.__screen)
+                    
+                    # Page des règles du jeu
+                    case Menu_State.HELPER:
+                        image.Image(0, 0, image.Page.COMMANDES.value).affiche(self.__screen)
+                    
+                    # Page du nombre de joueurs
+                    case Menu_State.NB_PLAYER:
+                        image.Image(0, 0, image.Page.CHOIX_NB_JOUEUR.value).affiche(self.__screen)
+                        rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.__screen)
+                        image.Image(400, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                        image.Image(500, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
+                        image.Image(600, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
+                        image.Image(700, 595, image.BtnMenu.BTN_4.value).affiche(self.__screen)
+
+                    # Page du nombre de ia
+                    case Menu_State.NB_IA:
+                        selectable_nb_ia = self.__interface.selectable_nb_ia()
+                        image.Image(0, 0, image.Page.CHOIX_NB_IA.value).affiche(self.__screen)
+                        rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.__screen)
+                        self.set_dialogues(["La sorciere du village vous a lancé un sort, pour","vous en sortir récuper la potion chez elle.","Combien de joueurs souhaitent jouer au jeu ?"])
+                        self.draw_dialogues_deb()
+                        if 1 in selectable_nb_ia :
+                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
+                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                            image.Image(600, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
+                            image.Image(700, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
+                        if 2 in selectable_nb_ia :
+                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
+                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                            image.Image(600, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
+                        if 3 in selectable_nb_ia :
+                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
+                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
+                        if 4 in selectable_nb_ia :
+                            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", logique.Couleur.NOIR.value, 30, 600).affiche(self.get_police(),self.__screen)
+
+                
+            # Boucle de la game Local
+            case Client_State.LOCAL:
+                match self.__game.get_state():
+                    case Game_State.SELECT_AVATAR:
+                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.__screen)
+                        self.set_dialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien",
+                                            "ici demarre une nouvelle aventure ! Je t'invite à",
+                                            "choisir un personnage parmi la liste suivante :"])
+                        self.draw_dialogues_deb()
+                        image.Image(400, 585, image.Personnages.ROCK.value).affiche(self.__screen)
+                        texte.Texte(joueur.Nom.ROCK.value, logique.Couleur.NOIR.value, 413, 650).affiche(self.__screen)
+                        image.Image(500, 585, image.Personnages.WATER.value).affiche(self.__screen)
+                        texte.Texte(joueur.Nom.WATER.value, logique.Couleur.NOIR.value, 510, 650).affiche(self.__screen)
+                        image.Image(600, 585, image.Personnages.TOWN.value).affiche(self.__screen)
+                        texte.Texte(joueur.Nom.TOWN.value, logique.Couleur.NOIR.value, 613, 650).affiche(self.__screen)
+                        image.Image(700, 585, image.Personnages.GRASS.value).affiche(self.__screen)
+                        texte.Texte(joueur.Nom.GRASS.value, logique.Couleur.NOIR.value, 715, 650).affiche(self.__screen)
+                    case Game_State.SELECT_ACTION:
+                        pass
+                    case Game_State.USE_DIE:
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.__screen)
+                        self.Menu_bas(self.__game.get_current_player())
+                        self.set_dialogues(["Tu es le joueur " + str(self.__game.get_current_player().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement ↑ ↓ → ←"])
+                        self.draw_dialogues()
+                        # Affiche le de sur la face 1
+                        image.Image(350,475,image.De.FACE1.value).affiche(self.__screen)
+                    case Game_State.MOVE_PLAYER:
+                        pass
+                    case Game_State.STAY_ON_CASE:
+                        pass
+                    case Game_State.FIGHT:
+                        pass
+                    case Game_State.WAIT_FIGHT_ACTION:
+                        pass
+                    case Game_State.DO_FIGHT_ACTION:
+                        pass
+                    case Game_State.DEAD:
+                        pass
+                    case Game_State.SWITCH_PLAYER:
+                        pass
+                print(self.__game.get_state())
+
+            
+        pygame.display.update()
+        self.__clock.tick(60)
+
+    # Bouton de retour en arrière dans les pages Helper, Nb_joueur, Nb_ia, Fin_du_jeu   
+    def mouse_on_btn_back(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        return 40 <= mouse_x <= 100 and 40 <= mouse_y <= 100
+
     def go_to_menu(self, menu_state:Menu_State):
         self.__stateMenu = menu_state
         print(self.__stateMenu)
@@ -76,94 +180,6 @@ class Client():
         Rectangle(10, 580, 780, 100, logique.Couleur.GRIS.value).affiche(self.__screen)
         for idDialogue in range(len(self.__dialogues)):
             texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 30, 600 + (20 * idDialogue)).affiche(self.__screen)
-
-    # 
-    def draw(self):
-        self.__screen.fill(logique.Couleur.NOIR.value)
-        match self.__stateClient :
-
-            case Client_State.LOCAL:
-                match self.__game.get_state():
-                    case Game_State.SELECT_AVARTAR:
-                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                        self.set_dialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien",
-                                            "ici demarre une nouvelle aventure ! Je t'invite à",
-                                            "choisir un personnage parmi la liste suivante :"])
-                        self.draw_dialogues_deb()
-                        image.Image(400, 585, image.Personnages.ROCK.value).affiche(self.__screen)
-                        texte.Texte(joueur.Nom.ROCK.value, logique.Couleur.NOIR.value, 413, 650).affiche(self.__screen)
-                        image.Image(500, 585, image.Personnages.WATER.value).affiche(self.__screen)
-                        texte.Texte(joueur.Nom.WATER.value, logique.Couleur.NOIR.value, 510, 650).affiche(self.__screen)
-                        image.Image(600, 585, image.Personnages.TOWN.value).affiche(self.__screen)
-                        texte.Texte(joueur.Nom.TOWN.value, logique.Couleur.NOIR.value, 613, 650).affiche(self.__screen)
-                        image.Image(700, 585, image.Personnages.GRASS.value).affiche(self.__screen)
-                        texte.Texte(joueur.Nom.GRASS.value, logique.Couleur.NOIR.value, 715, 650).affiche(self.__screen)
-                        pass
-                    case Game_State.SELECT_ACTION:
-                        pass
-                    case Game_State.USE_DIE:
-                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.__screen)
-                        self.Menu_bas(self.__game.get_current_player())
-                        self.set_dialogues(["Tu es le joueur " + str(self.__game.get_current_player().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement ↑ ↓ → ←"])
-                        self.draw_dialogues()
-                        # Affiche le de sur la face 1
-                        image.Image(350,475,image.De.FACE1.value).affiche(self.__screen)
-                    case Game_State.MOVE_PLAYER:
-                        pass
-                    case Game_State.STAY_ON_CASE:
-                        pass
-                    case Game_State.FIGHT:
-                        pass
-                    case Game_State.WAIT_FIGHT_ACTION:
-                        pass
-                    case Game_State.DO_FIGHT_ACTION:
-                        pass
-                    case Game_State.DEAD:
-                        pass
-                    case Game_State.SWITCH_PLAYER:
-                        pass
-                print(self.__game.get_state())
-
-            case Client_State.MENU:
-                match self.__stateMenu :
-                    case Menu_State.INDEX:
-                        # Affiche l'image de fond
-                        image.Image(0,0,image.Page.DEBUT_JEU.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                    case Menu_State.GLOBALS_STATS:
-                        image.Image(0,0,image.Page.STATS.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                    case Menu_State.HELPER:
-                        image.Image(0, 0, image.Page.COMMANDES.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                    case Menu_State.NB_IA:
-                        selectable_nb_ia = self.__interface.selectable_nb_ia()
-                        image.Image(0, 0, image.Page.CHOIX_NB_IA.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                        if 1 in selectable_nb_ia :
-                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
-                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
-                            image.Image(600, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
-                            image.Image(700, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
-                        if 2 in selectable_nb_ia :
-                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
-                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
-                            image.Image(600, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
-                        if 3 in selectable_nb_ia :
-                            image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
-                            image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
-                        if 4 in selectable_nb_ia :
-                            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", logique.Couleur.NOIR.value, 30, 600).affiche(self.get_police(),self.__screen)
-
-                    case Menu_State.NB_PLAYER:
-                        image.Image(0, 0, image.Page.CHOIX_NB_JOUEUR.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                        image.Image(400, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
-                        image.Image(500, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
-                        image.Image(600, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
-                        image.Image(700, 595, image.BtnMenu.BTN_4.value).affiche(self.__screen)
-        pygame.display.update()
-        self.__clock.tick(60)
-
-    # Bouton de retour en arrière dans les pages Helper, Nb_joueur, Nb_ia, Fin_du_jeu   
-    def mouse_on_btn_back(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        return 40 <= mouse_x <= 100 and 40 <= mouse_y <= 100
 
     # Gestion des pages
     def menu_logical(self, mouse_x:int, mouse_y:int, is_cliked:bool):
