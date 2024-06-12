@@ -1,6 +1,7 @@
 from utils.logique import CASE_TYPE
 import random
 class Plateau():
+    """La classe Plateau définit le type des cases présentes sur le plateau."""
     nom_case:dict = {
             CASE_TYPE.BOSS: "Boss",
             CASE_TYPE.LUCK: "Chance",
@@ -46,8 +47,10 @@ class Plateau():
                 
 
     def get_nb_IA(self)-> int:
+        """Renvoie le nombre d'IA"""
         return self.__nb_IA
     def get_nb_players(self)-> int:
+        """Renvoie le nombre d'IA"""
         return self.__nb_player
 
     def get_plateau(self):

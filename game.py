@@ -28,6 +28,7 @@ class Game_State(Enum):
     
     SWITCH_PLAYER = 10
 class Game():
+    """la Classe Game initialise les paramètres de la partie"""
     def __init__(self, nb_player:int, nb_IA:int) -> None:
         self.__nb_player:int = nb_player
         self.__players:list[joueur.Joueur] = [None for i in range(nb_IA + nb_player)]
