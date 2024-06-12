@@ -57,9 +57,6 @@ class Game():
         """
         self.__state = state
     
-    def get_current_player_id(self)->int:
-        return self.__current_player
-    
     
     def get_plateau(self)->Plateau:
         return self.__plateau

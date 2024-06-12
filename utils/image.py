@@ -88,10 +88,8 @@ class Image:
     def affiche(self, surface:pygame.Surface):
         """Affiche l'image sur l'interface pygame (Surface surface)."""
         surface.blit(self.get_surface(), (self.get_x(), self.get_y()))
-        return
     
     def affichage_image_redimensionnee(self, x:int, y:int, surface:pygame.Surface):
         """Affiche une image redimensionnee sur l'interface (int x, int y, Surface surface)."""
         image_redimensionnee = pygame.transform.scale(self.get_surface(), (x, y))
         surface.blit(image_redimensionnee, (self.get_x(), self.get_y()))
-        pygame.display.update()

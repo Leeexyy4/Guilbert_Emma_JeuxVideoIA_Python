@@ -67,16 +67,17 @@ class Client():
 
     def draw_dialogues(self):
         """dessiner les dialogues."""
-        Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value).affiche(self.get_fenetre())
+        Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value).affiche(self.__screen)
         for idDialogue in range(len(self.__dialogues)):
-            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 110, 600 + (20 * idDialogue)).affiche(self.get_police(), self.get_fenetre())
+            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 110, 600 + (20 * idDialogue)).affiche(self.__screen)
 
     def draw_dialogues_deb(self):
         """dessiner les dialogues."""
-        Rectangle(10, 580, 780, 100, self.get_couleur().get_Gris()).affiche(self.get_fenetre())
+        Rectangle(10, 580, 780, 100, logique.Couleur.GRIS.value).affiche(self.__screen)
         for idDialogue in range(len(self.__dialogues)):
-            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 30, 600 + (20 * idDialogue)).affiche(self.get_police(), self.get_fenetre())
+            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 30, 600 + (20 * idDialogue)).affiche(self.__screen)
 
+    # 
     def draw(self):
         self.__screen.fill(logique.Couleur.NOIR.value)
         match self.__stateClient :
@@ -84,11 +85,11 @@ class Client():
             case Client_State.LOCAL:
                 match self.__game.get_state():
                     case Game_State.SELECT_AVARTAR:
+                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.__screen)
                         self.set_dialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien",
                                             "ici demarre une nouvelle aventure ! Je t'invite à",
                                             "choisir un personnage parmi la liste suivante :"])
                         self.draw_dialogues_deb()
-                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.__screen)
                         image.Image(400, 585, image.Personnages.ROCK.value).affiche(self.__screen)
                         texte.Texte(joueur.Nom.ROCK.value, logique.Couleur.NOIR.value, 413, 650).affiche(self.__screen)
                         image.Image(500, 585, image.Personnages.WATER.value).affiche(self.__screen)
@@ -97,14 +98,16 @@ class Client():
                         texte.Texte(joueur.Nom.TOWN.value, logique.Couleur.NOIR.value, 613, 650).affiche(self.__screen)
                         image.Image(700, 585, image.Personnages.GRASS.value).affiche(self.__screen)
                         texte.Texte(joueur.Nom.GRASS.value, logique.Couleur.NOIR.value, 715, 650).affiche(self.__screen)
-                        self.draw_dialogues_deb()
                         pass
                     case Game_State.SELECT_ACTION:
                         pass
                     case Game_State.USE_DIE:
-                        image.Image(0,0,image.Page.BAS_PLATEAU.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                        self.Menu_bas(self.__local_player)
-                        image.Image()
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.__screen)
+                        self.Menu_bas(self.__game.get_current_player())
+                        self.set_dialogues(["Tu es le joueur " + str(self.__game.get_current_player().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement ↑ ↓ → ←"])
+                        self.draw_dialogues()
+                        # Affiche le de sur la face 1
+                        image.Image(350,475,image.De.FACE1.value).affiche(self.__screen)
                     case Game_State.MOVE_PLAYER:
                         pass
                     case Game_State.STAY_ON_CASE:
@@ -154,16 +157,16 @@ class Client():
                         image.Image(500, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
                         image.Image(600, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
                         image.Image(700, 595, image.BtnMenu.BTN_4.value).affiche(self.__screen)
-        self.__clock.tick(60)
         pygame.display.update()
+        self.__clock.tick(60)
 
     # Bouton de retour en arrière dans les pages Helper, Nb_joueur, Nb_ia, Fin_du_jeu   
-    def mouse_on_btn_back():
+    def mouse_on_btn_back(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        return (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690)
+        return 40 <= mouse_x <= 100 and 40 <= mouse_y <= 100
 
     # Gestion des pages
-    def menu_logical(self,mouse_x:int, mouse_y:int, is_cliked:bool):
+    def menu_logical(self, mouse_x:int, mouse_y:int, is_cliked:bool):
         match self.__stateMenu :
             case Menu_State.INDEX:
                 if is_cliked:
@@ -175,21 +178,18 @@ class Client():
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
                         self.go_to_menu(Menu_State.NB_PLAYER)
                         self.__interface = Interface(True)
-
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         self.go_to_menu(Menu_State.HELPER)
-                    if (Client.mouse_on_btn_back()): # si appuie sur fleche retour
-                        self.go_to_menu(Menu_State.INDEX)
                 pass
             case Menu_State.GLOBALS_STATS:
                 if is_cliked:
-                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
+                    if (self.mouse_on_btn_back()): # si appuie sur fleche retour
                         self.go_to_menu(Menu_State.INDEX)
                         stats = True
                 pass
             case Menu_State.HELPER:
                 if is_cliked:
-                    if (Client.mouse_on_btn_back()): # si appuie sur fleche retour
+                    if (self.mouse_on_btn_back()) : # si appuie bouton play
                         self.go_to_menu(Menu_State.INDEX)
                 pass
 
@@ -197,7 +197,7 @@ class Client():
                 # Recuperer les coordonnees de la souris
                 selectable_nb_ia = self.__interface.selectable_nb_ia()
                 if is_cliked:
-                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
+                    if (self.mouse_on_btn_back()) : # si appuie bouton play
                         self.__interface.set_nb_IA(0)
                         self.go_to_menu(Menu_State.NB_PLAYER)
 
@@ -220,7 +220,7 @@ class Client():
                 pass
             case Menu_State.NB_PLAYER:
                 if is_cliked:
-                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
+                    if (self.mouse_on_btn_back()) : # si appuie bouton play
                         self.__interface = None
                         self.go_to_menu(Menu_State.INDEX)
                     # Si le personnage sur lequel on clique est J2
@@ -253,26 +253,64 @@ class Client():
                             self.go_to_menu(Menu_State.NB_IA)
                     pass
     
+    def affichage_cle(self,joueur):
+        """
+            La fonction affichage_cle permet d'afficher les cle dans le menu(int x, int y, Surface surface, Font font)
+        """
+        for i in joueur.get_inventaire():
+            if i == "cle de la Ville" :
+                image.Image(660,640,image.Cle.TOWN.value).affichage_image_redimensionnee(48,30,self.__screen)
+            elif i == "cle de la Rivière" :
+                image.Image(660,595,image.Cle.WATER.value).affichage_image_redimensionnee(48,30,self.__screen)
+            elif i == "cle de la Forêt" :
+                image.Image(725,595,image.Cle.GRASS.value).affichage_image_redimensionnee(48,30,self.__screen)
+            elif i == "cle du Rocher" :
+                image.Image(725,640,image.Cle.ROCK.value).affichage_image_redimensionnee(48,30,self.__screen)
+        pygame.draw.line(self.__screen, logique.Couleur.NOIR.value, (660, 632), (770, 632), 2)
+        pygame.draw.line(self.__screen, logique.Couleur.NOIR.value, (715, 595), (715, 670), 2)
+
+    # Definir l'affichage sur le menu
+    def affichage_image(self,x,y,joueur):
+        """
+            La fonction affichage_image permet d'afficher le personnage dans le menu(int x, int y, Surface surface, Font font)
+        """        
+        # Afficher l'image sur la fenetre
+        self.__screen.blit(joueur.get_image(), (x, y))
+        
+        # Dessiner le rectangle pour les pv du joueur
+        rectangle.Rectangle(500,590,130,35,logique.Couleur.VERT.value).affiche(self.__screen)
+    
+        # Charger les pv
+        texte.Texte(joueur.get_pv(),logique.Couleur.NOIR.value,538,598).affiche(self.__screen)
+        
+    def affichage_image_adv(self,x,y,joueur):
+        """Affiche l'image de l'ennemi dans le menu."""
+        image = pygame.image.load(joueur.get_image())
+        self.__screen.blit(image, (x,y))
+        rectangle.Rectangle(500, 635, 130, 35, logique.Couleur.ROUGE.value).affiche(self.__screen)
+        texte.Texte(joueur.get_pv(), logique.Couleur.NOIR.value, 538, 645).affiche(self.__screen)
+    
+    # Affichage de la partie basse du jeu en focntion du joueur qui joue
     def Menu_bas(self, un_joueur):
         # Dessiner la partie basse
-        pygame.draw.rect(self.get_fenetre(),logique.Couleur.GRIS.value,(10,580,780,102))
+        pygame.draw.rect(self.__screen,logique.Couleur.GRIS.value,(10,580,780,102))
         
         # Dessiner la place pour montrer les cles
-        rectangle.Rectangle(650,585,130,90,logique.Couleur.ROSE.value).affiche(self.get_fenetre())
+        rectangle.Rectangle(650,585,130,90,logique.Couleur.ROSE.value).affiche(self.__screen)
         self.affichage_cle(un_joueur)
         
         # Dessiner le rectangle pour les pv du joueur
-        rectangle.Rectangle(500,590,130,35,logique.Couleur.VERT.value).affiche(self.get_fenetre())
-        texte.Texte("PV joueur : ", logique.Couleur.NOIR.value, 500,590).affiche(self.get_police(),self.get_fenetre())
+        rectangle.Rectangle(500,590,130,35,logique.Couleur.VERT.value).affiche(self.__screen)
+        texte.Texte("PV joueur : ", logique.Couleur.NOIR.value, 500,590).affiche(self.__screen)
         
         # Dessiner les bords de la place pour les pv de l'adversaire
-        rectangle.Rectangle(500,635,130,35,logique.Couleur.ROUGE.value).affiche(self.get_fenetre())
+        rectangle.Rectangle(500,635,130,35,logique.Couleur.ROUGE.value).affiche(self.__screen)
 
         # Dessiner le rectangle pour les textes
-        rectangle.Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value).affiche(self.get_fenetre())
+        rectangle.Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value).affiche(self.__screen)
         
         # Cadre pour mettre le personnage choisi
-        rectangle.Rectangle(20,590,70,80,logique.Couleur.ROSE.value).affiche(self.get_fenetre())
+        rectangle.Rectangle(20,590,70,80,logique.Couleur.ROSE.value).affiche(self.__screen)
         
         # Prendre la variable du personnage choisi de "Position_choix_perso()""
         if un_joueur.get_prenom() == joueur.Nom.ROCK.value:
@@ -291,13 +329,11 @@ class Client():
             # Ajouter la photo de Pierre
             self.affichage_image(24,598,un_joueur)
                 
-        # Mettre à jour l'affichage
-        pygame.display.update()
-    
     # Boucle du jeu lorsque le jeu est démarrer qui permet de gérer les événements
     def main(self):
         self.go_to_menu(Menu_State.INDEX)
         while (self.__stateClient != Client_State.QUIT):
+            self.draw()
             click = False
             dir = direction.ANY
 
@@ -337,7 +373,6 @@ class Client():
                     pass
                 case Client_State.QUIT:
                     pass
-            self.draw()
             
             
             
