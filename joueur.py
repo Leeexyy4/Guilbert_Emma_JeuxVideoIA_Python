@@ -2,6 +2,7 @@
 
 # Bibliotheques utilisees pour le code
 import pygame, random
+from utils import image
 # from utils import texte, couleur, image, rectangle, logique
 
 from enum import Enum

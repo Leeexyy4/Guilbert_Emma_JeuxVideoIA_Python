@@ -2,7 +2,7 @@
 
 # Bibliotheques utilisees pour le code
 import pygame 
-from logique import Couleur
+from .logique import Couleur
 
 class Rectangle:
     """La classe Rectangle est une classe qui permet de creer les rectangles du menu"""
@@ -74,7 +74,7 @@ class Rectangle:
         """
         self.__hauteur = hauteur
     
-    def set_couleur(self, couleur:couleur):
+    def set_couleur(self, couleur:Couleur):
         """_summary_
             Setter de la couleur du rectangle
         """

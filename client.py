@@ -1,9 +1,9 @@
 
 from enum import Enum
-import pygame
+import pygame, joueur
 from interface import Interface
 from game import Game, Game_State
-from utils import image, texte, logique
+from utils import image, texte, logique, rectangle
 from input import inputs, direction
 
 class Client_State(Enum):
@@ -33,21 +33,19 @@ class Menu_State(Enum):
     NB_PLAYER = 6
     NB_IA = 7
 
-class Main():
+class Client():
     def __init__(self) -> None:
         self.__clock:pygame.time.Clock =  pygame.time.Clock()
         self.__screen = pygame.display.set_mode((800, 700))
         self.__stateMenu:Menu_State = None
         self.__stateClient:Client_State = None
-        # self.__game = self.__interface.generate_Game()
-        # self.__local_player = [i for i in range(self.__game.get_players())]
         self.reset_out_of_game()
-        self.main()
         
     def go_to_menu(self, menu_state:Menu_State):
         self.__stateMenu = menu_state
         print(self.__stateMenu)
         self.change_state(Client_State.MENU)
+
     def change_state(self, client_state:Client_State):
         self.__stateClient = client_state
         if self.__stateClient == Client_State.MENU and self.__stateMenu not in [Menu_State.NB_PLAYER, Menu_State.NB_IA]: self.reset_out_of_game()
@@ -55,13 +53,17 @@ class Main():
             self.__game = self.__interface.generate_Game()
             self.__local_player =[i for i in range(len(self.__game.get_players()))]
         print(self.__stateClient)
+
     def reset_out_of_game(self):
         self.__interface = None
         self.__game = None
         self.__local_player:list[int] = []
+
+    # Affichage de la partie graphique en fonction 
     def draw(self):
         self.__screen.fill(logique.Couleur.NOIR.value)
         match self.__stateClient :
+
             case Client_State.LOCAL:
                 match self.__game:
                     case Game_State.SELECT_AVARTAR:
@@ -69,7 +71,9 @@ class Main():
                     case Game_State.SELECT_ACTION:
                         pass
                     case Game_State.USE_DIE:
-                        pass
+                        image.Image(0,0,image.Page.BAS_PLATEAU.value).affichage_image_redimensionnee(800, 700,self.__screen)
+                        self.Menu_bas(self.__local_player)
+                        image.Image()
                     case Game_State.MOVE_PLAYER:
                         pass
                     case Game_State.STAY_ON_CASE:
@@ -84,6 +88,7 @@ class Main():
                         pass
                     case Game_State.SWITCH_PLAYER:
                         pass
+                print(self.__game.get_state())
 
             case Client_State.MENU:
                 match self.__stateMenu :
@@ -110,8 +115,7 @@ class Main():
                             image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
                             image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
                         if 4 in selectable_nb_ia :
-                            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", self.get_couleur().get_Noir(), 30, 600).affiche(self.get_police(),self.__screen)
-
+                            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", logique.Couleur.NOIR.value, 30, 600).affiche(self.get_police(),self.__screen)
 
                     case Menu_State.NB_PLAYER:
                         image.Image(0, 0, image.Page.CHOIX_NB_JOUEUR.value).affichage_image_redimensionnee(800, 700,self.__screen)
@@ -121,11 +125,13 @@ class Main():
                         image.Image(700, 595, image.BtnMenu.BTN_4.value).affiche(self.__screen)
         self.__clock.tick(60)
         pygame.display.update()
-            
+
+    # Bouton de retour en arrière dans les pages Helper, Nb_joueur, Nb_ia, Fin_du_jeu   
     def mouse_on_btn_back():
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690)
 
+    # Gestion des pages
     def menu_logical(self,mouse_x:int, mouse_y:int, is_cliked:bool):
         match self.__stateMenu :
             case Menu_State.INDEX:
@@ -141,7 +147,7 @@ class Main():
                         
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         self.go_to_menu(Menu_State.HELPER)
-                    if (Main.mouse_on_btn_back()): # si appuie sur fleche retour
+                    if (Client.mouse_on_btn_back()): # si appuie sur fleche retour
                         self.go_to_menu(Menu_State.INDEX)
                 pass
             case Menu_State.GLOBALS_STATS:
@@ -152,7 +158,7 @@ class Main():
                 pass
             case Menu_State.HELPER:
                 if is_cliked:
-                    if (Main.mouse_on_btn_back()): # si appuie sur fleche retour
+                    if (Client.mouse_on_btn_back()): # si appuie sur fleche retour
                         self.go_to_menu(Menu_State.INDEX)
                 pass
             
@@ -216,16 +222,48 @@ class Main():
                             self.go_to_menu(Menu_State.NB_IA)
                     pass
     
-    def game_logical(self,mouse_x:int, mouse_y:int, is_cliked:bool):
-        if self.__interface == None:
-            self.go_to_menu(Menu_State.INDEX)
-            
-            return
-    def game_draw(self):
+    def Menu_bas(self, un_joueur):
+        # Dessiner la partie basse
+        pygame.draw.rect(self.get_fenetre(),logique.Couleur.GRIS.value,(10,580,780,102))
         
-        image.Image(0,0,image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
-        # Dessiner le cadre du bas afin de cacher les anciennes ecritures
-        rectangle.Rectangle(10,580,780,100,self.get_couleur().get_Gris()).affiche(self.get_fenetre())
+        # Dessiner la place pour montrer les cles
+        rectangle.Rectangle(650,585,130,90,logique.Couleur.ROSE.value).affiche(self.get_fenetre())
+        self.affichage_cle(un_joueur)
+        
+        # Dessiner le rectangle pour les pv du joueur
+        rectangle.Rectangle(500,590,130,35,logique.Couleur.VERT.value).affiche(self.get_fenetre())
+        texte.Texte("PV joueur : ", logique.Couleur.NOIR.value, 500,590).affiche(self.get_police(),self.get_fenetre())
+        
+        # Dessiner les bords de la place pour les pv de l'adversaire
+        rectangle.Rectangle(500,635,130,35,logique.Couleur.ROUGE.value).affiche(self.get_fenetre())
+
+        # Dessiner le rectangle pour les textes
+        rectangle.Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value).affiche(self.get_fenetre())
+        
+        # Cadre pour mettre le personnage choisi
+        rectangle.Rectangle(20,590,70,80,logique.Couleur.ROSE.value).affiche(self.get_fenetre())
+        
+        # Prendre la variable du personnage choisi de "Position_choix_perso()""
+        if un_joueur.get_prenom() == joueur.Nom.ROCK.value:
+            # Ajouter la photo de Pierre
+            self.affichage_image(24,598,un_joueur)
+        
+        if un_joueur.get_prenom() == joueur.Nom.WATER.value:
+            # Ajouter la photo de Ondine
+            self.affichage_image(24,598,un_joueur)
+        
+        if un_joueur.get_prenom() == joueur.Nom.GRASS.value:
+            # Ajouter la photo de Pierre
+            self.affichage_image(24,598,un_joueur)
+        
+        if un_joueur.get_prenom() == joueur.Nom.TOWN.value:
+            # Ajouter la photo de Pierre
+            self.affichage_image(24,598,un_joueur)
+                
+        # Mettre à jour l'affichage
+        pygame.display.update()
+    
+    # Boucle du jeu lorsque le jeu est démarrer qui permet de gérer les événements
     def main(self):
         self.go_to_menu(Menu_State.INDEX)
         while (self.__stateClient != Client_State.QUIT):
@@ -233,12 +271,11 @@ class Main():
             dir = direction.ANY
             
             for event in pygame.event.get():
-                if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
+                if event.type == pygame.QUIT: # si le joueur quitte la fenetre
                     pygame.quit()
                     self.__stateClient = Client_State.QUIT
                     
                 if(event.type == pygame.MOUSEBUTTONUP): click = True
-                # print(click)
                     
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_z:
@@ -257,9 +294,7 @@ class Main():
                         dir = direction.WEST
                     elif event.key == pygame.K_LEFT:
                         dir = direction.WEST
-                    
-                    
-                    
+                     
             mouse_x, mouse_y = pygame.mouse.get_pos()
             match self.__stateClient :
                 case Client_State.MENU:
@@ -275,5 +310,5 @@ class Main():
             
             
             
-            
-Main()
+if __name__ == "__main__":
+    Client().main()

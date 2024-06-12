@@ -1,0 +1,2 @@
+Regler le problème lors de l'ajout d'un joueur dupplication de la case_depart dans case_decouvertes
+Regler le problème lors du passage de plusieurs joueurs sur la même case case_decouvertes est ingrémenter

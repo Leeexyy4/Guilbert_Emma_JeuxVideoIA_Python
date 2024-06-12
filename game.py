@@ -92,10 +92,12 @@ class Game():
                     elif (600 <= input.get_cursor_x() <= 700 and 582 <= input.get_cursor_y() <= 652 and not joueur.Joueur.town_is_used):
                         self.__players[self.__current_player] = joueur.Joueur(self.__current_player, start[0], start[1], joueur.Element.TOWN)
                         self.__state = Game_State.USE_DIE
+
             case Game_State.SELECT_ACTION:
                 if input.is_clicked(): 
                     if 220 <= input.get_cursor_x() <= 284 and 480 <= input.get_cursor_y() <= 544: self.__state = Game_State.DO_FIGHT_ACTION
                     if 510 <= input.get_cursor_x() <= 574 and 480 <= input.get_cursor_y() <= 544: self.__state = Game_State.USE_DIE
+            
             case Game_State.USE_DIE:
                 if input.is_clicked(): 
                     if 350 <= input.get_cursor_x() <= 435 and 475 <= input.get_cursor_y() <= 560:
@@ -124,7 +126,6 @@ class Game():
                         player.set_plateaux(player.get_plateaux()-1)
                         self.__die_value -=1
                         print(self.__die_value)
-                
                 
             case Game_State.STAY_ON_CASE:
                 # Rajouté les effets de la case

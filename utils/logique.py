@@ -1,7 +1,5 @@
 from enum import Enum
 
-
-
 class Couleur(Enum):
     """La classe Couleur est une classe qui permet de recuperer la couleur voulue grâce au getter."""
     
