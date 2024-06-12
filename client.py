@@ -65,6 +65,16 @@ class Main():
             case Client_State.LOCAL:
                 match self.__game:
                     case Game_State.SELECT_AVARTAR:
+                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.__screen)
+                        image.Image(400, 585, image.Personnages.ROCK.value).affiche(self.get_fenetre())
+                        texte.Texte(self.__game.get_current_player().get_prenom(), self.get_couleur().get_Noir(), 413, 650).affiche(self.get_police(), self.__screen)
+                        image.Image(500, 585, image.Personnages.WATER.value).affiche(self.__screen)
+                        texte.Texte(self.__game.get_current_player().get_prenom(), self.get_couleur().get_Noir(), 510, 650).affiche(self.get_police(), self._screen)
+                        image.Image(600, 585, image.Personnages.TOWN.value).affiche(self.get_fenetre())
+                        texte.Texte(self.__game.get_current_player().get_prenom(), self.get_couleur().get_Noir(), 613, 650).affiche(self.get_police(), self.get_fenetre())
+                        image.Image(700, 585, image.Personnages.GRASS.value).affiche(self.get_fenetre())
+                        texte.Texte(self.__game.get_current_player().get_prenom(), self.get_couleur().get_Noir(), 715, 650).affiche(self.get_police(), self.get_fenetre())
+
                         pass
                     case Game_State.SELECT_ACTION:
                         pass
