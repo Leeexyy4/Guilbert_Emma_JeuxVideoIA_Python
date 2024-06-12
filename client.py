@@ -1,12 +1,6 @@
 
 from enum import Enum
-<<<<<<< HEAD
 import pygame, joueur
-=======
-import pygame
-
-import joueur
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
 from interface import Interface
 from game import Game, Game_State
 from utils import image, texte, logique, rectangle
@@ -46,17 +40,9 @@ class Client():
         self.__screen = pygame.display.set_mode((800, 700))
         self.__stateMenu:Menu_State = None
         self.__stateClient:Client_State = None
-<<<<<<< HEAD
-        self.reset_out_of_game()
-        
-=======
-        # self.__game = self.__interface.generate_Game()
-        # self.__local_player = [i for i in range(self.__game.get_players())]
         self.__dialogues = ""
         self.reset_out_of_game()
-        self.main()
 
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
     def go_to_menu(self, menu_state:Menu_State):
         self.__stateMenu = menu_state
         print(self.__stateMenu)
@@ -75,28 +61,22 @@ class Client():
         self.__game = None
         self.__local_player:list[int] = []
 
-<<<<<<< HEAD
-    # Affichage de la partie graphique en fonction 
-=======
     def set_dialogues(self, dialogues: list[str]):
         """Setter de la dialogues."""
         self.__dialogues = dialogues
 
     def draw_dialogues(self):
         """dessiner les dialogues."""
-        Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value.affiche(self.get_fenetre())
+        Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value).affiche(self.get_fenetre())
         for idDialogue in range(len(self.__dialogues)):
-            texte.Texte(self.__dialogues[idDialogue], couleur.Couleur().get_Noir(), 110,
-                        600 + (20 * idDialogue)).affiche(self.get_police(), self.get_fenetre())
+            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 110, 600 + (20 * idDialogue)).affiche(self.get_police(), self.get_fenetre())
 
     def draw_dialogues_deb(self):
         """dessiner les dialogues."""
         Rectangle(10, 580, 780, 100, self.get_couleur().get_Gris()).affiche(self.get_fenetre())
         for idDialogue in range(len(self.__dialogues)):
-            texte.Texte(self.__dialogues[idDialogue], couleur.Couleur().get_Noir(), 30,
-                        600 + (20 * idDialogue)).affiche(self.get_police(), self.get_fenetre())
+            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 30, 600 + (20 * idDialogue)).affiche(self.get_police(), self.get_fenetre())
 
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
     def draw(self):
         self.__screen.fill(logique.Couleur.NOIR.value)
         match self.__stateClient :
@@ -177,10 +157,7 @@ class Client():
         self.__clock.tick(60)
         pygame.display.update()
 
-<<<<<<< HEAD
     # Bouton de retour en arrière dans les pages Helper, Nb_joueur, Nb_ia, Fin_du_jeu   
-=======
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
     def mouse_on_btn_back():
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690)
@@ -275,7 +252,6 @@ class Client():
                         else:
                             self.go_to_menu(Menu_State.NB_IA)
                     pass
-<<<<<<< HEAD
     
     def Menu_bas(self, un_joueur):
         # Dessiner la partie basse
@@ -319,19 +295,6 @@ class Client():
         pygame.display.update()
     
     # Boucle du jeu lorsque le jeu est démarrer qui permet de gérer les événements
-=======
-
-    def game_logical(self,mouse_x:int, mouse_y:int, is_cliked:bool):
-        if self.__interface == None:
-            self.go_to_menu(Menu_State.INDEX)
-
-            return
-    def game_draw(self):
-
-        image.Image(0,0,image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.get_fenetre())
-        # Dessiner le cadre du bas afin de cacher les anciennes ecritures
-        rectangle.Rectangle(10,580,780,100,self.get_couleur().get_Gris()).affiche(self.get_fenetre())
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
     def main(self):
         self.go_to_menu(Menu_State.INDEX)
         while (self.__stateClient != Client_State.QUIT):
@@ -344,12 +307,7 @@ class Client():
                     self.__stateClient = Client_State.QUIT
 
                 if(event.type == pygame.MOUSEBUTTONUP): click = True
-<<<<<<< HEAD
                     
-=======
-                # print(click)
-
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_z:
                         dir = direction.NORTH
@@ -367,13 +325,7 @@ class Client():
                         dir = direction.WEST
                     elif event.key == pygame.K_LEFT:
                         dir = direction.WEST
-<<<<<<< HEAD
                      
-=======
-
-
-
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
             mouse_x, mouse_y = pygame.mouse.get_pos()
             match self.__stateClient :
                 case Client_State.MENU:
@@ -386,16 +338,8 @@ class Client():
                 case Client_State.QUIT:
                     pass
             self.draw()
-<<<<<<< HEAD
             
             
             
 if __name__ == "__main__":
     Client().main()
-=======
-
-
-
-
-Main()
->>>>>>> 60ffc2592876d139bd83775a1e7dbe411fc5ef6e
