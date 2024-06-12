@@ -1,5 +1,6 @@
 # ----------------------- Jeu de plateau - Texte  ------------------------ #
-
+import pygame
+pygame.init()
 class Texte:
     """La classe Texte est une classe qui permet d'afficher le texte sur l'interface"""
     
@@ -39,10 +40,11 @@ class Texte:
         return self.__couleur
 
     # Definir l'affichage du texte sur l'interface'
-    def affiche(self,font,surface):
+    def affiche(self,surface):
         """_summary_
             La fonction affiche affiche le texte sur l'interface pygame(Font font, Surface surface)
         """
+        font = pygame.font.Font('./assets/font/times-new-roman.ttf')
         texte_surface = font.render(str(self.__texte), True, self.__couleur)
         surface.blit(texte_surface, (self.__x, self.__y))
         return
