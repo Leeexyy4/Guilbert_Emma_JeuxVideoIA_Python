@@ -68,6 +68,8 @@ class Client():
                     case Menu_State.NB_PLAYER:
                         image.Image(0, 0, image.Page.CHOIX_NB_JOUEUR.value).affiche(self.__screen)
                         rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.__screen)
+                        self.set_dialogues(["La sorciere du village vous a lancé un sort, pour","vous en sortir récuper la potion chez elle.","Combien de joueurs souhaitent jouer au jeu ?"])
+                        self.draw_dialogues_deb()
                         image.Image(400, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
                         image.Image(500, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
                         image.Image(600, 595, image.BtnMenu.BTN_3.value).affiche(self.__screen)
@@ -78,7 +80,7 @@ class Client():
                         selectable_nb_ia = self.__interface.selectable_nb_ia()
                         image.Image(0, 0, image.Page.CHOIX_NB_IA.value).affiche(self.__screen)
                         rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.__screen)
-                        self.set_dialogues(["La sorciere du village vous a lancé un sort, pour","vous en sortir récuper la potion chez elle.","Combien de joueurs souhaitent jouer au jeu ?"])
+                        self.set_dialogues(["Combien d'IA souhaites-tu ajouter au jeu ?"])
                         self.draw_dialogues_deb()
                         if 1 in selectable_nb_ia :
                             image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)

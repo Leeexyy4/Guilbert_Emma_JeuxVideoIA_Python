@@ -44,7 +44,7 @@ class Texte:
         """_summary_
             La fonction affiche affiche le texte sur l'interface pygame(Font font, Surface surface)
         """
-        font = pygame.font.Font('./assets/font/times-new-roman.ttf')
+        font = pygame.font.Font('./assets/font/times-new-roman.ttf',16)
         texte_surface = font.render(str(self.__texte), True, self.__couleur)
         surface.blit(texte_surface, (self.__x, self.__y))
         return
