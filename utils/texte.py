@@ -45,20 +45,9 @@ class Texte:
             La fonction affiche affiche le texte sur l'interface pygame(Font font, Surface surface)
         """
         font = pygame.font.Font('./assets/font/times-new-roman.ttf',16)
-        texte_surface = font.render(str(self.__texte), True, self.__couleur)
-        surface.blit(texte_surface, (self.__x, self.__y))
+        texte_surface = font.render(str(self.get_texte()), True, self.get_couleur())
+        surface.blit(texte_surface, (self.get_x(), self.get_y()))
         return
     
     
-        
-# Tests des fonctions
-"""
-if __name__ == "__main__":
-    
-    import pygame, couleur
-    
-    pygame.init()
-    
-    nouveau_dialogue = Texte("Coucou",couleur.Couleur().get_Beige(),20,50)
-    nouveau_dialogue.affiche(pygame.font.Font('./assets/font/times-new-roman.ttf', 16),pygame.display.set_mode((700,800)))
-"""
+ 

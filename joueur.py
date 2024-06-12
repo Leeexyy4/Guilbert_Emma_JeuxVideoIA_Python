@@ -59,17 +59,17 @@ class Joueur:
         """_summary_
             Getter du prenom du joueur
         """
-        if(self.__element == Element.GRASS): return Nom.GRASS.value
-        if(self.__element == Element.WATER): return Nom.WATER.value
-        if(self.__element == Element.TOWN): return Nom.TOWN.value
-        if(self.__element == Element.ROCK): return Nom.ROCK.value
+        if(self.get_element() == Element.GRASS): return Nom.GRASS.value
+        if(self.get_element() == Element.WATER): return Nom.WATER.value
+        if(self.get_element() == Element.TOWN): return Nom.TOWN.value
+        if(self.get_element() == Element.ROCK): return Nom.ROCK.value
         return None
     
     def get_image(self):
-        if(self.__element == Element.GRASS): return image.Personnages.GRASS.value
-        if(self.__element == Element.WATER): return image.Personnages.WATER.value
-        if(self.__element == Element.TOWN): return image.Personnages.TOWN.value
-        if(self.__element == Element.ROCK): return image.Personnages.ROCK.value
+        if(self.get_element() == Element.GRASS): return image.Personnages.GRASS.value
+        if(self.get_element() == Element.WATER): return image.Personnages.WATER.value
+        if(self.get_element() == Element.TOWN): return image.Personnages.TOWN.value
+        if(self.get_element() == Element.ROCK): return image.Personnages.ROCK.value
         return None
 
     def get_id(self):
@@ -119,8 +119,6 @@ class Joueur:
                 Getter de l'attaque sur le plateau
             """
             return self.__attaque
-        
-        
             
     def set_lien(self, lien):
         """_summary_
@@ -136,18 +134,18 @@ class Joueur:
     
     def set_element(self, element):
         """_summary_
-            Setter de l'__element du joueur
+            Setter de l'element du joueur
         """
-        if(self.__element == None): pass
-        elif(self.__element == Element.GRASS): Joueur.grass_is_used = False
-        elif(self.__element == Element.WATER): Joueur.water_is_used = False
-        elif(self.__element == Element.TOWN): Joueur.town_is_used = False
+        if(self.get_element() == None): pass
+        elif(self.get_element() == Element.GRASS): Joueur.grass_is_used = False
+        elif(self.get_element() == Element.WATER): Joueur.water_is_used = False
+        elif(self.get_element() == Element.TOWN): Joueur.town_is_used = False
         else: Joueur.rock_is_used = False
-        self.__element = element
-        if(self.__element == Element.ROCK): Joueur.rock_is_used = True
-        elif(self.__element == Element.GRASS): Joueur.grass_is_used = True
-        elif(self.__element == Element.WATER): Joueur.water_is_used = True
-        elif(self.__element == Element.TOWN): Joueur.town_is_used = True
+        self.set_element(element)
+        if(self.get_element() == Element.ROCK): Joueur.rock_is_used = True
+        elif(self.get_element() == Element.GRASS): Joueur.grass_is_used = True
+        elif(self.get_element() == Element.WATER): Joueur.water_is_used = True
+        elif(self.get_element() == Element.TOWN): Joueur.town_is_used = True
         
     def set_inventaire(self,inventaire):
         """_summary_

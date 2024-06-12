@@ -2,7 +2,17 @@ from utils.logique import CASE_TYPE
 import random
 class Plateau():
     """La classe Plateau définit le type des cases présentes sur le plateau."""
-    nom_case:dict = {
+
+    def __init__(self) -> None:
+        """_summary_
+            Initialisation du Plateau
+        """
+        # Définir le plateau
+        self.__plateau:list[CASE_TYPE] = []
+        self.__casesDecouvertes:list = []
+        self.__tailleCase = 800 // 17
+
+        self.__nomCase:dict = {
             CASE_TYPE.BOSS: "Boss",
             CASE_TYPE.LUCK: "Chance",
             CASE_TYPE.UNLUCK: "Malus",
@@ -16,7 +26,8 @@ class Plateau():
             CASE_TYPE.DEATH: "Mort",
             CASE_TYPE.SPAWN: "Départ"
         }
-    max_cases:dict = {
+
+        self.__maxCases:dict = {
             CASE_TYPE.BOSS: 4,
             CASE_TYPE.LUCK: 26,
             CASE_TYPE.UNLUCK: 29,
@@ -30,39 +41,34 @@ class Plateau():
             CASE_TYPE.SPAWN:1,
             CASE_TYPE.NOTHING:55
         }
-    taille_case = 800 // 17
-    def __init__(self) -> None:
-        """_summary_
-            Initialisation du Plateau
-        """
-        # Définir le plateau
-        self.__plateau:list[CASE_TYPE] = []
-        # Définir la taille d'une case
-        self.__cases_decouvertes:list = []
+
+        # A retirer à la fin
         for ligne in range(10):
             for colonne in range(17):
-                self.__cases_decouvertes.append((ligne, colonne))
+                self.setCasesDecouvertes(((ligne, colonne)))
+        ########################
         
         self.remplirPlateauAleatoirement()
-                
-
-    def getNombreIA(self)-> int:
-        """Renvoie le nombre d'IA"""
-        return self.__nb_IA
-    def getNombreJoueur(self)-> int:
-        """Renvoie le nombre d'IA"""
-        return self.__nb_player
 
     def getPlateau(self):
         """Renvoie le plateau de jeu."""
         return self.__plateau
+
+    def getMaxCase(self):
+        """Renvoie le plateau de jeu."""
+        return self.__maxCases
+    
+    def getTailleCase(self):
+        """Renvoie le plateau de jeu."""
+        return self.__tailleCase
+
     def getNomCase(self):
         """Renvoie le nom_case de jeu."""
-        return self.__nom_case
+        return self.__nomCase
     
     def getCasesDecouvertes(self):
         """Renvoie les cases decouvertes de jeu."""
-        return self.__cases_decouvertes
+        return self.__casesDecouvertes
 
     def getCases(self, ligne, colonne):
         """Renvoie la couleur de la case à la position spécifiée."""
@@ -71,7 +77,7 @@ class Plateau():
     def getNom(self, ligne, colonne):
         """Renvoie le nom de la case à la position spécifiée."""
         couleur_case = self.getPlateau()[ligne][colonne]  # Obtenir la couleur de la case
-        nom_case = self.__nom_case[couleur_case]
+        nom_case = self.getNomCase()[couleur_case]
         return nom_case
     
     def getCaseJaune(self):
@@ -93,20 +99,19 @@ class Plateau():
                         coord_case_indigo = (ligne, colonne)
         return coord_case_indigo
 
-    
     def setPlateau(self, plateau):
         """Modifie le plateau de jeu."""
         self.__plateau = plateau
 
-    def setCasesDecouvertes(self, cases_decouvertes):
+    def setCasesDecouvertes(self, casesDecouvertes):
         """Modifie les cases decouvertes de jeu."""
-        self.__cases_decouvertes = cases_decouvertes
+        self.__casesDecouvertes = casesDecouvertes
         
     def remplirPlateauAleatoirement(self):
         """Remplit le plateau de manière aléatoire en fonction de max_couleur."""
         # Crée une liste des couleurs disponibles en fonction de max_couleur
         couleurs_disponibles = []
-        for couleurs, nombre_max in Plateau.max_cases.items():
+        for couleurs, nombre_max in self.getMaxCase().items():
             couleurs_disponibles.extend([couleurs] * nombre_max)
 
          # Remplit le plateau de manière aléatoire
@@ -118,5 +123,5 @@ class Plateau():
                     couleurs_disponibles.remove(couleur_aleatoire)  # Supprime la couleur de la liste
                     ligne_plateau.append(couleur_aleatoire)
         
-            self.__plateau.append(ligne_plateau)
-        return self.__plateau
+            self.getPlateau().append(ligne_plateau)
+        return self.getPlateau()

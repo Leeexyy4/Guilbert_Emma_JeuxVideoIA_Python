@@ -85,13 +85,13 @@ class Rectangle:
         """_summary_
             La fonction affiche affiche le rectangle et ses contours noirs sur l'interface pygame(Surface surface, Triplet int couleur)
         """
-        pygame.draw.rect(surface,self.__couleur,(self.__x,self.__y,self.__largeur,self.__hauteur))
+        pygame.draw.rect(surface,self.get_couleur(),(self.get_x(),self.get_y(),self.get_largeur(),self.get_hauteur()))
         
         # Dessiner les bords de la place pour les cles
-        pygame.draw.line(surface,(0, 0, 0),(self.__x,self.__y),(self.__x + self.__largeur,self.__y),2)
-        pygame.draw.line(surface,(0, 0, 0),(self.__x,self.__y),(self.__x,self.__y + self.__hauteur),2)
-        pygame.draw.line(surface,(0, 0, 0),(self.__x + self.__largeur,self.__y),(self.__x + self.__largeur,self.__y + self.__hauteur),2)
-        pygame.draw.line(surface,(0, 0, 0),(self.__x ,self.__y + self.__hauteur),(self.__x + self.__largeur,self.__y + self.__hauteur),2)
+        pygame.draw.line(surface,(0, 0, 0),(self.get_x(),self.get_y()),(self.get_x() + self.get_largeur(),self.get_y()),2)
+        pygame.draw.line(surface,(0, 0, 0),(self.get_x(),self.get_y()),(self.get_x(),self.get_y() + self.get_hauteur()),2)
+        pygame.draw.line(surface,(0, 0, 0),(self.get_x() + self.get_largeur(),self.get_y()),(self.get_x() + self.get_largeur(),self.get_y() + self.get_hauteur()),2)
+        pygame.draw.line(surface,(0, 0, 0),(self.get_x() ,self.get_y() + self.get_hauteur()),(self.get_x() + self.get_largeur(),self.get_y() + self.get_hauteur()),2)
         return
 
     def affiche_contour(self,surface,contour):
@@ -99,10 +99,10 @@ class Rectangle:
             La fonction affiche affiche le rectangle et ses contours noirs sur l'interface pygame(Surface surface)
         """        
         # Dessiner les bords de la place pour les cles
-        pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x + self.__largeur,self.__y),5)
-        pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x,self.__y + self.__hauteur),5)
-        pygame.draw.line(surface,contour,(self.__x + self.__largeur,self.__y),(self.__x + self.__largeur,self.__y + self.__hauteur),5)
-        pygame.draw.line(surface,contour,(self.__x ,self.__y + self.__hauteur),(self.__x + self.__largeur,self.__y + self.__hauteur),5)
+        pygame.draw.line(surface,contour,(self.get_x(),self.get_y()),(self.get_x() + self.get_largeur(),self.get_y()),5)
+        pygame.draw.line(surface,contour,(self.get_x(),self.get_y()),(self.get_x() + self.get_largeur(),self.get_y()),5)
+        pygame.draw.line(surface,contour,(self.get_x() + self.get_largeur(),self.get_y()),(self.get_x() + self.get_largeur(),self.get_y() + self.get_hauteur()),5)
+        pygame.draw.line(surface,contour,(self.get_x(), self.get_y() + self.get_hauteur()),(self.get_x() + self.get_largeur(),self.get_y() + self.get_hauteur()),5)
         return
     
     def affiche_contour_couleur(self,surface,contour):
@@ -110,21 +110,11 @@ class Rectangle:
             La fonction affiche affiche le rectangle et ses contours colores sur l'interface pygame(Surface surface)
         """     
         
-        pygame.draw.rect(surface,self.__couleur,(self.__x,self.__y,self.__largeur,self.__hauteur))
+        pygame.draw.rect(surface,self.get_couleur(),(self.get_x(),self.get_y(),self.get_largeur(),self.get_hauteur()))
            
         # Dessiner les bords de la place pour les cles
-        pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x + self.__largeur,self.__y),5)
-        pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x,self.__y + self.__hauteur),5)
-        pygame.draw.line(surface,contour,(self.__x + self.__largeur,self.__y),(self.__x + self.__largeur,self.__y + self.__hauteur),5)
-        pygame.draw.line(surface,contour,(self.__x ,self.__y + self.__hauteur),(self.__x + self.__largeur,self.__y + self.__hauteur),5)
+        pygame.draw.line(surface,contour,(self.get_x(),self.get_y()),(self.get_x() + self.get_largeur(),self.get_y()),5)
+        pygame.draw.line(surface,contour,(self.get_x(),self.get_y()),(self.get_x(),self.get_y() + self.get_hauteur()),5)
+        pygame.draw.line(surface,contour,(self.get_x() + self.get_largeur(),self.get_y()),(self.get_x() + self.get_largeur(),self.get_y() + self.get_hauteur()),5)
+        pygame.draw.line(surface,contour,(self.get_x() ,self.get_y() + self.get_hauteur()),(self.get_x() + self.get_largeur(),self.get_y() + self.get_hauteur()),5)
         return
-        
-# Tests des fonctions
-"""
-if __name__ == "__main__":
-    
-    import couleur
-    
-    nouveau_rectangle = Rectangle(50,50,100,100)
-    nouveau_rectangle.affiche(pygame.display.set_mode((700,800)),couleur.Couleur().get_Beige())
-"""

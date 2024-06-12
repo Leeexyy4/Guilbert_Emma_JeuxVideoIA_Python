@@ -99,7 +99,7 @@ class Client():
     
     def getGame(self):
         """Renvoie la game"""
-        return self.getGame()
+        return self.__game
 
     def setGame(self, game):
         """Modifie la game"""
@@ -160,22 +160,22 @@ class Client():
     def afficheDialogues(self):
         """Afficher les dialogues."""
         Rectangle(100, 590, 390, 80, logique.Couleur.BEIGE.value).affiche(self.getFenetre())
-        for idDialogue in range(len(self.__dialogues)):
-            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 110, 600 + (20 * idDialogue)).affiche(self.getFenetre())
+        for idDialogue in range(len(self.getDialogues())):
+            texte.Texte(self.getDialogues()[idDialogue], logique.Couleur.NOIR.value, 110, 600 + (20 * idDialogue)).affiche(self.getFenetre())
 
     def afficheDialoguesDeb(self):
         """Afficher les dialogues du début"""
         Rectangle(10, 580, 780, 100, logique.Couleur.GRIS.value).affiche(self.getFenetre())
-        for idDialogue in range(len(self.__dialogues)):
-            texte.Texte(self.__dialogues[idDialogue], logique.Couleur.NOIR.value, 30, 600 + (20 * idDialogue)).affiche(self.getFenetre())
+        for idDialogue in range(len(self.getDialogues())):
+            texte.Texte(self.getDialogues()[idDialogue], logique.Couleur.NOIR.value, 30, 600 + (20 * idDialogue)).affiche(self.getFenetre())
 
     def plateauCache(self):
         """Cache le plateau en le dessinant entièrement en noir."""
         for ligne in range(10):
             for colonne in range(17):
-                x = colonne * self.getGame().__plateau.taille_case  # Coordonnée X du coin supérieur gauche du rectangle
-                y = ligne * self.getGame().__plateau.taille_case  # Coordonnée Y du coin supérieur gauche du rectangle          
-                rectangle = pygame.Rect(x, y, self.getGame().__plateau.taille_case, self.getGame().__plateau.taille_case)  # Créer un rectangle
+                x = colonne * self.getGame().getPlateau().getTailleCase()  # Coordonnée X du coin supérieur gauche du rectangle
+                y = ligne * self.getGame().getPlateau().getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
+                rectangle = pygame.Rect(x, y, self.getGame().getPlateau().getTailleCase(), self.getGame().getPlateau().getTailleCase())  # Créer un rectangle
                 pygame.draw.rect(self.getFenetre(), logique.Couleur.NOIR.value, rectangle)  # Dessiner le rectangle avec la couleur
         self.miseAJourPlateau()
         self.afficheJoueurs()
@@ -183,14 +183,14 @@ class Client():
     def miseAJourPlateau(self):
         """Met à jour le plateau en affichant les cases découvertes."""
         font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
-        for i in self.getGame().__plateau.__cases_decouvertes:
-            couleur_case = self.getGame().__plateau[i[0]][i[1]]  # Obtenir la couleur de la case
-            x = i[1] * self.getGame().__plateau.taille_case  # Coordonnée X du coin supérieur gauche du rectangle
-            y = i[0] * self.getGame().__plateau.taille_case  # Coordonnée Y du coin supérieur gauche du rectangle          
-            rectangle = pygame.Rect(x, y, self.getGame().__plateau.taille_case, self.getGame().__plateau.taille_case)  # Créer un rectangle
+        for i in self.getGame().getPlateau().getCasesDecouvertes():
+            couleur_case = self.getGame().getPlateau()[i[0]][i[1]]  # Obtenir la couleur de la case
+            x = i[1] * self.getGame().getPlateau().getTailleCase()  # Coordonnée X du coin supérieur gauche du rectangle
+            y = i[0] * self.getGame().getPlateau().getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
+            rectangle = pygame.Rect(x, y, self.getGame().getPlateau().getTailleCase(), self.getGame().getPlateau().getTailleCase())  # Créer un rectangle
             pygame.draw.rect(self.getFenetre(), couleur_case, rectangle)  # Dessiner le rectangle avec la couleur
-            if (self.getGame().__plateau.get_nom_case()[couleur_case] != "Vide") and (self.getGame().__plateau.get_nom_case()[couleur_case] != "Mort") and (self.getGame().__plateau.get_nom_case()[couleur_case] != "Départ/arrivée"):
-                texte.Texte(self.getGame().__plateau.get_nom_case()[couleur_case], logique.Couleur.NOIR.value, x + 9, y + 15).affiche(self.getFenetre())
+            if (self.getGame().getPlateau().getNomCase()[couleur_case] != "Vide") and (self.getGame().getPlateau().getNomCase()[couleur_case] != "Mort") and (self.getGame().getPlateau().getNomCase()[couleur_case] != "Départ/arrivée"):
+                texte.Texte(self.getGame().getPlateau().getNomCase()[couleur_case], logique.Couleur.NOIR.value, x + 9, y + 15).affiche(self.getFenetre())
 
     # Définir l'affichage des clés dans l'inventaire du joueur
     def afficheCle(self,joueur):
@@ -199,13 +199,13 @@ class Client():
         """
         for i in joueur.get_inventaire():
             if i == "cle de la Ville" :
-                image.Image(660,640,image.Cle.TOWN.value).afficheImage_redimensionnee(48,30,self.getFenetre())
+                image.Image(660,640,image.Cle.TOWN.value).affichageImageRedimensionnee(48,30,self.getFenetre())
             elif i == "cle de la Rivière" :
-                image.Image(660,595,image.Cle.WATER.value).afficheImage_redimensionnee(48,30,self.getFenetre())
+                image.Image(660,595,image.Cle.WATER.value).affichageImageRedimensionnee(48,30,self.getFenetre())
             elif i == "cle de la Forêt" :
-                image.Image(725,595,image.Cle.GRASS.value).afficheImage_redimensionnee(48,30,self.getFenetre())
+                image.Image(725,595,image.Cle.GRASS.value).affichageImageRedimensionnee(48,30,self.getFenetre())
             elif i == "cle du Rocher" :
-                image.Image(725,640,image.Cle.ROCK.value).afficheImage_redimensionnee(48,30,self.getFenetre())
+                image.Image(725,640,image.Cle.ROCK.value).affichageImageRedimensionnee(48,30,self.getFenetre())
         pygame.draw.line(self.getFenetre(), logique.Couleur.NOIR.value, (660, 632), (770, 632), 2)
         pygame.draw.line(self.getFenetre(), logique.Couleur.NOIR.value, (715, 595), (715, 670), 2)
 
@@ -232,15 +232,15 @@ class Client():
         texte.Texte(joueur.get_pv(), logique.Couleur.NOIR.value, 538, 645).affiche(self.getFenetre())
     
     # Definir l'affichage sur le plateau
-    def afficheImagePlateau(self,joueur):
+    def afficheImagePlateau(self):
         """
             La fonction afficheImage_plateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
         """
         # Charger l'image
-        image_redimensionnee = pygame.transform.scale(self.getGame().get_current_player().get_image(), (47, 47))
+        image_redimensionnee = pygame.transform.scale(self.getGame().getJoueurActuel().get_image(), (47, 47))
         
         # Afficher l'image redimensionnee sur la fenetre
-        self.getFenetre().blit(image_redimensionnee, (self.getGame().get_current_player().get_x(), self.getGame().get_current_player().get_y()))
+        self.getFenetre().blit(image_redimensionnee, (self.getGame().getJoueurActuel().get_x(), self.getGame().getJoueurActuel().get_y()))
         
         # Mettre à jour l'affichage
         pygame.display.update()        
@@ -317,7 +317,6 @@ class Client():
                     # Page du nombre de joueurs
                     case PartieState.NB_PLAYER:
                         image.Image(0, 0, image.Page.CHOIX_NB_JOUEUR.value).affiche(self.getFenetre())
-                        rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.getFenetre())
                         self.setDialogues(["La sorciere du village vous a lancé un sort, pour","vous en sortir récuper la potion chez elle.","Combien de joueurs souhaitent jouer au jeu ?"])
                         self.afficheDialoguesDeb()
                         image.Image(400, 595, image.BtnMenu.BTN_1.value).affiche(self.getFenetre())
@@ -327,9 +326,8 @@ class Client():
 
                     # Page du nombre de ia
                     case PartieState.NB_IA:
-                        selectable_nb_ia = self.__interface.selectable_nb_ia()
+                        selectable_nb_ia = self.getInterface().selectionnableNombreIA()
                         image.Image(0, 0, image.Page.CHOIX_NB_IA.value).affiche(self.getFenetre())
-                        rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.getFenetre())
                         self.setDialogues(["Combien d'IA souhaites-tu ajouter au jeu ?"])
                         self.afficheDialoguesDeb()
                         if 1 in selectable_nb_ia :
@@ -345,17 +343,17 @@ class Client():
                             image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.getFenetre())
                             image.Image(500, 595, image.BtnMenu.BTN_1.value).affiche(self.getFenetre())
                         if 4 in selectable_nb_ia :
-                            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", logique.Couleur.NOIR.value, 30, 600).affiche(self.get_police(),self.getFenetre())
+                            texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", logique.Couleur.NOIR.value, 30, 600).affiche(self.getFenetre())
 
                 
             # Boucle de la game Local
             case ClientState.LOCAL:
+                self.setGame(self.getInterface().genererPartie())
+                self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
                 match self.getGame().getEtat():
-                    case GameState.SELECT_AVATAR:
-                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).afficheImage_redimensionnee(800, 700,self.getFenetre())
-                        self.setDialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien",
-                                            "ici demarre une nouvelle aventure ! Je t'invite à",
-                                            "choisir un personnage parmi la liste suivante :"])
+                    case game.GameState.SELECT_AVATAR:
+                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                        self.setDialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien","ici demarre une nouvelle aventure ! Je t'invite à","choisir un personnage parmi la liste suivante :"])
                         self.afficheDialoguesDeb()
                         image.Image(400, 585, image.Personnages.ROCK.value).affiche(self.getFenetre())
                         texte.Texte(joueur.Nom.ROCK.value, logique.Couleur.NOIR.value, 413, 650).affiche(self.getFenetre())
@@ -365,34 +363,34 @@ class Client():
                         texte.Texte(joueur.Nom.TOWN.value, logique.Couleur.NOIR.value, 613, 650).affiche(self.getFenetre())
                         image.Image(700, 585, image.Personnages.GRASS.value).affiche(self.getFenetre())
                         texte.Texte(joueur.Nom.GRASS.value, logique.Couleur.NOIR.value, 715, 650).affiche(self.getFenetre())
-                    case GameState.SELECT_ACTION:
+                    case game.GameState.SELECT_ACTION:
                         pass
-                    case GameState.USE_DIE:
+                    case game.GameState.USE_DIE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.Menu_bas(self.getGame().get_current_player())
-                        self.set_dialogues(["Tu es le joueur " + str(self.getGame().get_current_player().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement ↑ ↓ → ←"])
-                        self.draw_dialogues()
+                        self.MenuBas(self.getGame().getJoueurActuel())
+                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getJoueurActuel().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement", "haut, bas, gauche ou droite"])
+                        self.afficheDialogues()
                         # Affiche le de sur la face 1
                         image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
-                    case GameState.MOVE_PLAYER:
+                    case game.GameState.MOVE_PLAYER:
                         pass
-                    case GameState.STAY_ON_CASE:
+                    case game.GameState.STAY_ON_CASE:
                         pass
-                    case GameState.FIGHT:
+                    case game.GameState.FIGHT:
                         pass
-                    case GameState.WAIT_FIGHT_ACTION:
+                    case game.GameState.WAIT_FIGHT_ACTION:
                         pass
-                    case GameState.DO_FIGHT_ACTION:
+                    case game.GameState.DO_FIGHT_ACTION:
                         pass
-                    case GameState.DEAD:
+                    case game.GameState.DEAD:
                         pass
-                    case GameState.SWITCH_PLAYER:
+                    case game.GameState.SWITCH_PLAYER:
                         pass
-                print(self.getGame().get_state())
+                print(self.getGame().getEtat())
 
             
         pygame.display.update()
-        self.__clock.tick(60)  
+        self.getClock().tick(60)  
 
     # Gestion des pages
     def menu_logical(self, mouse_x:int, mouse_y:int, is_cliked:bool):
@@ -403,10 +401,10 @@ class Client():
                         self.setEtatPartie(PartieState.GLOBALS_STATS)
                     if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # si appuie bouton en local
                         self.setEtatPartie(PartieState.NB_PLAYER)
-                        self.__interface = interface.Interface(False)
+                        self.setInterface(interface.Interface(False))
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
                         self.setEtatPartie(PartieState.NB_PLAYER)
-                        self.__interface = interface.Interface(True)
+                        self.setInterface(interface.Interface(True))
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         self.setEtatPartie(PartieState.HELPER)
                 pass
@@ -420,67 +418,66 @@ class Client():
                 if is_cliked:
                     if (self.boutonRetour()) : # si appuie bouton play
                         self.setEtatPartie(PartieState.INDEX)
-                pass
-
-            case PartieState.NB_IA:
-                # Recuperer les coordonnees de la souris
-                selectable_nb_ia = self.__interface.selectable_nb_ia()
-                if is_cliked:
-                    if (self.boutonRetour()) : # si appuie bouton play
-                        self.__interface.set_nb_IA(0)
-                        self.setEtatPartie(PartieState.NB_PLAYER)
-
-                    # Si le personnage sur lequel on clique est J1
-                    if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and 0 in selectable_nb_ia:
-                        self.__interface.set_nb_IA(0)
-                        self.setEtatClient(ClientState.ONLINE if self.__interface.is_online()  else ClientState.LOCAL)
-                    # Si le personnage sur lequel on clique est J2
-                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and 1 in selectable_nb_ia:
-                        self.__interface.set_nb_IA(1)
-                        self.setEtatClient(ClientState.ONLINE if self.__interface.is_online() else ClientState.LOCAL)
-                    # Si le personnage sur lequel on clique est J3
-                    if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and 2 in selectable_nb_ia:
-                        self.__interface.set_nb_IA(2)
-                        self.setEtatClient(ClientState.ONLINE if self.__interface.is_online() else ClientState.LOCAL)
-                    # Si le personnage sur lequel on clique est J4
-                    if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and 3 in selectable_nb_ia:
-                        self.__interface.set_nb_IA(3)
-                        self.setEtatClient(ClientState.ONLINE if self.__interface.is_online() else ClientState.LOCAL)
-                pass
+                        
             case PartieState.NB_PLAYER:
                 if is_cliked:
                     if (self.boutonRetour()) : # si appuie bouton play
-                        self.__interface = None
-                        self.setStatePartie(PartieState.INDEX)
+                        self.setInterface(None)
+                        self.setEtatPartie(PartieState.INDEX)
                     # Si le personnage sur lequel on clique est J2
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 :
-                        self.__interface.set_nb_joueur(2)
-                        if self.__interface.is_online():
+                        self.getInterface().setNombreJoueur(2)
+                        if self.getInterface().getEnLigne():
                             self.setEtatClient(ClientState.STARTING)
                         else:
                             self.setEtatPartie(PartieState.NB_IA)
                     # Si le personnage sur lequel on clique est J4
                     if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 :
-                        self.__interface.set_nb_joueur(4)
-                        if self.__interface.is_online():
+                        self.getInterface().setNombreJoueur(4)
+                        if self.getInterface().getEnLigne():
                             self.setEtatClient(ClientState.STARTING)
                         else:
                             self.setEtatPartie(PartieState.NB_IA)
                     # Si le personnage sur lequel on clique est J1
                     if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 :
-                        self.__interface.set_nb_joueur(1)
-                        if self.__interface.is_online():
+                        self.getInterface().setNombreJoueur(1)
+                        if self.getInterface().getEnLigne():
                             self.setEtatClient(ClientState.STARTING)
                         else:
                             self.setEtatPartie(PartieState.NB_IA)
                     # Si le personnage sur lequel on clique est J3
                     if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 :
-                        self.__interface.set_nb_joueur(3)
-                        if self.__interface.is_online():
+                        self.getInterface().setNombreJoueur(3)
+                        if self.getInterface().getEnLigne():
                             self.setEtatClient(ClientState.STARTING)
                         else:
                             self.setEtatPartie(PartieState.NB_IA)
                     pass
+            case PartieState.NB_IA:
+                # Recuperer les coordonnees de la souris
+                selectable_nb_ia = self.getInterface().selectionnableNombreIA()
+                if is_cliked:
+                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
+                        self.getInterface().setNombreIA(0)
+                        self.setEtatPartie(PartieState.NB_PLAYER)
+                    
+                    # Si le personnage sur lequel on clique est J1
+                    if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and 0 in selectable_nb_ia:   
+                        self.getInterface().setNombreIA(0)
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne()  else ClientState.LOCAL)
+                    # Si le personnage sur lequel on clique est J2   
+                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and 1 in selectable_nb_ia:
+                        self.getInterface().setNombreIA(1)
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
+                    # Si le personnage sur lequel on clique est J3
+                    if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and 2 in selectable_nb_ia:   
+                        self.getInterface().setNombreIA(2)
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
+                    # Si le personnage sur lequel on clique est J4
+                    if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and 3 in selectable_nb_ia:   
+                        self.getInterface().setNombreIA(3)
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
+                pass
 
 
     # Boucle du jeu lorsque le jeu est démarrer qui permet de gérer les événements
@@ -494,7 +491,7 @@ class Client():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: # si le joueur quitte la fenetre
                     pygame.quit()
-                    self.__stateClient = ClientState.QUIT
+                    self.setEtatClient(ClientState.QUIT)
 
                 if(event.type == pygame.MOUSEBUTTONUP): click = True
                     

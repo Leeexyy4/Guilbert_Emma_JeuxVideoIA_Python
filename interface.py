@@ -5,16 +5,16 @@ class Interface():
         self.__estEnLigne = estEnLigne
         self.__nb_joueur = 4
         self.__nb_IA = 0
-        print("interface online? "+ str(self.estEnLigne()))
+        print("interface online? "+ str(self.getEnLigne()))
         
     def selectionnableNombreIA(self)->list[int]:
         res = [0]
-        if(self.__nb_joueur < 4): res.append(1)
-        if(self.__nb_joueur < 3): res.append(2)
-        if(self.__nb_joueur < 2): res.append(3)
+        if(self.getNombreJoueur() < 4): res.append(1)
+        if(self.getNombreJoueur() < 3): res.append(2)
+        if(self.getNombreJoueur() < 2): res.append(3)
         return res
         
-    def estEnLigne(self)->bool:
+    def getEnLigne(self)->bool:
         """Booleen qui définit si le mode de partie est en mode multijoueur ou non"""
         return self.__estEnLigne
     
@@ -38,4 +38,4 @@ class Interface():
     
     def genererPartie(self)->Game:
         """Fonction qui crée la partie"""
-        return Game(self.__nb_joueur, self.__nb_IA)
+        return Game(self.getNombreJoueur(), self.getNombreIA())
