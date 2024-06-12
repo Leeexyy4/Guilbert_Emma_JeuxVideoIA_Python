@@ -45,6 +45,7 @@ class Game():
             Getter de l'etat du joueur
         """
         return self.__state
+    
     def get_current_player(self)->joueur.Joueur:
         """_summary_
             Getter de l'etat du joueur
