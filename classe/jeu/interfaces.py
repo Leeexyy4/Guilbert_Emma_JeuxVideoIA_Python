@@ -598,7 +598,7 @@ class Interface:
                             if avancer == True :
                                 self.get_de_jeu().desincrement_face_choisie(1)
                             else:
-                                self.Page_rejouer(face_choisie)
+                                self.Page_rejouer(joueur, face_choisie)
                         
                         elif touche_fleche == pygame.K_DOWN:
                             # La touche fleche vers le bas a ete enfoncee
@@ -610,7 +610,7 @@ class Interface:
                             if avancer == True :
                                 self.get_de_jeu().desincrement_face_choisie(1)
                             else:
-                                self.Page_rejouer(face_choisie)
+                                self.Page_rejouer(joueur, face_choisie)
                         
                         elif touche_fleche == pygame.K_RIGHT:
                             # La touche fleche vers la droite a ete enfoncee
@@ -622,7 +622,7 @@ class Interface:
                             if avancer == True :
                                 self.get_de_jeu().desincrement_face_choisie(1)
                             else:
-                                self.Page_rejouer(face_choisie)
+                                self.Page_rejouer(joueur, face_choisie)
 
                         elif touche_fleche == pygame.K_LEFT:
                             # La touche fleche vers la gauche a ete enfoncee
@@ -634,9 +634,9 @@ class Interface:
                             if avancer == True :
                                 self.get_de_jeu().desincrement_face_choisie(1)
                             else:
-                                self.Page_rejouer(face_choisie)
+                                self.Page_rejouer(joueur, face_choisie)
                             
-    def Page_rejouer(self, face_choisie):
+    def Page_rejouer(self, joueur, face_choisie):
             # Dessiner le rectangle pour les dialogues
             self.Menu_bas(joueur)
             # Texte pour dire au joueur de rejouer
