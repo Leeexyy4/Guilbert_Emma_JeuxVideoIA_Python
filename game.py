@@ -119,7 +119,7 @@ class Game():
         return elems
     
     def loop(self, input:inputs):
-        if self.getListeJoueur()[self.getJoueurActuel()] == None:
+        if self.getJoueurActuel() == None:
             self.setEtat(GameState.SELECT_AVATAR)
         player:joueur.Joueur = self.getListeJoueur()[self.getJoueurActuel()]
         match self.getEtat():
