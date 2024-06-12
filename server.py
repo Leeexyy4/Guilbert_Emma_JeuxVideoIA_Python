@@ -1,6 +1,6 @@
 from enum import Enum
-class Server_State(Enum):
-    """La classe Server_State définit les états du serveur"""
+class ServerState(Enum):
+    """La classe ServerState définit les états du serveur"""
 
     INIT = 1 # création d'une instance de serveur
 

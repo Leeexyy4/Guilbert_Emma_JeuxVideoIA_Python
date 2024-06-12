@@ -102,13 +102,13 @@ class Joueur:
         """
         return self.__inventaire
     
-    def get_plateaux(self):
+    def getPlateaux(self):
             """_summary_
                 Getter de la position x sur le plateau
             """
             return self.__plateaux
     
-    def get_plateauy(self):
+    def getPlateauy(self):
             """_summary_
                 Getter de la position y sur le plateau
             """
@@ -155,13 +155,13 @@ class Joueur:
         """
         self.__inventaire = inventaire
     
-    def set_plateaux(self,plateaux):
+    def setPlateaux(self,plateaux):
         """
             Setter de la position x sur le plateau
         """
         self.__plateaux = plateaux
     
-    def set_plateauy(self,plateauy):
+    def setPlateauy(self,plateauy):
         """
             Setter de la position y sur le plateau
         """

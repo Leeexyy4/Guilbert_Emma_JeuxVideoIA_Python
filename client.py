@@ -68,7 +68,7 @@ class Client():
                     case Menu_State.NB_PLAYER:
                         image.Image(0, 0, image.Page.CHOIX_NB_JOUEUR.value).affiche(self.__screen)
                         rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.__screen)
-                        self.set_dialogues(["La sorciere du village vous a lancé un sort, pour","vous en sortir récuper la potion chez elle.","Combien de joueurs souhaitent jouer au jeu ?"])
+                        self.setDialogues(["La sorciere du village vous a lancé un sort, pour","vous en sortir récuper la potion chez elle.","Combien de joueurs souhaitent jouer au jeu ?"])
                         self.draw_dialogues_deb()
                         image.Image(400, 595, image.BtnMenu.BTN_1.value).affiche(self.__screen)
                         image.Image(500, 595, image.BtnMenu.BTN_2.value).affiche(self.__screen)
@@ -80,7 +80,7 @@ class Client():
                         selectable_nb_ia = self.__interface.selectable_nb_ia()
                         image.Image(0, 0, image.Page.CHOIX_NB_IA.value).affiche(self.__screen)
                         rectangle.Rectangle(10,580,780,100,logique.Couleur.GRIS.value).affiche(self.__screen)
-                        self.set_dialogues(["Combien d'IA souhaites-tu ajouter au jeu ?"])
+                        self.setDialogues(["Combien d'IA souhaites-tu ajouter au jeu ?"])
                         self.draw_dialogues_deb()
                         if 1 in selectable_nb_ia :
                             image.Image(400, 595, image.BtnMenu.BTN_0.value).affiche(self.__screen)
@@ -103,7 +103,7 @@ class Client():
                 match self.__game.get_state():
                     case Game_State.SELECT_AVATAR:
                         image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichage_image_redimensionnee(800, 700,self.__screen)
-                        self.set_dialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien",
+                        self.setDialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien",
                                             "ici demarre une nouvelle aventure ! Je t'invite à",
                                             "choisir un personnage parmi la liste suivante :"])
                         self.draw_dialogues_deb()
@@ -120,7 +120,7 @@ class Client():
                     case Game_State.USE_DIE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.__screen)
                         self.Menu_bas(self.__game.get_current_player())
-                        self.set_dialogues(["Tu es le joueur " + str(self.__game.get_current_player().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement ↑ ↓ → ←"])
+                        self.setDialogues(["Tu es le joueur " + str(self.__game.get_current_player().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement ↑ ↓ → ←"])
                         self.draw_dialogues()
                         # Affiche le de sur la face 1
                         image.Image(350,475,image.De.FACE1.value).affiche(self.__screen)
@@ -145,16 +145,16 @@ class Client():
         self.__clock.tick(60)
 
     # Bouton de retour en arrière dans les pages Helper, Nb_joueur, Nb_ia, Fin_du_jeu   
-    def mouse_on_btn_back(self):
+    def mouseOnBtnBack(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return 40 <= mouse_x <= 100 and 40 <= mouse_y <= 100
 
-    def go_to_menu(self, menu_state:Menu_State):
+    def goToMenu(self, menu_state:Menu_State):
         self.__stateMenu = menu_state
         print(self.__stateMenu)
-        self.change_state(Client_State.MENU)
+        self.changeStatee(Client_State.MENU)
 
-    def change_state(self, client_state:Client_State):
+    def changeState(self, client_state:Client_State):
         self.__stateClient = client_state
         if self.__stateClient == Client_State.MENU and self.__stateMenu not in [Menu_State.NB_PLAYER, Menu_State.NB_IA]: self.reset_out_of_game()
         if client_state == Client_State.LOCAL :
@@ -167,7 +167,7 @@ class Client():
         self.__game = None
         self.__local_player:list[int] = []
 
-    def set_dialogues(self, dialogues: list[str]):
+    def setDialogues(self, dialogues: list[str]):
         """Setter de la dialogues."""
         self.__dialogues = dialogues
 
@@ -189,86 +189,86 @@ class Client():
             case Menu_State.INDEX:
                 if is_cliked:
                     if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # si appuie bouton stats
-                        self.go_to_menu(Menu_State.GLOBALS_STATS)
+                        self.goToMenu(Menu_State.GLOBALS_STATS)
                     if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # si appuie bouton en local
-                        self.go_to_menu(Menu_State.NB_PLAYER)
+                        self.goToMenu(Menu_State.NB_PLAYER)
                         self.__interface = Interface(False)
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
-                        self.go_to_menu(Menu_State.NB_PLAYER)
+                        self.goToMenu(Menu_State.NB_PLAYER)
                         self.__interface = Interface(True)
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
-                        self.go_to_menu(Menu_State.HELPER)
+                        self.goToMenu(Menu_State.HELPER)
                 pass
             case Menu_State.GLOBALS_STATS:
                 if is_cliked:
-                    if (self.mouse_on_btn_back()): # si appuie sur fleche retour
-                        self.go_to_menu(Menu_State.INDEX)
+                    if (self.mouseOnBtnBack()): # si appuie sur fleche retour
+                        self.goToMenu(Menu_State.INDEX)
                         stats = True
                 pass
             case Menu_State.HELPER:
                 if is_cliked:
-                    if (self.mouse_on_btn_back()) : # si appuie bouton play
-                        self.go_to_menu(Menu_State.INDEX)
+                    if (self.mouseOnBtnBack()) : # si appuie bouton play
+                        self.goToMenu(Menu_State.INDEX)
                 pass
 
             case Menu_State.NB_IA:
                 # Recuperer les coordonnees de la souris
                 selectable_nb_ia = self.__interface.selectable_nb_ia()
                 if is_cliked:
-                    if (self.mouse_on_btn_back()) : # si appuie bouton play
+                    if (self.mouseOnBtnBack()) : # si appuie bouton play
                         self.__interface.set_nb_IA(0)
-                        self.go_to_menu(Menu_State.NB_PLAYER)
+                        self.goToMenu(Menu_State.NB_PLAYER)
 
                     # Si le personnage sur lequel on clique est J1
                     if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and 0 in selectable_nb_ia:
                         self.__interface.set_nb_IA(0)
-                        self.change_state(Client_State.ONLINE if self.__interface.is_online()  else Client_State.LOCAL)
+                        self.changeStatee(Client_State.ONLINE if self.__interface.is_online()  else Client_State.LOCAL)
                     # Si le personnage sur lequel on clique est J2
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and 1 in selectable_nb_ia:
                         self.__interface.set_nb_IA(1)
-                        self.change_state(Client_State.ONLINE if self.__interface.is_online() else Client_State.LOCAL)
+                        self.changeStatee(Client_State.ONLINE if self.__interface.is_online() else Client_State.LOCAL)
                     # Si le personnage sur lequel on clique est J3
                     if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and 2 in selectable_nb_ia:
                         self.__interface.set_nb_IA(2)
-                        self.change_state(Client_State.ONLINE if self.__interface.is_online() else Client_State.LOCAL)
+                        self.changeStatee(Client_State.ONLINE if self.__interface.is_online() else Client_State.LOCAL)
                     # Si le personnage sur lequel on clique est J4
                     if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and 3 in selectable_nb_ia:
                         self.__interface.set_nb_IA(3)
-                        self.change_state(Client_State.ONLINE if self.__interface.is_online() else Client_State.LOCAL)
+                        self.changeStatee(Client_State.ONLINE if self.__interface.is_online() else Client_State.LOCAL)
                 pass
             case Menu_State.NB_PLAYER:
                 if is_cliked:
-                    if (self.mouse_on_btn_back()) : # si appuie bouton play
+                    if (self.mouseOnBtnBack()) : # si appuie bouton play
                         self.__interface = None
-                        self.go_to_menu(Menu_State.INDEX)
+                        self.goToMenu(Menu_State.INDEX)
                     # Si le personnage sur lequel on clique est J2
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 :
                         self.__interface.set_nb_joueur(2)
                         if self.__interface.is_online():
-                            self.change_state(Client_State.STARTING)
+                            self.changeStatee(Client_State.STARTING)
                         else:
-                            self.go_to_menu(Menu_State.NB_IA)
+                            self.goToMenu(Menu_State.NB_IA)
                     # Si le personnage sur lequel on clique est J4
                     if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 :
                         self.__interface.set_nb_joueur(4)
                         if self.__interface.is_online():
-                            self.change_state(Client_State.STARTING)
+                            self.changeStatee(Client_State.STARTING)
                         else:
-                            self.go_to_menu(Menu_State.NB_IA)
+                            self.goToMenu(Menu_State.NB_IA)
                     # Si le personnage sur lequel on clique est J1
                     if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 :
                         self.__interface.set_nb_joueur(1)
                         if self.__interface.is_online():
-                            self.change_state(Client_State.STARTING)
+                            self.changeStatee(Client_State.STARTING)
                         else:
-                            self.go_to_menu(Menu_State.NB_IA)
+                            self.goToMenu(Menu_State.NB_IA)
                     # Si le personnage sur lequel on clique est J3
                     if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 :
                         self.__interface.set_nb_joueur(3)
                         if self.__interface.is_online():
-                            self.change_state(Client_State.STARTING)
+                            self.changeStatee(Client_State.STARTING)
                         else:
-                            self.go_to_menu(Menu_State.NB_IA)
+                            self.goToMenu(Menu_State.NB_IA)
                     pass
     
     def affichage_cle(self,joueur):
@@ -349,7 +349,7 @@ class Client():
                 
     # Boucle du jeu lorsque le jeu est démarrer qui permet de gérer les événements
     def main(self):
-        self.go_to_menu(Menu_State.INDEX)
+        self.goToMenu(Menu_State.INDEX)
         while (self.__stateClient != Client_State.QUIT):
             self.draw()
             click = False

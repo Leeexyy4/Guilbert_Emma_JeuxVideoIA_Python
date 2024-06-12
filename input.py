@@ -19,11 +19,11 @@ class inputs:
         self.__clicked = clicked
         self.__direction:direction = direction
     
-    def get_cursor_x(self)->int:
+    def getSourisx(self)->int:
         return self.__cursor_x
-    def get_cursor_y(self)->int:
+    def getSourisy(self)->int:
         return self.__cursor_y
-    def is_clicked(self)->bool:
+    def estClique(self)->bool:
         return self.__clicked
-    def get_direction(self)->direction:
+    def getDirection(self)->direction:
         return self.__direction

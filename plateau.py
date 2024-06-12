@@ -43,66 +43,66 @@ class Plateau():
             for colonne in range(17):
                 self.__cases_decouvertes.append((ligne, colonne))
         
-        self.remplir_plateau_aleatoirement()
+        self.remplirPlateauAleatoirement()
                 
 
-    def get_nb_IA(self)-> int:
+    def getNombreIA(self)-> int:
         """Renvoie le nombre d'IA"""
         return self.__nb_IA
-    def get_nb_players(self)-> int:
+    def getNombreJoueur(self)-> int:
         """Renvoie le nombre d'IA"""
         return self.__nb_player
 
-    def get_plateau(self):
+    def getPlateau(self):
         """Renvoie le plateau de jeu."""
         return self.__plateau
-    def get_nom_case(self):
+    def getNomCase(self):
         """Renvoie le nom_case de jeu."""
         return self.__nom_case
     
-    def get_cases_decouvertes(self):
+    def getCasesDecouvertes(self):
         """Renvoie les cases decouvertes de jeu."""
         return self.__cases_decouvertes
 
-    def get_cases(self, ligne, colonne):
+    def getCases(self, ligne, colonne):
         """Renvoie la couleur de la case à la position spécifiée."""
-        return self.get_plateau()[ligne][colonne]
+        return self.getPlateau()[ligne][colonne]
         
-    def get_nom(self, ligne, colonne):
+    def getNom(self, ligne, colonne):
         """Renvoie le nom de la case à la position spécifiée."""
-        couleur_case = self.get_plateau()[ligne][colonne]  # Obtenir la couleur de la case
+        couleur_case = self.getPlateau()[ligne][colonne]  # Obtenir la couleur de la case
         nom_case = self.__nom_case[couleur_case]
         return nom_case
     
-    def get_case_jaune(self):
+    def getCaseJaune(self):
         """Renvoie les coordonnées correspondant à la case jaune."""
         for ligne in range(10):
             for colonne in range(17):
-                if self.get_plateau()[ligne][colonne] == CASE_TYPE.SPAWN:
+                if self.getPlateau()[ligne][colonne] == CASE_TYPE.SPAWN:
                     coord_case_jaune = (ligne, colonne)
         return coord_case_jaune
 
-    def get_case_indigo(self, joueur):
+    def getCaseIndigo(self, joueur):
         """Renvoie les coordonnées correspondant aux cases indigo."""
         for ligne in range(10):
             for colonne in range(17):
-                if self.get_plateau()[ligne][colonne] == CASE_TYPE.TP:
-                    if joueur.get_plateaux() == ligne and joueur.get_plateauy() == colonne:
+                if self.getPlateau()[ligne][colonne] == CASE_TYPE.TP:
+                    if joueur.getPlateaux() == ligne and joueur.getPlateauy() == colonne:
                         pass
                     else:
                         coord_case_indigo = (ligne, colonne)
         return coord_case_indigo
 
     
-    def set_plateau(self, plateau):
+    def setPlateau(self, plateau):
         """Modifie le plateau de jeu."""
         self.__plateau = plateau
 
-    def set_cases_decouvertes(self, cases_decouvertes):
+    def setCasesDecouvertes(self, cases_decouvertes):
         """Modifie les cases decouvertes de jeu."""
         self.__cases_decouvertes = cases_decouvertes
         
-    def remplir_plateau_aleatoirement(self):
+    def remplirPlateauAleatoirement(self):
         """Remplit le plateau de manière aléatoire en fonction de max_couleur."""
         # Crée une liste des couleurs disponibles en fonction de max_couleur
         couleurs_disponibles = []
