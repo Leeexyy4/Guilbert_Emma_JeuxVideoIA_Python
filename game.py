@@ -233,7 +233,7 @@ class Game():
                     return
                 match input.getDirection():
                     case direction.NORTH:
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux() -1 > 0):
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux() -1 >= 0):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()-1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
@@ -254,7 +254,7 @@ class Game():
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
                     case direction.WEST:
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy() -1 > 0):
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy() -1 >= 0):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()-1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
@@ -309,6 +309,7 @@ class Game():
                     case logique.Couleur.INDIGO.value:
                         if input.estClique():
                             if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
+                                self.getPlateau().getCaseIndigo(self.getListeJoueur()[self.getIdJoueurActuel()])
                                 self.setEtat(GameState.CASE_TELEPORTE)
                             elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
                                 self.setEtat(GameState.CASE_RETOUR)
@@ -336,12 +337,14 @@ class Game():
                                 liste_chance = ["gagner 100 pv","gagner 200 pv","gagner 500 pv", "gagner 150 pv","gagner 400 pv","gagner 1050 pv"]
                                 self.setChanceAction(random.choice(liste_chance))
                                 self.setEtat(GameState.CASE_CHANCE)
+
                     case logique.Couleur.GRIS.value:
                         if input.estClique():
                             if 220 < input.getSourisx() < 284 and 480 < input.getSourisy() < 544:
                                 liste_special = ["bravo", "oh non dommage"]
                                 self.setSpecialAction(random.choice(liste_special))
-                                self.setEtat(GameState.CASE_CLE_SPECIALE)   
+                                self.setEtat(GameState.CASE_CLE_SPECIALE)
+
                     case logique.Couleur.BLEU.value:
                         if input.estClique():
                             if 220 < input.getSourisx() < 284 and 480 < input.getSourisy() < 544:
@@ -376,15 +379,17 @@ class Game():
                     self.setEtat(GameState.SWITCH_PLAYER)
 
             case GameState.CASE_CLE_SPECIALE:
-                delay = 8
+                ddelay = 8
                 self.__timeaction = time.time()
                 if self.__timeaction + delay > time.time():
                     self.setEtat(GameState.SWITCH_PLAYER)
+
             case GameState.CASE_CLE_PUIT:
                 delay = 8
                 self.__timeaction = time.time()
                 if self.__timeaction + delay > time.time():
                     self.setEtat(GameState.SWITCH_PLAYER)
+
             case GameState.CASE_PV_PUIT:
                 delay = 8
                 self.__timeaction = time.time()
