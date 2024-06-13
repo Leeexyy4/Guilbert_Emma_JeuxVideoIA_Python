@@ -25,16 +25,18 @@ class GameState(Enum):
     CASE_MALUS = 8 # envoie CASE_MALUS
     CASE_REJOUE = 9 # envoie CASE_REJOUE
     CASE_CLE_PUIT = 10 # envoie CASE_CLE_PUIT
+    CASE_PV_PUIT = 10 # envoie CASE_CLE_PUIT
     CASE_TELEPORTE = 11 # envoie CASE_TELEPORTE
     CASE_CLE_SPECIALE = 12 # envoie CASE_CLE_SPECIALE
+    CASE_PERDU_SPECIALE = 12 # envoie CASE_CLE_SPECIALE
     CASE_RETOUR = 13 # envoie CASE_CLE_SPECIALE
-    CASE_VIDE = 14
 
     # Sorciere
     CASE_FIN_DU_JEU = 15
     CASE_SORCIERE_SANS_CLE = 16
 
     # Combat
+    ATTACK = 17
     FIGHT = 17
     WAIT_FIGHT_ACTION = 18
     DO_FIGHT_ACTION = 19 
@@ -57,6 +59,7 @@ class Game():
         self.__timeaction:int = 0
         self.__chance_action:str = None
         self.__malus_action:str = None
+        self.__special_action:str = None
 
     def getNombreJoueur(self)->int:
         """_summary_
@@ -93,6 +96,19 @@ class Game():
             Setter de l'etat du joueur
         """
         self.__idJoueurActuel = idJoueurActuel
+
+    def getSpecialAction(self)->str:
+        """_summary_
+            Getter de l'etat du joueur
+        """
+        return self.__special_action
+    
+    def setSpecialAction(self, Specialaction):
+        """_summary_
+            Setter de l'etat du joueur
+        """
+        self.__special_action = chanceaction
+    
 
     def getChanceAction(self)->str:
         """_summary_
@@ -155,9 +171,12 @@ class Game():
     
     def joueurSuivant(self):
         """Fonction qui décide quel est le joueur qui joue au prochain tour"""
+        print(self.getIdJoueurActuel())
+        print(len(self.getListeJoueur()))
         if self.getListeJoueur()[self.getIdJoueurActuel()].getPv() == 0:
             self.setListeJoueur(self.getListeJoueur().pop(self.getIdJoueurActuel()))
         self.setIdJoueurActuel(self.getIdJoueurActuel()+1 if self.getIdJoueurActuel() < len(self.getListeJoueur())-1 else 0)
+        print(self.getIdJoueurActuel())
     
     def personnageSelectionnable(self):
         """Renvoie la liste des personnages sélectionnables"""
@@ -245,7 +264,7 @@ class Game():
             # Logique_Action
             case GameState.STAY_ON_CASE:
                 couleur_case = self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()).value.value
-                print(couleur_case)
+                print(self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()))
                 match couleur_case:
                     case logique.Couleur.BEIGE.value:
                         if input.estClique():
@@ -317,6 +336,26 @@ class Game():
                                 liste_chance = ["gagner 100 pv","gagner 200 pv","gagner 500 pv", "gagner 150 pv","gagner 400 pv","gagner 1050 pv"]
                                 self.setChanceAction(random.choice(liste_chance))
                                 self.setEtat(GameState.CASE_CHANCE)
+                    case logique.Couleur.GRIS.value:
+                        if input.estClique():
+                            if 220 < input.getSourisx() < 284 and 480 < input.getSourisy() < 544:
+                                liste_special = ["bravo", "oh non dommage"]
+                                self.setSpecialAction(random.choice(liste_special))
+                                self.setEtat(GameState.CASE_CLE_SPECIALE)   
+                    case logique.Couleur.BLEU.value:
+                        if input.estClique():
+                            if 220 < input.getSourisx() < 284 and 480 < input.getSourisy() < 544:
+                                if player.get_pv() > 200:  
+                                    player.setPv(player.getPv()-200)
+                                    self.setEtat(GameState.CASE_CLE_PUIT)
+                                else :
+                                    player.setPv(0)
+                                    self.setEtat(GameState.CASE_PV_PUIT)
+                            elif 510 < input.getSourisx() < 574 and 480 < input.getSourisy() < 544:
+                                if player.getInventaire() != []:
+                                    player.getInventaire().pop(0)
+                                    self.setEtat(GameState.CASE_PV_PUIT)
+                                    
                         
                     case logique.Couleur.ROUGE.value:
                         pass
@@ -336,6 +375,22 @@ class Game():
                 if self.__timeaction + delay > time.time():
                     self.setEtat(GameState.SWITCH_PLAYER)
 
+            case GameState.CASE_CLE_SPECIALE:
+                delay = 8
+                self.__timeaction = time.time()
+                if self.__timeaction + delay > time.time():
+                    self.setEtat(GameState.SWITCH_PLAYER)
+            case GameState.CASE_CLE_PUIT:
+                delay = 8
+                self.__timeaction = time.time()
+                if self.__timeaction + delay > time.time():
+                    self.setEtat(GameState.SWITCH_PLAYER)
+            case GameState.CASE_PV_PUIT:
+                delay = 8
+                self.__timeaction = time.time()
+                if self.__timeaction + delay > time.time():
+                    self.setEtat(GameState.SWITCH_PLAYER if(player.getPv()>0) else GameState.DEAD)
+                    
             case GameState.CASE_RETOUR:
                 delay = 8
                 self.__timeaction = time.time()
@@ -349,6 +404,11 @@ class Game():
                     self.setEtat(GameState.SWITCH_PLAYER)
         
             # Combat
+            case GameState.SELECT_ACTION:
+                if 220 < input.getSourisx() < 284 and 480 < input.getSourisy() < 544:
+                    self.setEtat(GameState.ATTACK)
+                elif 510 <= input.getSourisx() <= 574 and 480 < input.getSourisy() < 544:
+                    self.setEtat(GameState.USE_DIE)
             case GameState.FIGHT:
                 pass
             case GameState.WAIT_FIGHT_ACTION:

@@ -390,12 +390,19 @@ class Client():
                     
                     # Page_Mouvement
                     case game.GameState.SELECT_ACTION:
-                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        player = self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()]
+                        image.Image(0,468, image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
                         self.affichagePlateau()
-                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
-                        self.afficheDialogues()
-                        image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
+                        self.MenuBas(player)
+                        
+                        texte.Texte("Joueur " + str(player.getId() + 1) + " : " + player.getPrenom() + " clique sur le de afin ",logique.Couleur.NOIR.value,110,600).affiche(self.getFenetre())
+                        texte.Texte("d'attaquer un joueur ou de lancer le de",logique.Couleur.NOIR.value,110,620).affiche(self.getFenetre())
+                        
+                        # Affiche le de sur la face 1
+                        image.Image(220,480,image.Interaction.ATTAQUER.value).affiche(self.getFenetre())
+                        image.Image(510, 480,image.Interaction.DE.value).affiche(self.getFenetre())
+                        texte.Texte("Attaquer",logique.Couleur.BLANC.value,227,545).affiche(self.getFenetre())
+                        texte.Texte("De",logique.Couleur.BLANC.value,532,545).affiche(self.getFenetre())
 
                     # Page_LancementDe
                     case game.GameState.LANCEMENT_DE:
@@ -545,6 +552,20 @@ class Client():
                         self.setDialogues(["Tou-dou-dou-doum","Teleportation sur la deuxieme case de téléportation"])
                         self.afficheDialogues()
 
+                    case game.GameState.CASE_PV_PUIT:
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        dialogue = ["Tu as donnée 200PV, tu peux sortir du puis"]if self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPv()>0 else ["Tu as donnée 200PV, Mais tu est mort"]
+                        self.afficheDialogues()
+                        self.setDialogues(dialogue)
+                    case game.GameState.CASE_CLE_PUIT:
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Tu as donnée 1 clef, tu peux sortir du puis"])
+                        self.afficheDialogues()
+                    case game.GameState.CASE_CLE_SPECIALE:
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        dialogue = ["Bravo tu as gagner !!!","Voilà deux cles supplementaires que tu peux", "voir apparaître dans ton inventaire."] if self.__game.getSpecialAction()  == "bravo" else ["Oh non dommage...","Tu peux retenter ta chance si tu as", "d'autres cles :)"]
+                        self.setDialogues(dialogue)
+                        self.afficheDialogues()
                     case game.GameState.FIGHT:
                         pass
                     case game.GameState.WAIT_FIGHT_ACTION:
