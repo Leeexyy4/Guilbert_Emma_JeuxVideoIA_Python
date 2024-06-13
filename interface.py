@@ -15,7 +15,7 @@ class Interface():
         return res
         
     def getEnLigne(self)->bool:
-        """Booleen qui définit si le mode de partie est en mode multijoueur ou non"""
+        """Booleen qui renvoie si le mode de partie est en mode multijoueur ou non"""
         return self.__estEnLigne
     
     def getNombreIA(self)->int:

@@ -17,25 +17,25 @@ class Texte:
     # Definir les getters
     def get_x(self):
         """_summary_
-            Getter de la position x
+            renvoie la position(valeur) de X
         """
         return self.__x
     
     def get_y(self):
         """_summary_
-            Getter de la position y
+            renvoie la position(valeur) de Y
         """
         return self.__y
     
     def get_texte(self):
         """_summary_
-            Getter du texte à ecrire
+            Renvoie le texte à écrire
         """
         return self.__texte
     
     def get_couleur(self):
         """_summary_
-            Getter de la couleur du texte
+            Renvoie la couleur du texte
         """
         return self.__couleur
 

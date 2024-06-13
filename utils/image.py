@@ -83,15 +83,15 @@ class Image:
         self.__surface = surface
     
     def get_x(self):
-        """Getter de la position x."""
+        """Renvoie la position(valeur) de X"""
         return self.__x
     
     def get_y(self):
-        """Getter de la position y."""
+        """Renvoie la position(valeur) de Y."""
         return self.__y
     
     def get_surface(self)-> pygame.Surface:
-        """Getter du surface de l'image."""
+        """Renvoie la surface de l'image."""
         return self.__surface
     
     def affiche(self, surface:pygame.Surface):
