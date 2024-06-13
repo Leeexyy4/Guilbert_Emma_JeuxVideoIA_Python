@@ -230,34 +230,38 @@ class Interface:
             "Boss vaincus", "PV moyen"
         ]
 
-        # Affichage des statistiques par groupe de 3
-        y1 = 170
-        y2 = 200
+        if len(moyennes) >= 6:
+            # Affichage des statistiques par groupe de 3
+            y1 = 170
+            y2 = 200
 
-        # Première moitié des statistiques
-        for i in range(len(labels) // 2):
-            label = labels[i]
-            moyenne = moyennes[i]
+            # Première moitié des statistiques
+            for i in range(len(labels) // 2):
+                label = labels[i]
+                moyenne = moyennes[i]
 
-            texte.Texte(f"{label}", couleur.Couleur().get_Blanc(), 200, y1).affiche(self.get_police(), self.get_fenetre())
-            texte.Texte(f"{moyenne:.2f}", couleur.Couleur().get_Blanc(), 230, y2).affiche(self.get_police(), self.get_fenetre())
+                texte.Texte(f"{label}", couleur.Couleur().get_Blanc(), 200, y1).affiche(self.get_police(), self.get_fenetre())
+                texte.Texte(f"{moyenne:.2f}", couleur.Couleur().get_Blanc(), 230, y2).affiche(self.get_police(), self.get_fenetre())
 
-            y1 += 100
-            y2 += 100
+                y1 += 100
+                y2 += 100
 
-        # Seconde moitié des statistiques
-        y1 = 170
-        y2 = 200
+            # Seconde moitié des statistiques
+            y1 = 170
+            y2 = 200
 
-        for i in range(len(labels) // 2, len(labels)):
-            label = labels[i]
-            moyenne = moyennes[i]
+            for i in range(len(labels) // 2, len(labels)):
+                label = labels[i]
+                moyenne = moyennes[i]
 
-            texte.Texte(f"{label}", couleur.Couleur().get_Blanc(), 500, y1).affiche(self.get_police(), self.get_fenetre())
-            texte.Texte(f"{moyenne:.2f}", couleur.Couleur().get_Blanc(), 530, y2).affiche(self.get_police(), self.get_fenetre())
+                texte.Texte(f"{label}", couleur.Couleur().get_Blanc(), 500, y1).affiche(self.get_police(), self.get_fenetre())
+                texte.Texte(f"{moyenne:.2f}", couleur.Couleur().get_Blanc(), 530, y2).affiche(self.get_police(), self.get_fenetre())
 
-            y1 += 100
-            y2 += 100
+                y1 += 100
+                y2 += 100
+        else:
+            texte.Texte("Les statistiques ne sont pas disponibles pour le moment", couleur.Couleur().get_Blanc(), 240, 300).affiche(self.get_police(), self.get_fenetre())
+
 
         # Mettre à jour l'affichage
         pygame.display.update()

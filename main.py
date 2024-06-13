@@ -80,7 +80,7 @@ if __name__ == "__main__":
                 for numero_joueur in range(page.get_nb_joueur()):
                     # Afficher la proposition pour choisir le personnage
                     prenom, element = page.Page_choixperso(numero_joueur)
-                    un_joueur = joueur.Joueur(numero_joueur,prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,["cle du Rocher", "cle de la Rivière"])
+                    un_joueur = joueur.Joueur(numero_joueur,prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,["cle de la Ville", "cle de la Forêt", "cle du Rocher", "cle de la Rivière"])
                     page.set_liste_joueur(page.get_liste_joueur() + [[un_joueur.get_id(), un_joueur.get_prenom(), un_joueur.get_element(), un_joueur.get_plateaux(), un_joueur.get_plateauy(), un_joueur.get_pv(), un_joueur.get_attaque(), un_joueur.get_inventaire()]])
                     page.Page_premier_mouvement(un_joueur)
                     page.get_plateau_de_jeu().plateau_cache(page)
