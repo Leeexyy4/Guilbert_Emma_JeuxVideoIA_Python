@@ -7,13 +7,13 @@ from utils import image
 
 from enum import Enum
 class Nom(Enum):
-    """La classe Nom regroupe le nom des personnages jouables."""
+    """La classe Nom(Enum) regroupe le nom des personnages jouables."""
     WATER = "Ondine"
     GRASS = "Flora"
     ROCK = "Pierre"
     TOWN = "Kevin"
 class Element(Enum):
-    """La classe Element regroupe les 'titres' des personnages jouables"""
+    """La classe Element(Enum) regroupe les 'titres' des personnages jouables"""
     WATER = "de la Riviere"
     GRASS = "de la Foret"
     ROCK = "du Rocher"
@@ -45,19 +45,19 @@ class Joueur:
     # Definir les getters
     def getX(self):
         """_summary_
-            Getter de la position x
+            Renvoie la position(valeur) de X
         """
         return self.__plateaux *47
     
     def getY(self):
         """_summary_
-            Getter de la position y
+            Renvoie la position(valeur) de Y
         """
         return self.__plateauy *47
     
     def getPrenom(self)->str:
         """_summary_
-            Getter du prenom du joueur
+            Renvoie le prénom du joueur
         """
         if(self.getElement() == Element.GRASS): return Nom.GRASS.value
         if(self.getElement() == Element.WATER): return Nom.WATER.value
@@ -66,6 +66,7 @@ class Joueur:
         return None
     
     def getImage(self):
+        """Renvoie les images correspondantes aux personnages"""
         if(self.getElement() == Element.GRASS): return image.Personnages.GRASS.value
         if(self.getElement() == Element.WATER): return image.Personnages.WATER.value
         if(self.getElement() == Element.TOWN): return image.Personnages.TOWN.value
@@ -74,67 +75,67 @@ class Joueur:
 
     def getId(self):
         """_summary_
-            Getter de l'id du joueur
+            Renvoie l'id du joueur
         """
         return self.__id
     
     def getPv(self):
         """_summary_
-            Getter des pv du joueur
+            Renvoie les points de vie du joueur
         """
         return self.__pv
     
     def getAttaque(self):
         """_summary_
-            Getter des attaques du joueur
+            Renvoie les "attaques" du joueur
         """
         return self.__attaque
     
     def getElement(self):
         """_summary_
-            Getter de l'__element du joueur
+            Renvoie l'élément du joueur
         """
         return self.__element
     
     def getInventaire(self):
         """_summary_
-            Getter de l'inventaire du joueur
+            Renvoie l'inventaire du joueur
         """
         return self.__inventaire
     
     def getPlateaux(self):
             """_summary_
-                Getter de la position x sur le plateau
+                Renvoie la position(valeur) de X sur le plateau
             """
             return self.__plateaux
     
     def getPlateauy(self):
             """_summary_
-                Getter de la position y sur le plateau
+                Renvoie la position(valeur) de X sur le plateau
             """
             return self.__plateauy
     
     def getAttaque(self):
             """_summary_
-                Getter de l'attaque sur le plateau
+                Renvoie "l'attaque" sur le plateau
             """
             return self.__attaque
             
     def setLien(self, lien):
         """_summary_
-            Setter du lien de l'image du joueur
+            Modifie le lien de l'image du joueur
         """
         self.__lien = lien
     
     def setPv(self,pv):
         """_summary_
-            Setter de la vie du joueur
+            Modifie la vie du joueur
         """
         self.__pv = pv
     
     def setElement(self, element):
         """_summary_
-            Setter de l'element du joueur
+            Modifie l'élément du joueur
         """
         if(self.getElement() == None): pass
         elif(self.getElement() == Element.GRASS): Joueur.grass_is_used = False
@@ -149,25 +150,25 @@ class Joueur:
         
     def setInventaire(self,inventaire):
         """_summary_
-            Setter de l'inventaire du joueur
+            Modifie l'inventaire du joueur
         """
         self.__inventaire = inventaire
     
     def setPlateaux(self,plateaux):
         """
-            Setter de la position x sur le plateau
+            Modifie la position X sur le plateau
         """
         self.__plateaux = plateaux
     
     def setPlateauy(self,plateauy):
         """
-            Setter de la position y sur le plateau
+            Modifie la position Y sur le plateau
         """
         self.__plateauy = plateauy
 
     def setAttaque(self,attaque):
         """
-            Setter de l'attaque sur le plateau
+            Modifie l'attaque sur le plateau
         """
         self.__attaque = attaque
 

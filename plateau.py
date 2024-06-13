@@ -52,15 +52,15 @@ class Plateau():
         return self.__plateau
 
     def getMaxCase(self):
-        """Renvoie le plateau de jeu."""
+        """Renvoie le nombre maximum de cases sur le plateau"""
         return self.__maxCases
     
     def getTailleCase(self):
-        """Renvoie le plateau de jeu."""
+        """Renvoie la taille d'une case sur le plateau"""
         return self.__tailleCase
 
     def getNomCase(self):
-        """Renvoie le nom_case de jeu."""
+        """Renvoie le nom de la case"""
         return self.__nomCase
     
     def getCasesDecouvertes(self):
@@ -78,7 +78,7 @@ class Plateau():
         return nom_case
     
     def getCaseJaune(self):
-        """Renvoie les coordonnées correspondant à la case jaune."""
+        """Renvoie les coordonnées correspondant aux cases 'jaune'."""
         for ligne in range(10):
             for colonne in range(17):
                 if self.getPlateau()[ligne][colonne] == CASE_TYPE.SPAWN:
@@ -86,7 +86,7 @@ class Plateau():
         return coord_case_jaune
 
     def getCaseIndigo(self, joueur):
-        """Renvoie les coordonnées correspondant aux cases indigo."""
+        """Renvoie les coordonnées correspondant aux cases 'indigo'."""
         for ligne in range(10):
             for colonne in range(17):
                 if self.getPlateau()[ligne][colonne] == CASE_TYPE.TP:

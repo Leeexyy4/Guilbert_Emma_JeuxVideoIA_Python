@@ -20,10 +20,17 @@ class inputs:
         self.__direction:direction = direction
     
     def getSourisx(self)->int:
+        """Renvoie la position axe X de la souris"""
         return self.__cursor_x
+
     def getSourisy(self)->int:
+        """Renvoie la position axe Y de la souris"""
         return self.__cursor_y
+
     def estClique(self)->bool:
+        """Renvoie la True s'il y a un clique de souris"""
         return self.__clicked
+
     def getDirection(self)->direction:
+        """Renvoie la direction"""
         return self.__direction

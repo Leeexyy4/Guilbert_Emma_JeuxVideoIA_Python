@@ -4,7 +4,7 @@ from input import inputs, direction
 from enum import Enum
 from utils import logique
 class GameState(Enum):
-    """la classe GameState regroupe les états de la partie selon les actions du joueur"""
+    """la classe GameState regroupe les états de la partie selon les choix et actions du joueur"""
     # attente d'action d'un joueur (idJOueur + GameState action)
     WAIT_PLAYER = 0 
     
@@ -63,98 +63,98 @@ class Game():
 
     def getNombreJoueur(self)->int:
         """_summary_
-            Getter du nombre de joueur
+            Renvoie le nombre de joueur
         """
         return self.__nombreJoueur
 
     def setNombreJoueur(self, nombreJoueur):
         """_summary_
-            Setter du nombre du joueur
+            Modifie le nombre du joueur
         """
         self.__nombreJoueur = nombreJoueur
 
     def getListeJoueur(self)->list[joueur.Joueur]:
         """_summary_
-            Getter de l'etat du joueur
+            Renvoie la liste des joueurs
         """
         return self.__listeJoueur
 
     def setListeJoueur(self, listeJoueur):
         """_summary_
-            Setter de l'etat du joueur
+            Modifie l'etat du joueur
         """
         self.__listeJoueur[self.getIdJoueurActuel()] = listeJoueur
     
     def getIdJoueurActuel(self)->joueur.Joueur:
         """_summary_
-            Getter de l'etat du joueur
+            Renvoie  l'ID du joueur actuel
         """
         return self.__idJoueurActuel
     
     def setIdJoueurActuel(self, idJoueurActuel):
         """_summary_
-            Setter de l'etat du joueur
+            Modifie l'ID du joueur actuel
         """
         self.__idJoueurActuel = idJoueurActuel
 
     def getSpecialAction(self)->str:
         """_summary_
-            Getter de l'etat du joueur
+            Renvoie l'effet obtenu par la case Spécial
         """
         return self.__special_action
     
     def setSpecialAction(self, Specialaction):
         """_summary_
-            Setter de l'etat du joueur
+            Modifie l'effet obtenu par la case Spécial
         """
         self.__special_action = Specialaction
     
 
     def getChanceAction(self)->str:
         """_summary_
-            Getter de l'etat du joueur
+           Renvoie le résultat de la case spéciale Chance
         """
         return self.__chance_action
     
     def setChanceAction(self, chanceaction):
         """_summary_
-            Setter de l'etat du joueur
+            Modifie l'effet obtenu par la case Chance
         """
         self.__chance_action = chanceaction
     
     def getMalusAction(self)->str:
         """_summary_
-            Getter de l'etat du joueur
+            Renvoie le résultat de la case Malus
         """
         return self.__malus_action
     
     def setMalusAction(self, malusaction):
         """_summary_
-            Setter de l'etat du joueur
+            Modifie le résultat de la case Malus
         """
         self.__malus_action = malusaction
     
     def getDeValue(self)->int:
         """_summary_
-            Getter de l'etat du joueur
+            Renvoie la valeur du jet de dé
         """
         return self.__deValue
     
     def setDeValue(self, deValue):
         """_summary_
-            Setter de l'etat du joueur
+            Modifie la valeur du jet de dé
         """
         self.__deValue = deValue
     
     def getEtat(self)->GameState:
         """_summary_
-            Getter de l'etat du joueur
+            Renvoie l'état du joueur
         """
         return self.__etat
     
     def setEtat(self,etat:GameState):
         """_summary_
-            Setter l'etat du joueur
+            Modifie l'état du joueur
         """
         self.__etat = etat
         print(etat)
@@ -165,12 +165,12 @@ class Game():
 
     def setPlateau(self,plateau:Plateau):
         """_summary_
-            Setter l'etat du joueur
+            Modifie l'état du joueur
         """
         self.__plateau = plateau
     
     def joueurSuivant(self):
-        """Fonction qui décide quel est le joueur qui joue au prochain tour"""
+        """la fonction joueurSuivant permet de définir quel est le joueur qui joue au prochain tour"""
         print(self.getIdJoueurActuel())
         print(len(self.getListeJoueur()))
         if self.getListeJoueur()[self.getIdJoueurActuel()].getPv() == 0:
