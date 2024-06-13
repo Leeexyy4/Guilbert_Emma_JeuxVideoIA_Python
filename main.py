@@ -206,17 +206,18 @@ if __name__ == "__main__":
                 page.set_etat_de_jeu("fin_du_jeu")
 
         if page.get_etat_de_jeu() == "fin_du_jeu":
+            for i in page.get_liste_joueur():
+                un_joueur = joueur.Joueur(i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
 
-            if(un_joueur.avoir_tt_cles == True):
-                gagnant = True
-            else:
-                gagnant = False
+                if(un_joueur.avoir_tt_cles == True):
+                    gagnant = False
+                else:
+                    gagnant = True
 
-            print(gagnant)
-            partie_id = creer_partie(gagnant)
-            print(partie_id)
+                print(gagnant)
+                partie_id = creer_partie(gagnant)
+                print(partie_id)
 
-            for joueur_data in page.get_liste_joueur():
                 envoyer_donnees_bdd(
                     partie_id,
                     2 if un_joueur.get_prenom() == 'Pierre' else 3 if un_joueur.get_prenom() == 'Flora' else 4 if un_joueur.get_prenom() == 'Ondine' else 5,
