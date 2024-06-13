@@ -3,6 +3,7 @@ import random
 import joueur
 from input import inputs, direction
 from enum import Enum
+from utils import logique
 class GameState(Enum):
     """la classe GameState regroupe les états de la partie selon les actions du joueur"""
     WAIT_PLAYER = 0 # attente d'action d'un joueur (idJOueur + GameState action)
@@ -186,9 +187,42 @@ class Game():
                 
             # Logique_Action
             case GameState.STAY_ON_CASE:
-                # Rajouté les effets de la case
                 couleur_case = self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy())
+                if couleur_case == logique.Couleur.BEIGE.value:
+                    pass
+                            
+                elif couleur_case == logique.Couleur.BLANC.value:
+                    pass
+                
+                elif couleur_case == logique.Couleur.BLEU.value:
+                    pass
 
+                elif couleur_case == logique.Couleur.GRIS.value:
+                    pass
+
+                elif couleur_case == logique.Couleur.INDIGO.value:
+                    pass
+                
+                elif couleur_case == logique.Couleur.JAUNE.value:
+                    pass
+                
+                elif couleur_case == logique.Couleur.NOIR.value:
+                    self.getListeJoueur()[self.getIdJoueurActuel()].setPv(0)
+                
+                elif couleur_case == logique.Couleur.ORANGE.value:
+                    pass
+                    
+                elif couleur_case == logique.Couleur.ROSE.value:
+                    pass
+                    
+                elif couleur_case == logique.Couleur.ROUGE.value:
+                    pass
+                    
+                elif couleur_case == logique.Couleur.TURQUOISE.value:
+                    pass
+
+                elif couleur_case == logique.Couleur.VIOLET.value:
+                    pass
             case GameState.FIGHT:
                 pass
             case GameState.WAIT_FIGHT_ACTION:
