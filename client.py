@@ -310,7 +310,6 @@ class Client():
             # Affiche le de sur la face 6
             self.currentImageDe = image.De.FACE6.value
             self.getFenetre().blit(self.currentImageDe,(350,475))
-        self.getGame().setEtat(game.GameState.MOVE_PLAYER)
 
 # --------- Boucle principale du jeu qui fait l'affichage et la logique --------- #
 
