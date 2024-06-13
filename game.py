@@ -97,6 +97,7 @@ class Game():
             Setter l'etat du joueur
         """
         self.__etat = etat
+        print(etat)
     
     def getPlateau(self)->Plateau:
         """Renvoie l'état du plateau"""
@@ -121,7 +122,7 @@ class Game():
         return elems
     
     def loop(self, input:inputs):
-        if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
+        if self.getListeJoueur()[self.getIdJoueurActuel()] == None and self.getEtat() == GameState.SELECT_AVATAR :
             self.setEtat(GameState.SELECT_AVATAR)
         player:joueur.Joueur = self.getListeJoueur()[self.getIdJoueurActuel()]
         match self.getEtat():

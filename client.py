@@ -4,6 +4,7 @@ import pygame, joueur
 import interface, game
 from utils import image, texte, logique, rectangle
 from input import inputs, direction
+import time
 from utils.rectangle import Rectangle
 
 class ClientState(Enum):
@@ -48,6 +49,7 @@ class Client():
         self.__joueurLocal:list[int] = []
         self.currentIdDe:int = 0
         self.currentImageDe:image.De = None
+        self.__timerAnimation = {}
 
 # --------- Getter et Setter du client --------- #
 
@@ -291,13 +293,22 @@ class Client():
     
     def afficheAnimationDe(self):
         listeDe = [image.De.FACE2.value, image.De.FACE1.value, image.De.FACE4.value, image.De.FACE6.value, image.De.FACE5.value, image.De.FACE3.value]
-        
-        self.currentIdDe += 1
+        if 'de' not in self.__timerAnimation.keys():
+            self.__timerAnimation['de'] = time.time()
         if self.currentIdDe >= len(listeDe):
+            print("b")
+            self.__timerAnimation['de'] = time.time()
             self.currentIdDe = 0
             self.affichageResultatDe()
         else:
             self.getFenetre().blit(listeDe[self.currentIdDe],(350,475))
+        animationDelay = 0.23 - int(0.19*(self.currentIdDe/len(listeDe)))
+        if self.__timerAnimation['de'] + animationDelay < time.time() :
+                print("a" + str(self.currentIdDe))
+                self.currentIdDe += 1
+                self.__timerAnimation['de'] = time.time()
+        # else: print("nul")
+        # print(self.__timerAnimation['de'])
 
     def affichageResultatDe(self):
         if self.getGame().getDeValue() == 1:
@@ -422,6 +433,8 @@ class Client():
 
                     # Page_LancementDe
                     case game.GameState.LANCEMENT_DE:
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.afficheAnimationDe()
 
                     # Page_Direction
@@ -488,7 +501,6 @@ class Client():
                         pass
                     case game.GameState.SWITCH_PLAYER:
                         pass
-                print(self.getGame().getEtat())
             
             # En ligne
             case ClientState.ONLINE:
