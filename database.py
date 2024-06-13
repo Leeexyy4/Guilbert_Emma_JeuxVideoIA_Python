@@ -30,9 +30,9 @@ def creer_partie(gagnant):
         cur.close()
         return partie_id
 
-def recuperer_donnees_bdd(partie_id):
+def recuperer_donnees_bdd():
         cur = conn.cursor()
-        cur.execute("SELECT * FROM statistiques WHERE partie_id = %s", (partie_id,))
+        cur.execute("SELECT * FROM statistiques")
         donnees = cur.fetchall()
         cur.close()
         return donnees

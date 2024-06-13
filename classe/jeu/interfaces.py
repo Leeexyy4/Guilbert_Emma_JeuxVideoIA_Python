@@ -5,6 +5,8 @@ import pygame
 from classe.visuel import image, couleur, rectangle, texte
 from classe.jeu import plateau, de
 from classe.personnage import joueur
+from decimal import Decimal
+
 
 class Interface:
     """La classe Interface est une classe qui permet de gérer les pages."""
@@ -127,25 +129,7 @@ class Interface:
         else:
             self.get_liste_joueur().pop(joueur.get_id())
     
-    def Page_demarrage(self, nb_tour, 
-                                    nb_pv_j1_final,
-                                    nb_pv_j2_final ,
-                                    nb_pv_j3_final,
-                                    nb_pv_j4_final,
-                                    nb_cle_j1,
-                                    nb_cle_j2,
-                                    nb_cle_j3,
-                                    nb_cle_j4,
-                                    nb_combat_j1,
-                                    nb_combat_j2,
-                                    nb_combat_j3,
-                                    nb_combat_j4,
-                                    pv_moy_j1_final,
-                                    pv_moy_j2_final,
-                                    pv_moy_j3_final,
-                                    pv_moy_j4_final,
-                                    nombre_case_decouverte,
-                                    nb_mort):    
+    def Page_demarrage(self, donnees_bdd):    
         # Affiche l'image de fond 
         image.Image(0,0,'assets/img/illustrations/Page_demarrage.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())    
         # Mettre à jour l'affichage
@@ -159,36 +143,18 @@ class Interface:
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # si appuie bouton stats
-                        self.Page2_statistiques(nb_tour, 
-                                    nb_pv_j1_final,
-                                    nb_pv_j2_final ,
-                                    nb_pv_j3_final,
-                                    nb_pv_j4_final,
-                                    nb_cle_j1,
-                                    nb_cle_j2,
-                                    nb_cle_j3,
-                                    nb_cle_j4,
-                                    nb_combat_j1,
-                                    nb_combat_j2,
-                                    nb_combat_j3,
-                                    nb_combat_j4,
-                                    pv_moy_j1_final,
-                                    pv_moy_j2_final,
-                                    pv_moy_j3_final,
-                                    pv_moy_j4_final,
-                                    nombre_case_decouverte,
-                                    nb_mort)
+                        self.Page_statistiques(donnees_bdd)
                     if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # si appuie bouton en local
-                        self.Page_nb_joueur()
+                        self.Page_nb_joueur(donnees_bdd)
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
                         self.set_jeuHlouEL("EL")
-                        self.Page_nb_joueur()
+                        self.Page_nb_joueur(donnees_bdd)
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         image.Image(0,0,'assets/img/illustrations/Page_commentjouer.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
                         # Mettre à jour l'affichage
                         pygame.display.update()
                     if (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690): # si appuie sur fleche retour
-                        self.Page_demarrage()
+                        self.Page_demarrage(donnees_bdd)
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
                     pygame.quit()
@@ -234,12 +200,64 @@ class Interface:
                 
         # Mettre à jour l'affichage
         pygame.display.update()
-    
-    def Page_statistiques(self, nombre_cases_decouvertes):    
-        # Affiche l'image de fond 
-        image.Image(0,0,'assets/img/illustrations/Page_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+        
 
-        texte.Texte("Cases découvertes : {}".format(nombre_cases_decouvertes), couleur.Couleur().get_Blanc(), 100, 100).affiche(self.get_police(), self.get_fenetre())
+    def calculer_moyennes(self, donnees):
+        nombre_de_lignes = len(donnees)
+        if nombre_de_lignes == 0:
+            return []
+        
+        # Sommes initiales
+        sommes = [0] * len(donnees[0])
+        
+        for ligne in donnees:
+            for i, valeur in enumerate(ligne):
+                sommes[i] += valeur
+        
+        # Calcul des moyennes
+        moyennes = [somme / nombre_de_lignes for somme in sommes]
+        return moyennes
+
+    def Page_statistiques(self, donnees_bdd):
+        # Affiche l'image de fond 
+        image.Image(0,0,'assets/img/illustrations/Page1_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+
+        moyennes = self.calculer_moyennes(donnees_bdd)
+
+        labels = [
+            "Cases découvertes", 
+            "Manches effectuées", "Morts", "Clés récupérées", 
+            "Boss vaincus", "PV moyen"
+        ]
+
+        # Affichage des statistiques par groupe de 3
+        y1 = 170
+        y2 = 200
+
+        # Première moitié des statistiques
+        for i in range(len(labels) // 2):
+            label = labels[i]
+            moyenne = moyennes[i]
+
+            texte.Texte(f"{label}", couleur.Couleur().get_Blanc(), 200, y1).affiche(self.get_police(), self.get_fenetre())
+            texte.Texte(f"{moyenne:.2f}", couleur.Couleur().get_Blanc(), 230, y2).affiche(self.get_police(), self.get_fenetre())
+
+            y1 += 100
+            y2 += 100
+
+        # Seconde moitié des statistiques
+        y1 = 170
+        y2 = 200
+
+        for i in range(len(labels) // 2, len(labels)):
+            label = labels[i]
+            moyenne = moyennes[i]
+
+            texte.Texte(f"{label}", couleur.Couleur().get_Blanc(), 500, y1).affiche(self.get_police(), self.get_fenetre())
+            texte.Texte(f"{moyenne:.2f}", couleur.Couleur().get_Blanc(), 530, y2).affiche(self.get_police(), self.get_fenetre())
+
+            y1 += 100
+            y2 += 100
 
         # Mettre à jour l'affichage
         pygame.display.update()
@@ -254,7 +272,7 @@ class Interface:
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
-                        self.Page_demarrage(nombre_cases_decouvertes)
+                        self.Page_demarrage(donnees_bdd)
                         stats = True
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
@@ -315,7 +333,7 @@ class Interface:
                     pygame.quit()
                     exit()
 
-    def Page_nb_joueur(self):
+    def Page_nb_joueur(self, donnees_bdd):
         self.set_nb_joueur(0)
 
         image.Image(0,0,'assets/img/illustrations/Page_nbjoueurs.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
@@ -342,7 +360,7 @@ class Interface:
                     mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
                         self.set_nb_joueur(-1)
-                        self.Page_demarrage()
+                        self.Page_demarrage(donnees_bdd)
                     # Si le personnage sur lequel on clique est J2   
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 :
                         self.set_nb_joueur(2)
@@ -689,7 +707,8 @@ class Interface:
                                     pv_moy_j3,
                                     pv_moy_j4,
                                     nombre_case_decouverte,
-                                    nb_mort):
+                                    nb_mort,
+                                    donnees_bdd):
         # Page de la sorcière quan don a réussi le jeu
         image.Image(0,0,'assets/img/illustrations/Page_maisonsorciere.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
         self.Menu_bas(joueur)
@@ -763,7 +782,8 @@ class Interface:
                                     pv_moy_j3,
                                     pv_moy_j4,
                                     nombre_case_decouverte,
-                                    nb_mort)
+                                    nb_mort,
+                                    donnees_bdd)
                         #self.Menu_bas(joueur)
                         #texte.Texte("Tu as terminé le jeu bravo à toi jeune aventurier",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
                         #texte.Texte("Tu es le premier a t'être libéré du sort !!",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
@@ -895,7 +915,8 @@ class Interface:
                                     pv_moy_j3_final,
                                     pv_moy_j4_final,
                                     nombre_case_decouverte,
-                                    nb_mort):    
+                                    nb_mort,
+                                    donnees_bdd):    
         # Affiche l'image de fond 
         image.Image(0,0,'assets/img/illustrations/Page_findujeu.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
         # Mettre à jour l'affichage
@@ -930,7 +951,8 @@ class Interface:
                                     pv_moy_j3_final,
                                     pv_moy_j4_final,
                                     nombre_case_decouverte,
-                                    nb_mort)
+                                    nb_mort, 
+                                    donnees_bdd)
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
                     pygame.quit()
@@ -938,7 +960,7 @@ class Interface:
 
     def Page2_statistiques(self,    nb_tour, 
                                     nb_pv_j1_final,
-                                    nb_pv_j2_final ,
+                                    nb_pv_j2_final,
                                     nb_pv_j3_final,
                                     nb_pv_j4_final,
                                     nb_cle_j1,
@@ -954,9 +976,10 @@ class Interface:
                                     pv_moy_j3_final,
                                     pv_moy_j4_final,
                                     nombre_case_decouverte,
-                                    nb_mort):    
+                                    nb_mort,
+                                    donnees_bdd):
         # Affiche l'image de fond 
-        image.Image(0,0,'assets/img/illustrations/Page_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+        image.Image(0,0,'assets/img/illustrations/Page2_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
 
         texte.Texte("Joueur 1", couleur.Couleur().get_Blanc(), 100, 100).affiche(self.get_police(), self.get_fenetre())
         texte.Texte("Nombre de clé : {}".format(nb_cle_j1), couleur.Couleur().get_Blanc(), 100, 150).affiche(self.get_police(), self.get_fenetre())
@@ -998,25 +1021,7 @@ class Interface:
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
-                        self.Page_demarrage(nb_tour, 
-                                    nb_pv_j1_final,
-                                    nb_pv_j2_final ,
-                                    nb_pv_j3_final,
-                                    nb_pv_j4_final,
-                                    nb_cle_j1,
-                                    nb_cle_j2,
-                                    nb_cle_j3,
-                                    nb_cle_j4,
-                                    nb_combat_j1,
-                                    nb_combat_j2,
-                                    nb_combat_j3,
-                                    nb_combat_j4,
-                                    pv_moy_j1_final,
-                                    pv_moy_j2_final,
-                                    pv_moy_j3_final,
-                                    pv_moy_j4_final,
-                                    nombre_case_decouverte,
-                                    nb_mort)
+                        self.Page_demarrage(donnees_bdd)
                         stats = True
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):

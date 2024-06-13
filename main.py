@@ -34,7 +34,9 @@ if __name__ == "__main__":
     # Initialisation de Pygame
     pygame.init()
 
-    nombre_cases_decouvertes = nbCases()
+    stat = recuperer_donnees_bdd()
+    print(stat)
+
     nb_tour = 0
     nb_pv_j1 = []
     nb_pv_j2 = []
@@ -63,27 +65,12 @@ if __name__ == "__main__":
     pv_moy_j3_final = sum(nb_pv_j3) / len(nb_pv_j3) if nb_pv_j3 else 0
     nb_pv_j4_final = nb_pv_j4[-1] if nb_pv_j4 else 0
     pv_moy_j4_final = sum(nb_pv_j4) / len(nb_pv_j4) if nb_pv_j4 else 0
-    
+
+
+    donnees_bdd = recuperer_donnees_bdd()
+
     page = interfaces.Interface()
-    page.Page_demarrage(nb_tour, 
-                                    nb_pv_j1_final,
-                                    nb_pv_j2_final ,
-                                    nb_pv_j3_final,
-                                    nb_pv_j4_final,
-                                    nb_cle_j1,
-                                    nb_cle_j2,
-                                    nb_cle_j3,
-                                    nb_cle_j4,
-                                    nb_combat_j1,
-                                    nb_combat_j2,
-                                    nb_combat_j3,
-                                    nb_combat_j4,
-                                    pv_moy_j1_final,
-                                    pv_moy_j2_final,
-                                    pv_moy_j3_final,
-                                    pv_moy_j4_final,
-                                    nombre_case_decouverte,
-                                    nb_mort)
+    page.Page_demarrage(donnees_bdd)
     # Pour tous les joueurs encore en vie
     while page.get_etat_de_jeu() != "fin_du_jeu": 
         print(nombre_case_decouverte)
@@ -93,7 +80,7 @@ if __name__ == "__main__":
                 for numero_joueur in range(page.get_nb_joueur()):
                     # Afficher la proposition pour choisir le personnage
                     prenom, element = page.Page_choixperso(numero_joueur)
-                    un_joueur = joueur.Joueur(numero_joueur,prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,["cle de la Forêt", "cle de la Ville", "cle du Rocher", "cle de la Rivière"])
+                    un_joueur = joueur.Joueur(numero_joueur,prenom,element,page.get_plateau_de_jeu().get_case_jaune()[0],page.get_plateau_de_jeu().get_case_jaune()[1],700,110,["cle du Rocher", "cle de la Rivière"])
                     page.set_liste_joueur(page.get_liste_joueur() + [[un_joueur.get_id(), un_joueur.get_prenom(), un_joueur.get_element(), un_joueur.get_plateaux(), un_joueur.get_plateauy(), un_joueur.get_pv(), un_joueur.get_attaque(), un_joueur.get_inventaire()]])
                     page.Page_premier_mouvement(un_joueur)
                     page.get_plateau_de_jeu().plateau_cache(page)
@@ -110,11 +97,13 @@ if __name__ == "__main__":
             nb_tour += 1
             pv_joueurs = { 'Pierre': None, 'Flora': None, 'Ondine': None, 'Kevin': None }
             combat_joueur = { 'Pierre': None, 'Flora': None, 'Ondine': None, 'Kevin': None }
+            cles_joueurs = { 'Pierre': 0, 'Flora': 0, 'Ondine': 0, 'Kevin': 0 }
 
             for joueur_data in page.get_liste_joueur():
                 un_joueur = joueur.Joueur(joueur_data[0], joueur_data[1], joueur_data[2], joueur_data[3], joueur_data[4], joueur_data[5], joueur_data[6], joueur_data[7])
                 pv_joueurs[un_joueur.get_prenom()] = un_joueur.get_pv()
                 combat_joueur[un_joueur.get_prenom()] = un_joueur.get_attaque()
+                cles_joueurs[un_joueur.get_prenom()] = len(un_joueur.get_inventaire())
 
             if pv_joueurs['Pierre'] is not None:
                 nb_pv_j1.append(pv_joueurs['Pierre'])
@@ -128,6 +117,11 @@ if __name__ == "__main__":
             if pv_joueurs['Kevin'] is not None:
                 nb_pv_j4.append(pv_joueurs['Kevin'])
                 nb_combat_j4 += combat_joueur["Kevin"]
+
+            nb_cle_j1 = cles_joueurs['Pierre']
+            nb_cle_j2 = cles_joueurs['Flora']
+            nb_cle_j3 = cles_joueurs['Ondine']
+            nb_cle_j4 = cles_joueurs['Kevin']
 
             nb_pv_j1_final = nb_pv_j1[-1] if nb_pv_j1 else 0
             pv_moy_j1_final = sum(nb_pv_j1) / len(nb_pv_j1) if nb_pv_j1 else 0
@@ -148,6 +142,10 @@ if __name__ == "__main__":
             print(f"Nb combat du joueur 2 : {nb_combat_j2}"),
             print(f"Nb combat du joueur 3 : {nb_combat_j3}"),
             print(f"Nb combat du joueur 4 : {nb_combat_j4}"),
+            print(f"Nb de clé du joueur 1 : {nb_cle_j1}"),
+            print(f"Nb de clé du joueur 2 : {nb_cle_j2}"),
+            print(f"Nb de clé du joueur 3 : {nb_cle_j3}"),
+            print(f"Nb de clé du joueur 4 : {nb_cle_j4}"),
             print(f"Nombre de cases découvertes : {nombre_case_decouverte}"),
             if page.get_liste_joueur() != []:
                 for i in page.get_liste_joueur():
@@ -230,9 +228,8 @@ if __name__ == "__main__":
                     nb_combat_j1 if un_joueur.get_prenom() == 'Pierre' else nb_combat_j2 if un_joueur.get_prenom() == 'Flora' else nb_combat_j3 if un_joueur.get_prenom() == 'Ondine' else nb_combat_j4,
                     pv_moy_j1_final if un_joueur.get_prenom() == 'Pierre' else pv_moy_j2_final if un_joueur.get_prenom() == 'Flora' else pv_moy_j3_final if un_joueur.get_prenom() == 'Ondine' else pv_moy_j4_final,
                 )
-            
-            stat = recuperer_donnees_bdd(partie_id)
-            print(stat)
+
+            donnees_bdd = recuperer_donnees_bdd()
 
             if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
                 un_joueur.set_inventaire([])
@@ -255,7 +252,8 @@ if __name__ == "__main__":
                                     pv_moy_j3_final,
                                     pv_moy_j4_final,
                                     nombre_case_decouverte,
-                                    nb_mort
+                                    nb_mort,
+                                    donnees_bdd
                                 )
                 pygame.quit()
             else:
@@ -279,7 +277,8 @@ if __name__ == "__main__":
                                     pv_moy_j3_final,
                                     pv_moy_j4_final,
                                     nombre_case_decouverte,
-                                    nb_mort)
+                                    nb_mort,
+                                    donnees_bdd)
                 # Dessiner la partie basse
                 pygame.draw.rect(page.get_fenetre(),page.get_couleur().get_Gris(),(10,580,780,102))
                 texte.Texte("Aucun des joueurs n'a réussi à finir le jeu",couleur.Couleur().get_Noir(),30,600).affiche(page.get_police(),page.get_fenetre())
