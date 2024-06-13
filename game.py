@@ -107,7 +107,7 @@ class Game():
         """_summary_
             Setter de l'etat du joueur
         """
-        self.__special_action = chanceaction
+        self.__special_action = Specialaction
     
 
     def getChanceAction(self)->str:
