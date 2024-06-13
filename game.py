@@ -50,6 +50,7 @@ class GameState(Enum):
 class Game():
     """la Classe Game initialise les paramètres de la partie"""
     def __init__(self, nombreJoueur:int, nombreIA:int) -> None:
+        self._deCd = 0
         self.__nombreJoueur:int = nombreJoueur
         self.__listeJoueur:list[joueur.Joueur] = [None for i in range(nombreIA + nombreJoueur)]
         self.__plateau:Plateau = Plateau()
@@ -60,7 +61,17 @@ class Game():
         self.__chance_action:str = None
         self.__malus_action:str = None
         self.__special_action:str = None
+        self.__lastdeVal = 1
+    def autoInitPlayer(self) :
+        start = self.__plateau.getCaseJaune()
+        elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
+        self.__listeJoueur:list[joueur.Joueur] = [joueur.Joueur(i, start[0], start[1],elems[i] ) for i in range(self.__nombreJoueur)]
 
+    def getlastdeVal(self)->int:
+        """_summary_
+            Getter de l'etat du joueur
+        """
+        return self.__lastdeVal
     def getNombreJoueur(self)->int:
         """_summary_
             Getter du nombre de joueur
@@ -214,6 +225,7 @@ class Game():
                 if input.estClique(): 
                     if 350 <= input.getSourisx() <= 435 and 475 <= input.getSourisy() <= 560:
                         self.setDeValue(random.randint(1,6))
+                        self.__lastdeVal = self.__deValue
                         self.setEtat(GameState.LANCEMENT_DE)
             
             # Logique_Mouvement
@@ -224,7 +236,14 @@ class Game():
             
             # Logique_LancementDe
             case GameState.LANCEMENT_DE:
-                pass
+                delay = 0.23
+                for i in range(6):
+                    delay += 0.23 - int(0.19*(i/6))
+                if(self._deCd == 0):
+                    self._deCd = time.time()
+                elif(self._deCd+delay+0.5 <= time.time()):
+                    self.setEtat(GameState.MOVE_PLAYER)
+                    self._deCd = 0
             
             # Logique_Direction
             case GameState.MOVE_PLAYER:
