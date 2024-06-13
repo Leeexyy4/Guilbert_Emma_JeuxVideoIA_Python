@@ -247,7 +247,7 @@ class Game():
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
                     case direction.SOUTH :
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()+1 < 10):
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()+1 < 10):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()+1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
