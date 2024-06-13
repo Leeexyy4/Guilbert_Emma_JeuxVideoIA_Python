@@ -15,7 +15,7 @@ class ServerState(Enum):
 
     ENDING = 4 # fin du serveur envoie des données à la bd pour les stats
     
-host = ' 172.20.10.2'
+host = '192.168.1.159'
 firstport = 12345
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 players = []
@@ -43,18 +43,14 @@ while isOn:
                 for player in players:
                     sock.sendto(pickle.dumps(game), player)
         case ServerState.IN_GAME:
-            if game.getEtat == GameState.LANCEMENT_DE:
-                game.loop(inputs(0,0))
-                
-            else:
-                id = game.getIdJoueurActuel()
-                message = {}
-                message['id'] = id
-                message['input'] = game.getEtat()
-                sock.sendto(pickle.dumps(message), players[id])
-                
-                data, addr = sock.recvfrom(20480)
-                input = pickle.loads(data)
+            id = game.getIdJoueurActuel()
+            message = {}
+            message['id'] = id
+            message['input'] = game.getEtat()
+            sock.sendto(pickle.dumps(message), players[id])
+            
+            data, addr = sock.recvfrom(20480)
+            input = pickle.loads(data)
             if (type(input) == inputs):
                 game.loop(input)
                 for player in players:

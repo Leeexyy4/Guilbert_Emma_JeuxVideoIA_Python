@@ -10,6 +10,7 @@ from utils.rectangle import Rectangle
 host = '192.168.1.159'
 firstport = 12345
 clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# clientSock.bind((host, firstport))
 
 class ClientState(Enum):
     """ClientState(Enum) contient tous les états dans lesquels le client de jeu peut se trouver"""
@@ -602,6 +603,8 @@ class Client():
                         self.setInterface(interface.Interface(False))
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
                         self.__game = game.Game(4,0)
+                        
+                        clientSock.sendto(pickle.dumps("hello"), (host, firstport))
                         self.setEtatClient(ClientState.ONLINE)
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         self.setEtatPartie(PartieState.HELPER)
