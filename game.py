@@ -233,33 +233,33 @@ class Game():
                     return
                 match input.getDirection():
                     case direction.NORTH:
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()-1 > 0):
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux() -1 > 0):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()-1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
                     case direction.EAST:
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()+1 < 17):
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy() +1 < 17):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()+1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
                     case direction.SOUTH:
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()+1 < 10):
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux() +1 < 10):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()+1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
                     case direction.WEST:
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()-1 > 0):
-                            self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()-1)
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy() -1 > 0):
+                            self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()-1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
-    
+            
                 
             # Logique_Action
             case GameState.STAY_ON_CASE:
