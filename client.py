@@ -4,9 +4,13 @@ import pygame, joueur
 import interface, game
 from utils import image, texte, logique, rectangle
 from input import inputs, direction
-import time, random
-from utils.rectangle import Rectangle
 
+import time, random, pickle, socket
+from utils.rectangle import Rectangle
+    
+host = '192.168.1.159'
+firstport = 12345
+clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 class ClientState(Enum):
 
     LOCAL = 1 # création de la map, envoi des donné au joueur
@@ -362,7 +366,7 @@ class Client():
 
                 
             # En local
-            case ClientState.LOCAL:
+            case ClientState.LOCAL | ClientState.ONLINE:
                 match self.getGame().getEtat():
 
                     # Page_ChoixPerso
@@ -419,7 +423,8 @@ class Client():
                         temp_texte=("Bravo ! Tu peux avancer de {} cases ! Où ".format(self.getGame().getDeValue()))
                         self.setDialogues([temp_texte, "veux-tu aller ? (haut, bas, gauche, droite)"])
                         self.afficheDialogues()
-                        image.Image(350,475,self.currentImageDe).affiche(self.getFenetre())
+                        listeDe = [image.De.FACE1.value, image.De.FACE2.value, image.De.FACE3.value, image.De.FACE4.value, image.De.FACE5.value, image.De.FACE6.value]
+                        image.Image(350,475,listeDe[self.__game.getlastdeVal()-1]).affiche(self.getFenetre())
 
                     # Page_Action
                     case game.GameState.STAY_ON_CASE:
@@ -596,8 +601,8 @@ class Client():
                         self.setEtatPartie(PartieState.NB_PLAYER)
                         self.setInterface(interface.Interface(False))
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
-                        self.setEtatPartie(PartieState.NB_PLAYER)
-                        self.setInterface(interface.Interface(True))
+                        self.__game = game.Game(4,0)
+                        self.setEtatClient(ClientState.ONLINE)
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         self.setEtatPartie(PartieState.HELPER)
                 pass
@@ -709,7 +714,26 @@ class Client():
                 case ClientState.LOCAL:
                     self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.ONLINE:
+                    
+                    print("online")
+                    clientSock.sendto(pickle.dumps('hello'), (host, firstport))
+                    self.__game.loop(inputs(mouse_x, mouse_y))
                     # envoyé les inputs au server
+                    try:
+                        data, serveur = clientSock.recvfrom(20480)
+                        print('a')
+                        resp  = 'OK'
+                        data = pickle.loads(data)
+                        if(type(data) == game.Game):
+                            print("change game")
+                            self.setGame(data)
+                        elif isinstance(data, dict):
+                            print("input")
+                            if( 'input' in data.keys()):
+                                clientSock.sendto(pickle.dumps(inputs(mouse_x, mouse_y, click, dir)), (host, firstport))
+                        else : print(type(data))
+                    except TimeoutError:
+                        print('REQUEST TIMED OUT')
                     pass
                 case ClientState.QUIT:
                     pass

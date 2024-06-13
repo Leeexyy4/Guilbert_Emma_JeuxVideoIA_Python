@@ -49,7 +49,8 @@ class GameState(Enum):
 
 class Game():
     """la Classe Game initialise les paramètres de la partie"""
-    def __init__(self, nombreJoueur:int, nombreIA:int) -> None:
+    def __init__(self, nombreJoueur:int, nombreIA:int, isLocal:bool = True) -> None:
+        self.__deCd = 0
         self.__nombreJoueur:int = nombreJoueur
         self.__listeJoueur:list[joueur.Joueur] = [None for i in range(nombreIA + nombreJoueur)]
         self.__plateau:Plateau = Plateau()
@@ -61,6 +62,21 @@ class Game():
         self.__chance_action:str = None
         self.__malus_action:str = None
         self.__special_action:str = None
+        self.__lastdeVal = 1
+        self.__tours = 0
+        self.__isLocal = isLocal
+        self.resetTours()
+        
+    def autoInitPlayer(self) :
+        start = self.__plateau.getCaseJaune()
+        elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
+        self.__listeJoueur:list[joueur.Joueur] = [joueur.Joueur(i, start[0], start[1],elems[i] ) for i in range(self.__nombreJoueur)]
+
+    def getlastdeVal(self)->int:
+        """_summary_
+            Getter de l'etat du joueur
+        """
+        return self.__lastdeVal
 
     def getNombreJoueur(self)->int:
         """_summary_
@@ -176,7 +192,11 @@ class Game():
         print(len(self.getListeJoueur()))
         if self.getListeJoueur()[self.getIdJoueurActuel()].getPv() == 0:
             self.setListeJoueur(self.getListeJoueur().pop(self.getIdJoueurActuel()))
-        self.setIdJoueurActuel(self.getIdJoueurActuel()+1 if self.getIdJoueurActuel() < len(self.getListeJoueur())-1 else 0)
+        if self.getIdJoueurActuel() < len(self.getListeJoueur())-1:
+            self.setIdJoueurActuel(self.getIdJoueurActuel()+1)
+        else:
+            self.setIdJoueurActuel(0)
+            self.__tours +=1
         print(self.getIdJoueurActuel())
     
     def personnageSelectionnable(self):
@@ -186,6 +206,11 @@ class Game():
             if isinstance(player, joueur.Joueur):
                 elems.remove(player.getElement())
         return elems
+    def resetTours(self):
+        if self.__tours == 0:
+            self.setEtat(GameState.SELECT_AVATAR if self.__isLocal else GameState.USE_DIE)
+        else:
+            self.setEtat(GameState.SELECT_ACTION)
     
     def loop(self, input:inputs):
         if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
@@ -215,6 +240,7 @@ class Game():
                 if input.estClique(): 
                     if 350 <= input.getSourisx() <= 435 and 475 <= input.getSourisy() <= 560:
                         self.setDeValue(random.randint(1,6))
+                        self.__lastdeVal = self.__deValue
                         self.setEtat(GameState.LANCEMENT_DE)
             
             # Logique_Mouvement
@@ -225,7 +251,14 @@ class Game():
             
             # Logique_LancementDe
             case GameState.LANCEMENT_DE:
-                pass
+                delay = 0.23
+                for i in range(6):
+                    delay += 0.23 - int(0.19*(i/6))
+                if(self.__deCd == 0):
+                    self.__deCd = time.time()
+                elif(self.__deCd+delay+0.5 <= time.time()):
+                    self.setEtat(GameState.MOVE_PLAYER)
+                    self.__deCd = 0
             
             # Logique_Direction
             case GameState.MOVE_PLAYER:
@@ -437,6 +470,4 @@ class Game():
                 pass
             case GameState.SWITCH_PLAYER:
                 self.joueurSuivant()
-                self.setEtat(GameState.SELECT_ACTION)
-                if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
-                    self.setEtat(GameState.SELECT_AVATAR)
+                self.resetTours()

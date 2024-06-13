@@ -28,7 +28,7 @@ isOn = True
 while isOn:
     match state:
         case ServerState.INIT :
-            game = Game(2,0)
+            game = Game(2,0, False)
             game.autoInitPlayer()
             state = ServerState.WAIT_CONNECION
             print("fin initialisation")
@@ -41,12 +41,8 @@ while isOn:
                 state = ServerState.IN_GAME
                 print("debut du serveur")
                 for player in players:
-                    sock.sendto(pickle.dumps(game), player) 
+                    sock.sendto(pickle.dumps(game), player)
         case ServerState.IN_GAME:
-            if (type(input) == inputs):
-                game.loop(input)
-                for player in players:
-                    sock.sendto(pickle.dumps(game), player) 
             if game.getEtat == GameState.LANCEMENT_DE:
                 game.loop(inputs(0,0))
                 
@@ -59,6 +55,10 @@ while isOn:
                 
                 data, addr = sock.recvfrom(20480)
                 input = pickle.loads(data)
+            if (type(input) == inputs):
+                game.loop(input)
+                for player in players:
+                    sock.sendto(pickle.dumps(game), player) 
         case ServerState.ENDING:
             # Envoi donné à la bd
             for player in players:
