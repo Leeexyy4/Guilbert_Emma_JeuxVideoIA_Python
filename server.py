@@ -15,7 +15,7 @@ class ServerState(Enum):
 
     ENDING = 4 # fin du serveur envoie des données à la bd pour les stats
     
-host = '192.168.1.159'
+host = ' 172.20.10.2'
 firstport = 12345
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 players = []

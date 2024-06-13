@@ -81,7 +81,7 @@ class Plateau():
         """Renvoie les coordonnées correspondant à la case jaune."""
         for ligne in range(10):
             for colonne in range(17):
-                if self.getPlateau()[ligne][colonne] == CASE_TYPE.SPAWN:
+                if self.getPlateau()[ligne][colonne] == CASE_TYPE.DEPART:
                     coord_case_jaune = (ligne, colonne)
         return coord_case_jaune
 
@@ -89,7 +89,7 @@ class Plateau():
         """Renvoie les coordonnées correspondant aux cases indigo."""
         for ligne in range(10):
             for colonne in range(17):
-                if self.getPlateau()[ligne][colonne] == CASE_TYPE.TP:
+                if self.getPlateau()[ligne][colonne] == CASE_TYPE.POUF:
                     if joueur.getPlateaux() == ligne and joueur.getPlateauy() == colonne:
                         pass
                     else:
