@@ -12,7 +12,7 @@ host = '192.168.1.159'
 firstport = 12345
 clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 class ClientState(Enum):
-
+    """ClientState(Enum) contient tous les états dans lesquels le client de jeu peut se trouver"""
     LOCAL = 1 # création de la map, envoi des donné au joueur
 
     ONLINE = 2 # attente que le MAX_PLAYER sois atteint
@@ -28,7 +28,7 @@ class ClientState(Enum):
     QUIT = 6 # fin du serveur envoi des donné à la bd pour les stat
 
 class PartieState(Enum):
-
+    """PartieState(Enum) contient tous les états dans lesquels la partie et le jeu peuvent se trouver"""
     INDEX = 1 # creation d'une instance de serveur
 
     GLOBALS_STATS = 4 # boucle de jeu principal
@@ -225,7 +225,7 @@ class Client():
         
     # Definir l'affichage de l'adversaire lors des combats
     def afficheImage_adv(self,x,y,joueur):
-        """Affiche l'image de l'ennemi dans le menu."""
+        """La fonction AfficheImage_adv affiche l'image de l'ennemi dans le menu."""
         image = pygame.image.load(joueur.getImage())
         self.getFenetre().blit(image, (x,y))
         rectangle.Rectangle(500, 635, 130, 35, logique.Couleur.ROUGE.value).affiche(self.getFenetre())
@@ -234,7 +234,7 @@ class Client():
     # Definir l'affichage sur le plateau
     def afficheImagePlateau(self, joueur):
         """
-            La fonction afficheImage_plateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
+            La fonction afficheImagePlateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
         """
         # Charger l'image
         image_redimensionnee = pygame.transform.scale(joueur.getImage(), (47, 47))
@@ -254,7 +254,7 @@ class Client():
     # Définir l'affichage de la potion
     def affichePotion(self):
         """
-            La fonction afficheImage_plateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
+            La fonction affichePotion permet d'afficher la potion dans l'inventaire du joueur
         """
         # Charger l'image
         potion = image.Sorciere.POTION.value
@@ -264,6 +264,7 @@ class Client():
           
     
     def afficheAnimationDe(self):
+        """La fonction afficheAnimationDe permet d'afficher les différentes face du dé lors du jet de dés"""
         listeDe = [image.De.FACE2.value, image.De.FACE1.value, image.De.FACE4.value, image.De.FACE6.value, image.De.FACE5.value, image.De.FACE3.value]
         if 'de' not in self.__timerAnimation.keys():
             self.__timerAnimation['de'] = time.time()
@@ -279,6 +280,7 @@ class Client():
                 self.__timerAnimation['de'] = time.time()
 
     def affichageResultatDe(self):
+        """La fonction affichageResultatDe renvoie l'image correspondant au résultat du lancer au joueur"""
         if self.getGame().getDeValue() == 1:
             # Affiche le de sur la face 1
             self.currentImageDe = image.De.FACE1.value
@@ -314,6 +316,7 @@ class Client():
 
     # Permets de switcher entre les affichage des pages
     def affichagePartie(self):
+        """La fonction affichagePartie permet d'afficher les différentes pages du jeu et des menus"""
         self.getFenetre().fill(logique.Couleur.NOIR.value)
         match self.getEtatClient() :
             
@@ -388,7 +391,7 @@ class Client():
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
                         self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
+                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton déplacement :"," haut, bas, gauche ou droite"])
                         self.afficheDialogues()
                         image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
                     
@@ -398,10 +401,8 @@ class Client():
                         image.Image(0,468, image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
                         self.affichagePlateau()
                         self.MenuBas(player)
-                        
-                        texte.Texte("Joueur " + str(player.getId() + 1) + " : " + player.getPrenom() + " clique sur le de afin ",logique.Couleur.NOIR.value,110,600).affiche(self.getFenetre())
-                        texte.Texte("d'attaquer un joueur ou de lancer le de",logique.Couleur.NOIR.value,110,620).affiche(self.getFenetre())
-                        
+                        self.setDialogues(["Joueur " + str(player.getId() + 1) + " : " + player.getPrenom() + " clique sur le de afin d'attaquer"," un joueur ou de lancer le dé"])
+                        self.afficheDialogues()
                         # Affiche le de sur la face 1
                         image.Image(220,480,image.Interaction.ATTAQUER.value).affiche(self.getFenetre())
                         image.Image(510, 480,image.Interaction.DE.value).affiche(self.getFenetre())
@@ -534,14 +535,14 @@ class Client():
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
                         self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        self.setDialogues(["Tou-dou-dou-doum","Tu vas {}".format(self.getGame().getChanceAction())])
+                        self.setDialogues(["Tou-dou-dou-doum","Tu vas gagner {} pvs".format(self.getGame().getChanceAction()),"Utilise les à bon escient"])
                         self.afficheDialogues()
 
                     case game.GameState.CASE_MALUS:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
                         self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        self.setDialogues(["Tou-dou-dou-doum","Tu vas {}".format(self.getGame().getMalusAction())])
+                        self.setDialogues(["Tou-dou-dou-doum","Tu vas perdre {} pvs".format(self.getGame().getMalusAction()),"Fais attention où tu mets les pieds"])
                         self.afficheDialogues()
                     
                     case game.GameState.CASE_RETOUR:
