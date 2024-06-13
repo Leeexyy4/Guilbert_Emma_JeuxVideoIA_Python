@@ -13,26 +13,28 @@ class GameState(Enum):
     
     USE_DIE = 3 # envoie NB MOVE
     
-    MOVE_PLAYER = 4 # envoie nb déplacement restant + pos
+    LANCEMENT_DE = 4 # Lance l'animation du dé et envoie le nb de déplacement possible
     
-    STAY_ON_CASE = 5 # envoie CASE_ACTION + changement en question
+    MOVE_PLAYER = 5 # envoie nb déplacement restant + pos
 
-    FIGHT = 6 # envoi les 2joueur dans l'ordre d'action
-    
-    WAIT_FIGHT_ACTION = 7 # att les action de l'autre joueur
+    STAY_ON_CASE = 6 # envoie CASE_ACTION + changement en question
 
-    DO_FIGHT_ACTION = 8 # envoi l'action chois
+    FIGHT = 7 # envoi les 2joueur dans l'ordre d'action
     
-    DEAD = 9 # envoi l'action chois
+    WAIT_FIGHT_ACTION = 8 # att les action de l'autre joueur
+
+    DO_FIGHT_ACTION = 9 # envoi l'action chois
     
-    SWITCH_PLAYER = 10
+    DEAD = 10 # envoi l'action chois
+    
+    SWITCH_PLAYER = 11
 class Game():
     """la Classe Game initialise les paramètres de la partie"""
     def __init__(self, nombreJoueur:int, nombreIA:int) -> None:
         self.__nombreJoueur:int = nombreJoueur
         self.__listeJoueur:list[joueur.Joueur] = [None for i in range(nombreIA + nombreJoueur)]
         self.__plateau:Plateau = Plateau()
-        self.__joueurActuel:int = 0
+        self.__idJoueurActuel:int = 0
         self.__deValue:int = 0
         self.__etat:GameState = GameState.SELECT_AVATAR
 
@@ -42,7 +44,7 @@ class Game():
         """
         return self.__nombreJoueur
 
-    def setListeJoueur(self, nombreJoueur):
+    def setNombreJoueur(self, nombreJoueur):
         """_summary_
             Setter du nombre du joueur
         """
@@ -58,19 +60,19 @@ class Game():
         """_summary_
             Setter de l'etat du joueur
         """
-        self.__listeJoueur = listeJoueur
+        self.__listeJoueur[self.getIdJoueurActuel()] = listeJoueur
     
-    def getJoueurActuel(self)->joueur.Joueur:
+    def getIdJoueurActuel(self)->joueur.Joueur:
         """_summary_
             Getter de l'etat du joueur
         """
-        return self.getListeJoueur()[self.__joueurActuel]
+        return self.__idJoueurActuel
     
-    def setJoueurActuel(self):
+    def setIdJoueurActuel(self, idJoueurActuel):
         """_summary_
             Setter de l'etat du joueur
         """
-        return self.getListeJoueur()[self.__joueurActuel]
+        self.__idJoueurActuel = idJoueurActuel
     
     def getDeValue(self)->int:
         """_summary_
@@ -108,7 +110,7 @@ class Game():
     
     def joueurSuivant(self):
         """Fonction qui décide quel est le joueur qui joue au prochain tour"""
-        self.setJoueurActuel(self.getJoueurActuel()+1 if self.getJoueurActuel() < len(self.getListeJoueur())-2 else 0)
+        self.setIdJoueurActuel(self.getIdJoueurActuel()+1 if self.getIdJoueurActuel() < len(self.getListeJoueur())-2 else 0)
     
     def personnageSelectionnable(self):
         """Renvoie la liste des personnages sélectionnables"""
@@ -119,28 +121,25 @@ class Game():
         return elems
     
     def loop(self, input:inputs):
-        if self.getJoueurActuel() == None:
+        if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
             self.setEtat(GameState.SELECT_AVATAR)
-        player:joueur.Joueur = self.getListeJoueur()[self.getJoueurActuel()]
+        player:joueur.Joueur = self.getListeJoueur()[self.getIdJoueurActuel()]
         match self.getEtat():
             case GameState.SELECT_AVATAR:
                 if input.estClique(): 
                     start:tuple[int, int] = self.getPlateau().getCaseJaune()
                     if (500 <= input.getSourisx() <= 600 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.water_is_used):
-                        self.getListeJoueur()[self.getJoueurActuel()] = joueur.Joueur(self.getJoueurActuel(), start[0], start[1], joueur.Element.WATER)
-                        self.setEtat(GameState.USE_DIE)
+                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER))
                         # Si le personnage sur lequel on clique est Flora
                     elif (700 <= input.getSourisx() <= 800 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.grass_is_used): 
-                        self.getListeJoueur[self.getJoueurActuel()] = joueur.Joueur(self.getJoueurActuel(), start[0], start[1], joueur.Element.GRASS)
-                        self.setEtat(GameState.USE_DIE)
+                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS))
                     # Si le personnage sur lequel on clique est Pierre
                     elif (400 <= input.getSourisx() <= 500 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.rock_is_used): 
-                        self.getListeJoueur[self.getJoueurActuel()] = joueur.Joueur(self.getJoueurActuel(), start[0], start[1], joueur.Element.ROCK)
-                        self.setEtat(GameState.USE_DIE)
+                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK))
                     # Si le personnage sur lequel on clique est Kevin
                     elif (600 <= input.getSourisx() <= 700 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.town_is_used):
-                        self.getListeJoueur[self.getJoueurActuel()] = joueur.Joueur(self.getJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
-                        self.setEtat(GameState.USE_DIE)
+                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN))
+                    self.setEtat(GameState.USE_DIE)
 
             case GameState.SELECT_ACTION:
                 if input.estClique(): 
@@ -151,9 +150,11 @@ class Game():
                 if input.estClique(): 
                     if 350 <= input.getSourisx() <= 435 and 475 <= input.getSourisy() <= 560:
                         self.setDeValue(random.randint(1,6))
-                        print(self.getDeValue())
-                        self.setEtat(GameState.MOVE_PLAYER)
-                        
+                        self.setEtat(GameState.LANCEMENT_DE)
+            
+            case GameState.LANCEMENT_DE:
+                pass
+
             case GameState.MOVE_PLAYER:
                 if(self.getDeValue() == 0):
                     self.setEtat(GameState.STAY_ON_CASE)
@@ -178,6 +179,7 @@ class Game():
                 
             case GameState.STAY_ON_CASE:
                 # Rajouté les effets de la case
+                couleur_case = self.getPlateau()[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()][self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]
                 self.joueurSuivant()
                 self.setEtat(GameState.SELECT_ACTION)
                 

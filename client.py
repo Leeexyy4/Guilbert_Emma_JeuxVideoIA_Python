@@ -40,12 +40,14 @@ class Client():
     def __init__(self) -> None:
         self.__clock:pygame.time.Clock =  pygame.time.Clock()
         self.__fenetre = pygame.display.set_mode((800, 700))
-        self.__etatPartie:PartieState = None
+        self.__etatPartie:PartieState = PartieState.INDEX
         self.__etatClient:ClientState = ClientState.MENU
         self.__dialogues:str = ""
         self.__interface:interface.Interface = None
         self.__game:game.Game = None
         self.__joueurLocal:list[int] = []
+        self.currentIdDe:int = 0
+        self.currentImageDe:image.De = None
 
 # --------- Getter et Setter du client --------- #
 
@@ -241,9 +243,7 @@ class Client():
         
         # Afficher l'image redimensionnee sur la fenetre
         self.getFenetre().blit(image_redimensionnee, (self.getGame().getJoueurActuel().get_x(), self.getGame().getJoueurActuel().get_y()))
-        
-        # Mettre à jour l'affichage
-        pygame.display.update()        
+                
 
     # Definir l'affichage des joueurs sur le plateau
     def afficheJoueurs(self):
@@ -287,14 +287,54 @@ class Client():
         
         # Afficher l'image redimensionnee sur la fenetre
         self.getFenetre().blit(potion, (668, 593))
+          
+    
+    def afficheAnimationDe(self):
+        listeDe = [image.De.FACE2.value, image.De.FACE1.value, image.De.FACE4.value, image.De.FACE6.value, image.De.FACE5.value, image.De.FACE3.value]
         
-        # Mettre à jour l'affichage
-        pygame.display.update()  
+        self.currentIdDe += 1
+        if self.currentIdDe >= len(listeDe):
+            self.currentIdDe = 0
+            self.affichageResultatDe()
+        else:
+            self.getFenetre().blit(listeDe[self.currentIdDe],(350,475))
+
+    def affichageResultatDe(self):
+        if self.getGame().getDeValue() == 1:
+            # Affiche le de sur la face 1
+            self.currentImageDe = image.De.FACE1.value
+            self.getFenetre().blit(self.currentImageDe,(350,475))
+            
+        elif self.getGame().getDeValue() == 2:
+            # Affiche le de sur la face 2
+            self.currentImageDe = image.De.FACE2.value
+            self.getFenetre().blit(self.currentImageDe,(350,475))
+            
+        elif self.getGame().getDeValue() == 3:
+            # Affiche le de sur la face 3
+            self.currentImageDe = image.De.FACE3.value
+            self.getFenetre().blit(self.currentImageDe,(350,475))
+            
+        elif self.getGame().getDeValue() == 4:
+            # Affiche le de sur la face 4
+            self.currentImageDe = image.De.FACE4.value
+            self.getFenetre().blit(self.currentImageDe,(350,475))
+            
+        elif self.getGame().getDeValue() == 5:
+            # Affiche le de sur la face 5
+            self.currentImageDe = image.De.FACE5.value
+            self.getFenetre().blit(self.currentImageDe,(350,475))
+            
+        elif self.getGame().getDeValue() == 6:
+            # Affiche le de sur la face 6
+            self.currentImageDe = image.De.FACE6.value
+            self.getFenetre().blit(self.currentImageDe,(350,475))
+        self.getGame().setEtat(game.GameState.MOVE_PLAYER)
 
 # --------- Boucle principale du jeu qui fait l'affichage et la logique --------- #
 
     # Permets de switcher entre les affichage des pages
-    def draw(self):
+    def affichagePartie(self):
         self.getFenetre().fill(logique.Couleur.NOIR.value)
         match self.getEtatClient() :
             
@@ -346,10 +386,8 @@ class Client():
                             texte.Texte("Le nombre de joueurs est complet tu ne peux pas ajouter d'IA", logique.Couleur.NOIR.value, 30, 600).affiche(self.getFenetre())
 
                 
-            # Boucle de la game Local
+            # En local
             case ClientState.LOCAL:
-                self.setGame(self.getInterface().genererPartie())
-                self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
                 match self.getGame().getEtat():
                     case game.GameState.SELECT_AVATAR:
                         image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
@@ -367,15 +405,24 @@ class Client():
                         pass
                     case game.GameState.USE_DIE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.MenuBas(self.getGame().getJoueurActuel())
-                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getJoueurActuel().get_id() + 1) + ", clique sur le de afin de faire","ton déplacement", "haut, bas, gauche ou droite"])
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
                         self.afficheDialogues()
-                        # Affiche le de sur la face 1
                         image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
+                    case game.GameState.LANCEMENT_DE:
+                        self.afficheAnimationDe()
+
                     case game.GameState.MOVE_PLAYER:
-                        pass
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        temp_texte=("Bravo ! Tu peux avancer de {} cases ! Où ".format(self.getGame().getDeValue()))
+                        self.setDialogues([temp_texte, "veux-tu aller ? (haut, bas, gauche, droite)"])
+                        self.afficheDialogues()
+                        image.Image(350,475,self.currentImageDe).affiche(self.getFenetre())
                     case game.GameState.STAY_ON_CASE:
-                        pass
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        texte.Texte("Tu as atterris sur une case {}".format(self.getGame().getPlateau().getNom(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateaux(),self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateauy())), logique.Couleur.NOIR.value, 110, 600).affiche(self.getFenetre())
                     case game.GameState.FIGHT:
                         pass
                     case game.GameState.WAIT_FIGHT_ACTION:
@@ -387,7 +434,10 @@ class Client():
                     case game.GameState.SWITCH_PLAYER:
                         pass
                 print(self.getGame().getEtat())
-
+            
+            # En ligne
+            case ClientState.ONLINE:
+                pass
             
         pygame.display.update()
         self.getClock().tick(60)  
@@ -422,7 +472,6 @@ class Client():
             case PartieState.NB_PLAYER:
                 if is_cliked:
                     if (self.boutonRetour()) : # si appuie bouton play
-                        self.setInterface(None)
                         self.setEtatPartie(PartieState.INDEX)
                     # Si le personnage sur lequel on clique est J2
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 :
@@ -464,27 +513,24 @@ class Client():
                     # Si le personnage sur lequel on clique est J1
                     if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and 0 in selectable_nb_ia:   
                         self.getInterface().setNombreIA(0)
-                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne()  else ClientState.LOCAL)
                     # Si le personnage sur lequel on clique est J2   
                     if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and 1 in selectable_nb_ia:
                         self.getInterface().setNombreIA(1)
-                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
                     # Si le personnage sur lequel on clique est J3
                     if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and 2 in selectable_nb_ia:   
                         self.getInterface().setNombreIA(2)
-                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
                     # Si le personnage sur lequel on clique est J4
                     if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and 3 in selectable_nb_ia:   
                         self.getInterface().setNombreIA(3)
-                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
-                pass
-
+                    self.setGame(self.getInterface().genererPartie())
+                    self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
+                    self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
 
     # Boucle du jeu lorsque le jeu est démarrer qui permet de gérer les événements
     def main(self):
         self.setEtatPartie(PartieState.INDEX)
         while (self.getEtatClient() != ClientState.QUIT):
-            self.draw()
+            self.affichagePartie()
             click = False
             dir = direction.ANY
 

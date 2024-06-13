@@ -110,18 +110,18 @@ class Plateau():
     def remplirPlateauAleatoirement(self):
         """Remplit le plateau de manière aléatoire en fonction de max_couleur."""
         # Crée une liste des couleurs disponibles en fonction de max_couleur
-        couleurs_disponibles = []
-        for couleurs, nombre_max in self.getMaxCase().items():
-            couleurs_disponibles.extend([couleurs] * nombre_max)
+        couleursDisponibles = []
+        for couleurs, nombreMax in self.getMaxCase().items():
+            couleursDisponibles.extend([couleurs] * nombreMax)
 
          # Remplit le plateau de manière aléatoire
         for i in range(10):
-            ligne_plateau = []
+            lignePlateau = []
             for j in range(17):
-                if couleurs_disponibles:  # Vérifiez si des couleurs sont disponibles
-                    couleur_aleatoire = random.choice(couleurs_disponibles)
-                    couleurs_disponibles.remove(couleur_aleatoire)  # Supprime la couleur de la liste
-                    ligne_plateau.append(couleur_aleatoire)
+                if couleursDisponibles:  # Vérifiez si des couleurs sont disponibles
+                    couleur_aleatoire = random.choice(couleursDisponibles)
+                    couleursDisponibles.remove(couleur_aleatoire)  # Supprime la couleur de la liste
+                    lignePlateau.append(couleur_aleatoire)
         
-            self.getPlateau().append(ligne_plateau)
+            self.getPlateau().append(lignePlateau)
         return self.getPlateau()
