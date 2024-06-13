@@ -431,8 +431,8 @@ class Client():
                             self.setDialogues(["Tu es devant la Hutte de la sorciere.","Veux-tu essayer de l'ouvrir à l'aide","des cles des quatre boss ?"])
                             self.getFenetre().blit(image.Interaction.CLES.value, (220, 480))
                             self.getFenetre().blit(image.Interaction.RETOUR.value, (510,480))
-                            texte.Texte("Ouvrir la porte",logique.Couleur.BLANC.value,212,545).affiche(interface.get_police(),interface.get_fenetre())
-                            texte.Texte("Passer son chemin",logique.Couleur.BLANC.value,485,545).affiche(interface.get_police(),interface.get_fenetre())
+                            texte.Texte("Ouvrir la porte",logique.Couleur.BLANC.value,212,545).affiche(self.getFenetre())
+                            texte.Texte("Passer son chemin",logique.Couleur.BLANC.value,485,545).affiche(self.getFenetre())
                             
                         elif couleur_case == logique.Couleur.BLANC.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())

@@ -93,8 +93,7 @@ class Plateau():
                     if joueur.getPlateaux() == ligne and joueur.getPlateauy() == colonne:
                         pass
                     else:
-                        coord_case_indigo = (ligne, colonne)
-        return coord_case_indigo
+                        joueur.setPlateaux(ligne); joueur.setPlateauy(colonne)
 
     def setPlateau(self, plateau):
         """Modifie le plateau de jeu."""
