@@ -50,7 +50,6 @@ class GameState(Enum):
 class Game():
     """la Classe Game initialise les paramètres de la partie"""
     def __init__(self, nombreJoueur:int, nombreIA:int) -> None:
-        self._deCd = 0
         self.__nombreJoueur:int = nombreJoueur
         self.__listeJoueur:list[joueur.Joueur] = [None for i in range(nombreIA + nombreJoueur)]
         self.__plateau:Plateau = Plateau()
@@ -58,20 +57,11 @@ class Game():
         self.__deValue:int = 0
         self.__etat:GameState = GameState.SELECT_AVATAR
         self.__timeaction:int = 0
+        self.__delay:int = 8
         self.__chance_action:str = None
         self.__malus_action:str = None
         self.__special_action:str = None
-        self.__lastdeVal = 1
-    def autoInitPlayer(self) :
-        start = self.__plateau.getCaseJaune()
-        elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
-        self.__listeJoueur:list[joueur.Joueur] = [joueur.Joueur(i, start[0], start[1],elems[i] ) for i in range(self.__nombreJoueur)]
 
-    def getlastdeVal(self)->int:
-        """_summary_
-            Getter de l'etat du joueur
-        """
-        return self.__lastdeVal
     def getNombreJoueur(self)->int:
         """_summary_
             Getter du nombre de joueur
@@ -118,7 +108,7 @@ class Game():
         """_summary_
             Setter de l'etat du joueur
         """
-        self.__special_action = chanceaction
+        self.__special_action = Specialaction
     
 
     def getChanceAction(self)->str:
@@ -225,7 +215,6 @@ class Game():
                 if input.estClique(): 
                     if 350 <= input.getSourisx() <= 435 and 475 <= input.getSourisy() <= 560:
                         self.setDeValue(random.randint(1,6))
-                        self.__lastdeVal = self.__deValue
                         self.setEtat(GameState.LANCEMENT_DE)
             
             # Logique_Mouvement
@@ -236,14 +225,7 @@ class Game():
             
             # Logique_LancementDe
             case GameState.LANCEMENT_DE:
-                delay = 0.23
-                for i in range(6):
-                    delay += 0.23 - int(0.19*(i/6))
-                if(self._deCd == 0):
-                    self._deCd = time.time()
-                elif(self._deCd+delay+0.5 <= time.time()):
-                    self.setEtat(GameState.MOVE_PLAYER)
-                    self._deCd = 0
+                pass
             
             # Logique_Direction
             case GameState.MOVE_PLAYER:
@@ -251,44 +233,46 @@ class Game():
                     self.setEtat(GameState.STAY_ON_CASE)
                     return
                 match input.getDirection():
-                    case direction.NORTH :
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()-1 > 0):
+                    case direction.NORTH:
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux() -1 >= 0):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()-1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
-                    case direction.EAST :
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()-1 > 0):
+                    case direction.EAST:
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy() +1 < 17):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()+1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
-                    case direction.SOUTH :
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()+1 < 10):
+                    case direction.SOUTH:
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux() +1 < 10):
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()+1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
             
-                    case direction.WEST :
-                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()+1 > 17):
-                            self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()-1)
+                    case direction.WEST:
+                        if (self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy() -1 >= 0):
+                            self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()-1)
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]])
-    
+            
                 
             # Logique_Action
             case GameState.STAY_ON_CASE:
                 couleur_case = self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()).value.value
                 print(self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()))
                 match couleur_case:
+
+
                     case logique.Couleur.BEIGE.value:
                         if input.estClique():
                             if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
-                                if self.getListeJoueur()[self.getIdJoueurActuel()].avoir_tt_cles() == True:
+                                if self.getListeJoueur()[self.getIdJoueurActuel()].avoirCles() == True:
                                     self.setEtat(GameState.CASE_FIN_DU_JEU)
                                 else:
                                     self.setEtat(GameState.CASE_SORCIERE_SANS_CLE)
@@ -296,17 +280,17 @@ class Game():
                                 self.setEtat(GameState.CASE_RETOUR)
 
                     case logique.Couleur.BLANC.value:
-                        delay = 8
                         self.__timeaction = time.time()
-                        if self.__timeaction + delay > time.time():
+                        if self.__timeaction + self.__delay > time.time():
+                            self.__delay = 8
                             self.setEtat(GameState.SWITCH_PLAYER)
                 
                     case logique.Couleur.BLEU.value:
                         if input.estClique():
-                            if (self.getListeJoueur()[self.getIdJoueurActuel()].get_pv() > 200 and self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() != []):
+                            if (self.getListeJoueur()[self.getIdJoueurActuel()].getPv() > 200 and self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() != []):
                                 if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
-                                    if self.getListeJoueur()[self.getIdJoueurActuel()].get_pv() > 200:
-                                        self.getListeJoueur()[self.getIdJoueurActuel()].setPv(self.getListeJoueur()[self.getIdJoueurActuel()] - 200)
+                                    if self.getListeJoueur()[self.getIdJoueurActuel()].getPv() > 200:
+                                        self.getListeJoueur()[self.getIdJoueurActuel()].getPv(self.getListeJoueur()[self.getIdJoueurActuel()] - 200)
                                         self.setEtat(GameState.SWITCH_PLAYER)
                                 elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
                                     if self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() != []:
@@ -328,6 +312,8 @@ class Game():
                     case logique.Couleur.INDIGO.value:
                         if input.estClique():
                             if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
+                                self.getPlateau().getCaseIndigo(self.getListeJoueur()[self.getIdJoueurActuel()])
+                                self.__timeaction = time.time()
                                 self.setEtat(GameState.CASE_TELEPORTE)
                             elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
                                 self.setEtat(GameState.CASE_RETOUR)
@@ -336,31 +322,35 @@ class Game():
                         self.setEtat(GameState.SWITCH_PLAYER)
                     
                     case logique.Couleur.NOIR.value:
-                        delay = 8
                         self.__timeaction = time.time()
-                        if self.__timeaction + delay > time.time():
+                        if self.__timeaction + self.__delay > time.time():
+                            self.__delay = 8
                             self.getListeJoueur()[self.getIdJoueurActuel()].setPv(0)
                             self.setEtat(GameState.DEAD)
                     
                     case logique.Couleur.ORANGE.value:
                         if input.estClique():
                             if 360 < input.getSourisx() < 424 and 475 < input.getSourisy() < 539:
-                                liste_malus = ["perdre 20 pv","perdre 50 pv","perdre 80 pv","perdre 120 pv"]
+                                liste_malus = [20,50,80,120,750]
                                 self.setMalusAction(random.choice(liste_malus))
+                                self.getListeJoueur()[self.getIdJoueurActuel()].setPv(self.getListeJoueur()[self.getIdJoueurActuel()].getPv() - self.getMalusAction())
                                 self.setEtat(GameState.CASE_MALUS)
                         
                     case logique.Couleur.ROSE.value:
                         if input.estClique():
                             if 360 < input.getSourisx() < 424 and 475 < input.getSourisy() < 539:
-                                liste_chance = ["gagner 100 pv","gagner 200 pv","gagner 500 pv", "gagner 150 pv","gagner 400 pv","gagner 1050 pv"]
+                                liste_chance = [100,200,500,150,400,1050]
                                 self.setChanceAction(random.choice(liste_chance))
+                                self.getListeJoueur()[self.getIdJoueurActuel()].setPv(self.getListeJoueur()[self.getIdJoueurActuel()].getPv() + self.getChanceAction())
                                 self.setEtat(GameState.CASE_CHANCE)
+
                     case logique.Couleur.GRIS.value:
                         if input.estClique():
                             if 220 < input.getSourisx() < 284 and 480 < input.getSourisy() < 544:
                                 liste_special = ["bravo", "oh non dommage"]
                                 self.setSpecialAction(random.choice(liste_special))
-                                self.setEtat(GameState.CASE_CLE_SPECIALE)   
+                                self.setEtat(GameState.CASE_CLE_SPECIALE)
+
                     case logique.Couleur.BLEU.value:
                         if input.estClique():
                             if 220 < input.getSourisx() < 284 and 480 < input.getSourisy() < 544:
@@ -380,46 +370,55 @@ class Game():
                         pass
                         
                     case logique.Couleur.TURQUOISE.value:
-                        delay = 8
+                        self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(random.randint(0,10))
+                        self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(random.randint(0,17))
                         self.__timeaction = time.time()
-                        if self.__timeaction + delay > time.time():
+                        if self.__timeaction + self.__delay > time.time():
+                            self.__delay = 8
                             self.setEtat(GameState.SWITCH_PLAYER)
 
                     case logique.Couleur.VIOLET.value:
                         self.setEtat(GameState.USE_DIE)
 
             case GameState.CASE_CHANCE:
-                delay = 8
                 self.__timeaction = time.time()
-                if self.__timeaction + delay > time.time():
+                if self.__timeaction + self.__delay > time.time():
+                    self.__delay = 8
+                    self.setEtat(GameState.SWITCH_PLAYER)
+            
+            case GameState.CASE_MALUS:
+                self.__timeaction = time.time()
+                if self.__timeaction + self.__delay > time.time():
+                    self.__delay = 8
                     self.setEtat(GameState.SWITCH_PLAYER)
 
             case GameState.CASE_CLE_SPECIALE:
-                delay = 8
                 self.__timeaction = time.time()
-                if self.__timeaction + delay > time.time():
+                if self.__timeaction + self.__delay > time.time():
+                    self.__delay = 8
                     self.setEtat(GameState.SWITCH_PLAYER)
+
             case GameState.CASE_CLE_PUIT:
-                delay = 8
                 self.__timeaction = time.time()
-                if self.__timeaction + delay > time.time():
+                if self.__timeaction + self.__delay > time.time():
+                    self.__delay = 8
                     self.setEtat(GameState.SWITCH_PLAYER)
+
             case GameState.CASE_PV_PUIT:
-                delay = 8
                 self.__timeaction = time.time()
-                if self.__timeaction + delay > time.time():
+                if self.__timeaction + self.__delay > time.time():
+                    self.__delay = 8
                     self.setEtat(GameState.SWITCH_PLAYER if(player.getPv()>0) else GameState.DEAD)
                     
             case GameState.CASE_RETOUR:
-                delay = 8
                 self.__timeaction = time.time()
-                if self.__timeaction + delay > time.time():
+                if self.__timeaction + self.__delay > time.time():
+                    self.__delay = 8
                     self.setEtat(GameState.SWITCH_PLAYER)
             
             case GameState.CASE_TELEPORTE:
-                delay = 8
-                self.__timeaction = time.time()
-                if self.__timeaction + delay > time.time():
+                if self.__timeaction + self.__delay > time.time():
+                    self.__delay = 8
                     self.setEtat(GameState.SWITCH_PLAYER)
         
             # Combat

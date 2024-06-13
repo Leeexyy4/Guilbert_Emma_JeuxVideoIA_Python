@@ -18,7 +18,7 @@ class Plateau():
             CASE_TYPE.UNLUCK: "Malus",
             CASE_TYPE.TP: "Pouf",
             CASE_TYPE.REPLAY: "Rejoue",
-            CASE_TYPE.RANDOM_TP: "Grrr",
+            CASE_TYPE.RANDOM: "Grrr",
             CASE_TYPE.WITCH: "Hutte",
             CASE_TYPE.SPECIAL: "Spéciale",
             CASE_TYPE.WELL: "Puit",
@@ -33,7 +33,7 @@ class Plateau():
             CASE_TYPE.UNLUCK: 29,
             CASE_TYPE.TP: 2,
             CASE_TYPE.REPLAY: 20,
-            CASE_TYPE.RANDOM_TP: 20,
+            CASE_TYPE.RANDOM: 20,
             CASE_TYPE.WITCH: 1,
             CASE_TYPE.SPECIAL: 10,
             CASE_TYPE.WELL: 1,
@@ -52,15 +52,15 @@ class Plateau():
         return self.__plateau
 
     def getMaxCase(self):
-        """Renvoie le nombre maximum de cases sur le plateau"""
+        """Renvoie le plateau de jeu."""
         return self.__maxCases
     
     def getTailleCase(self):
-        """Renvoie la taille d'une case sur le plateau"""
+        """Renvoie le plateau de jeu."""
         return self.__tailleCase
 
     def getNomCase(self):
-        """Renvoie le nom de la case"""
+        """Renvoie le nom_case de jeu."""
         return self.__nomCase
     
     def getCasesDecouvertes(self):
@@ -78,7 +78,7 @@ class Plateau():
         return nom_case
     
     def getCaseJaune(self):
-        """Renvoie les coordonnées correspondant aux cases 'jaune'."""
+        """Renvoie les coordonnées correspondant à la case jaune."""
         for ligne in range(10):
             for colonne in range(17):
                 if self.getPlateau()[ligne][colonne] == CASE_TYPE.SPAWN:
@@ -86,7 +86,7 @@ class Plateau():
         return coord_case_jaune
 
     def getCaseIndigo(self, joueur):
-        """Renvoie les coordonnées correspondant aux cases 'indigo'."""
+        """Renvoie les coordonnées correspondant aux cases indigo."""
         for ligne in range(10):
             for colonne in range(17):
                 if self.getPlateau()[ligne][colonne] == CASE_TYPE.TP:

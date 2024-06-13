@@ -25,7 +25,7 @@ class CASE_TYPE(Enum):
     NOTHING = Couleur.BLANC # Se pas rien, pas de click
     DEATH = Couleur.NOIR
     WITCH = Couleur.BEIGE # choix entre use clef si non rien, pour finir la partie
-    RANDOM_TP = Couleur.TURQUOISE# click pour être tp aléatoirement
+    RANDOM = Couleur.TURQUOISE# click pour être tp aléatoirement
     REPLAY = Couleur.VIOLET# rejour à partir du lancé de dée
     WELL = Couleur.BLEU # Choisit quoi abandoné, Si n'as pas de clef, boucle sur lui meme
     TP = Couleur.INDIGO # click pour être tp

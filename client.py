@@ -4,12 +4,8 @@ import pygame, joueur
 import interface, game
 from utils import image, texte, logique, rectangle
 from input import inputs, direction
-import time, random, pickle, socket
+import time, random
 from utils.rectangle import Rectangle
-    
-host = '192.168.1.159'
-firstport = 12345
-clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 class ClientState(Enum):
 
@@ -366,7 +362,7 @@ class Client():
 
                 
             # En local
-            case ClientState.LOCAL | ClientState.ONLINE:
+            case ClientState.LOCAL:
                 match self.getGame().getEtat():
 
                     # Page_ChoixPerso
@@ -423,9 +419,7 @@ class Client():
                         temp_texte=("Bravo ! Tu peux avancer de {} cases ! Où ".format(self.getGame().getDeValue()))
                         self.setDialogues([temp_texte, "veux-tu aller ? (haut, bas, gauche, droite)"])
                         self.afficheDialogues()
-                        
-                        listeDe = [image.De.FACE1.value, image.De.FACE2.value, image.De.FACE3.value, image.De.FACE4.value, image.De.FACE5.value, image.De.FACE6.value]
-                        image.Image(350,475,listeDe[self.__game.getlastdeVal()]).affiche(self.getFenetre())
+                        image.Image(350,475,self.currentImageDe).affiche(self.getFenetre())
 
                     # Page_Action
                     case game.GameState.STAY_ON_CASE:
@@ -435,10 +429,11 @@ class Client():
                             self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es devant la Hutte de la sorciere.","Veux-tu essayer de l'ouvrir à l'aide","des cles des quatre boss ?"])
+                            self.afficheDialogues()
                             self.getFenetre().blit(image.Interaction.CLES.value, (220, 480))
                             self.getFenetre().blit(image.Interaction.RETOUR.value, (510,480))
-                            texte.Texte("Ouvrir la porte",logique.Couleur.BLANC.value,212,545).affiche(interface.get_police(),interface.get_fenetre())
-                            texte.Texte("Passer son chemin",logique.Couleur.BLANC.value,485,545).affiche(interface.get_police(),interface.get_fenetre())
+                            texte.Texte("Ouvrir la porte",logique.Couleur.BLANC.value,212,545).affiche(self.getFenetre())
+                            texte.Texte("Passer son chemin",logique.Couleur.BLANC.value,485,545).affiche(self.getFenetre())
                             
                         elif couleur_case == logique.Couleur.BLANC.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
@@ -601,8 +596,7 @@ class Client():
                         self.setEtatPartie(PartieState.NB_PLAYER)
                         self.setInterface(interface.Interface(False))
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
-                        self.__game = game.Game(4,0)
-                        self.setEtatClient(ClientState.ONLINE)
+                        self.setEtatPartie(PartieState.NB_PLAYER)
                         self.setInterface(interface.Interface(True))
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         self.setEtatPartie(PartieState.HELPER)
@@ -715,25 +709,8 @@ class Client():
                 case ClientState.LOCAL:
                     self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.ONLINE:
-                    print("online")
-                    clientSock.sendto(pickle.dumps('hello'), (host, firstport))
-                    self.__game.loop(inputs(mouse_x, mouse_y))
                     # envoyé les inputs au server
-                    try:
-                        data, serveur = clientSock.recvfrom(20480)
-                        print('a')
-                        data = pickle.loads(data)
-                        if(type(data) == game.Game):
-                            print("change game")
-                            self.setGame(data)
-                            self.affichagePartie()
-                        elif isinstance(data, dict):
-                            print("input")
-                            if( 'input' in data.keys()):
-                                clientSock.sendto(pickle.dumps(inputs(mouse_x, mouse_y, click, dir)), (host, firstport))
-                        else : print(type(data))
-                    except TimeoutError:
-                        print('REQUEST TIMED OUT')
+                    pass
                 case ClientState.QUIT:
                     pass
             
