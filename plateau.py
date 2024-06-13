@@ -41,14 +41,11 @@ class Plateau():
             CASE_TYPE.SPAWN:1,
             CASE_TYPE.NOTHING:55
         }
-
-        # A retirer à la fin
+        self.remplirPlateauAleatoirement()
+        self.setCasesDecouvertes(self.getCasesDecouvertes() + [[self.getCaseJaune()[0], self.getCaseJaune()[1]]])   
         for ligne in range(10):
             for colonne in range(17):
-                self.setCasesDecouvertes(((ligne, colonne)))
-        ########################
-        
-        self.remplirPlateauAleatoirement()
+                self.setCasesDecouvertes(self.getCasesDecouvertes() + [[ligne, colonne]])     
 
     def getPlateau(self):
         """Renvoie le plateau de jeu."""

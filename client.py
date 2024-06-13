@@ -160,6 +160,21 @@ class Client():
         if un_joueur.getPrenom() == joueur.Nom.TOWN.value:
             # Ajouter la photo de Pierre
             self.afficheImage(24,598,un_joueur)
+        
+    def affichagePlateau(self):
+        """Met à jour le plateau en affichant les cases découvertes."""
+        font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
+        for i in self.getGame().getPlateau().getCasesDecouvertes():
+            couleur_case = self.getGame().getPlateau().getCases(i[0],i[1]).value # Obtenir la couleur de la case
+            x = i[1] * self.getGame().getPlateau().getTailleCase()  # Coordonnée X du coin supérieur gauche du rectangle
+            y = i[0] * self.getGame().getPlateau().getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
+            rectangle = pygame.Rect(x, y, self.getGame().getPlateau().getTailleCase(), self.getGame().getPlateau().getTailleCase())  # Créer un rectangle
+            pygame.draw.rect(self.getFenetre(), couleur_case.value, rectangle)  # Dessiner le rectangle avec la couleur
+            if (self.getGame().getPlateau().getCases(i[0],i[1]).name != 'MORT' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'SPAWN' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'NOTHING'):
+                texte_surface = font.render(str(self.getGame().getPlateau().getCases(i[0],i[1]).name), True, logique.Couleur.NOIR.value)
+                self.getFenetre().blit(texte_surface, (x + 9, y + 15))
+        self.afficheJoueurs()
+
     
     def afficheDialogues(self):
         """Afficher les dialogues."""
@@ -172,29 +187,6 @@ class Client():
         Rectangle(10, 580, 780, 100, logique.Couleur.GRIS.value).affiche(self.getFenetre())
         for idDialogue in range(len(self.getDialogues())):
             texte.Texte(self.getDialogues()[idDialogue], logique.Couleur.NOIR.value, 30, 600 + (20 * idDialogue)).affiche(self.getFenetre())
-
-    def plateauCache(self):
-        """Cache le plateau en le dessinant entièrement en noir."""
-        for ligne in range(10):
-            for colonne in range(17):
-                x = colonne * self.getGame().getPlateau().getTailleCase()  # Coordonnée X du coin supérieur gauche du rectangle
-                y = ligne * self.getGame().getPlateau().getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
-                rectangle = pygame.Rect(x, y, self.getGame().getPlateau().getTailleCase(), self.getGame().getPlateau().getTailleCase())  # Créer un rectangle
-                pygame.draw.rect(self.getFenetre(), logique.Couleur.NOIR.value, rectangle)  # Dessiner le rectangle avec la couleur
-        self.miseAJourPlateau()
-        self.afficheJoueurs()
-
-    def miseAJourPlateau(self):
-        """Met à jour le plateau en affichant les cases découvertes."""
-        font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
-        for i in self.getGame().getPlateau().getCasesDecouvertes():
-            couleur_case = self.getGame().getPlateau()[i[0]][i[1]]  # Obtenir la couleur de la case
-            x = i[1] * self.getGame().getPlateau().getTailleCase()  # Coordonnée X du coin supérieur gauche du rectangle
-            y = i[0] * self.getGame().getPlateau().getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
-            rectangle = pygame.Rect(x, y, self.getGame().getPlateau().getTailleCase(), self.getGame().getPlateau().getTailleCase())  # Créer un rectangle
-            pygame.draw.rect(self.getFenetre(), couleur_case, rectangle)  # Dessiner le rectangle avec la couleur
-            if (self.getGame().getPlateau().getNomCase()[couleur_case] != "Vide") and (self.getGame().getPlateau().getNomCase()[couleur_case] != "Mort") and (self.getGame().getPlateau().getNomCase()[couleur_case] != "Départ/arrivée"):
-                texte.Texte(self.getGame().getPlateau().getNomCase()[couleur_case], logique.Couleur.NOIR.value, x + 9, y + 15).affiche(self.getFenetre())
 
     # Définir l'affichage des clés dans l'inventaire du joueur
     def afficheCle(self,joueur):
@@ -236,48 +228,24 @@ class Client():
         texte.Texte(joueur.getPv(), logique.Couleur.NOIR.value, 538, 645).affiche(self.getFenetre())
     
     # Definir l'affichage sur le plateau
-    def afficheImagePlateau(self):
+    def afficheImagePlateau(self, joueur):
         """
             La fonction afficheImage_plateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
         """
         # Charger l'image
-        image_redimensionnee = pygame.transform.scale(self.getGame().getJoueurActuel().getImage(), (47, 47))
+        image_redimensionnee = pygame.transform.scale(joueur.getImage(), (47, 47))
         
         # Afficher l'image redimensionnee sur la fenetre
-        self.getFenetre().blit(image_redimensionnee, (self.getGame().getJoueurActuel().getX(), self.getGame().getJoueurActuel().getY()))
+        self.getFenetre().blit(image_redimensionnee, (joueur.getY(), joueur.getX()))
                 
 
     # Definir l'affichage des joueurs sur le plateau
     def afficheJoueurs(self):
         """Affiche tous les joueurs sur le plateau."""
-        if len(self.get_liste_joueur()) == 1:
-            J1  = joueur.Joueur(0,self.get_liste_joueur()[0][1], self.get_liste_joueur()[0][2],self.get_liste_joueur()[0][3], self.get_liste_joueur()[0][4], self.get_liste_joueur()[0][5], self.get_liste_joueur()[0][6], self.get_liste_joueur()[0][7])
-            self.afficheImagePlateau(J1)
-            pygame.display.update()
-        elif len(self.get_liste_joueur()) == 2:
-            J1 = joueur.Joueur(0,self.get_liste_joueur()[0][1], self.get_liste_joueur()[0][2],self.get_liste_joueur()[0][3], self.get_liste_joueur()[0][4], self.get_liste_joueur()[0][5], self.get_liste_joueur()[0][6], self.get_liste_joueur()[0][7])
-            J2 = joueur.Joueur(1,self.get_liste_joueur()[1][1], self.get_liste_joueur()[1][2],self.get_liste_joueur()[1][3], self.get_liste_joueur()[1][4], self.get_liste_joueur()[1][5], self.get_liste_joueur()[1][6], self.get_liste_joueur()[1][7])
-            self.afficheImagePlateau(J1)
-            self.afficheImagePlateau(J2)
-            pygame.display.update()
-        elif len(self.get_liste_joueur()) == 3:
-            J1 = joueur.Joueur(0,self.get_liste_joueur()[0][1], self.get_liste_joueur()[0][2],self.get_liste_joueur()[0][3], self.get_liste_joueur()[0][4], self.get_liste_joueur()[0][5], self.get_liste_joueur()[0][6], self.get_liste_joueur()[0][7])
-            J2 = joueur.Joueur(1,self.get_liste_joueur()[1][1], self.get_liste_joueur()[1][2],self.get_liste_joueur()[1][3], self.get_liste_joueur()[1][4], self.get_liste_joueur()[1][5], self.get_liste_joueur()[1][6], self.get_liste_joueur()[1][7])
-            J3 = joueur.Joueur(2,self.get_liste_joueur()[2][1], self.get_liste_joueur()[2][2],self.get_liste_joueur()[2][3], self.get_liste_joueur()[2][4], self.get_liste_joueur()[2][5], self.get_liste_joueur()[2][6], self.get_liste_joueur()[2][7])
-            self.afficheImagePlateau(J1)
-            self.afficheImagePlateau(J2)
-            self.afficheImagePlateau(J3)
-            pygame.display.update()
-        elif len(self.get_liste_joueur()) == 4:
-            J1 = joueur.Joueur(0,self.get_liste_joueur()[0][1], self.get_liste_joueur()[0][2],self.get_liste_joueur()[0][3], self.get_liste_joueur()[0][4], self.get_liste_joueur()[0][5], self.get_liste_joueur()[0][6], self.get_liste_joueur()[0][7])
-            J2 = joueur.Joueur(1,self.get_liste_joueur()[1][1], self.get_liste_joueur()[1][2],self.get_liste_joueur()[1][3], self.get_liste_joueur()[1][4], self.get_liste_joueur()[1][5], self.get_liste_joueur()[1][6], self.get_liste_joueur()[1][7])
-            J3 = joueur.Joueur(2,self.get_liste_joueur()[2][1], self.get_liste_joueur()[2][2],self.get_liste_joueur()[2][3], self.get_liste_joueur()[2][4], self.get_liste_joueur()[2][5], self.get_liste_joueur()[2][6], self.get_liste_joueur()[2][7])
-            J4 = joueur.Joueur(3,self.get_liste_joueur()[3][1], self.get_liste_joueur()[3][2],self.get_liste_joueur()[3][3], self.get_liste_joueur()[3][4], self.get_liste_joueur()[3][5], self.get_liste_joueur()[3][6], self.get_liste_joueur()[3][7])
-            self.afficheImagePlateau(J1)
-            self.afficheImagePlateau(J2)
-            self.afficheImagePlateau(J3)
-            self.afficheImagePlateau(J4)
-            pygame.display.update()
+        if len(self.getGame().getListeJoueur()) != 0 and self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()] != None:
+            for i in self.getGame().getListeJoueur():
+                self.afficheImagePlateau(i)
+
     
     # Définir l'affichage de la potion
     def affichePotion(self):
@@ -414,6 +382,7 @@ class Client():
                     # Page_PremierMouvement
                     case game.GameState.USE_DIE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
                         self.afficheDialogues()
@@ -422,6 +391,7 @@ class Client():
                     # Page_Mouvement
                     case game.GameState.SELECT_ACTION:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
                         self.afficheDialogues()
@@ -430,12 +400,14 @@ class Client():
                     # Page_LancementDe
                     case game.GameState.LANCEMENT_DE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.afficheAnimationDe()
 
                     # Page_Direction
                     case game.GameState.MOVE_PLAYER:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         temp_texte=("Bravo ! Tu peux avancer de {} cases ! Où ".format(self.getGame().getDeValue()))
                         self.setDialogues([temp_texte, "veux-tu aller ? (haut, bas, gauche, droite)"])
@@ -447,6 +419,7 @@ class Client():
                         couleur_case = self.getGame().getPlateau().getCases(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateaux(),self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateauy()).value.value
                         if couleur_case == logique.Couleur.BEIGE.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es devant la Hutte de la sorciere.","Veux-tu essayer de l'ouvrir à l'aide","des cles des quatre boss ?"])
                             self.getFenetre().blit(image.Interaction.CLES.value, (220, 480))
@@ -456,12 +429,14 @@ class Client():
                             
                         elif couleur_case == logique.Couleur.BLANC.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es dans une case Vide.", "Il ne t'arrivera rien tu peux etre rassure."])
                             self.afficheDialogues()
                             
                         elif couleur_case == logique.Couleur.BLEU.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es tombe dans la case Puit... Pour t'en","sortir, tu dois sacrifier une de tes cles","ou 200 pv."])        
                             self.getFenetre().blit(image.Interaction.PV.value, (220, 480))
@@ -471,6 +446,7 @@ class Client():
 
                         elif couleur_case == logique.Couleur.GRIS.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case Speciale ! Si tu tente","ta chance, tu as une chance sur deux gagner", "deux cles que tu n'as pas ou de tout perdre."])
                             self.afficheDialogues()
@@ -481,6 +457,7 @@ class Client():
 
                         elif couleur_case == logique.Couleur.INDIGO.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case de Teleportation.","Veux-tu etre teleporter ?"])
                             self.afficheDialogues()
@@ -492,18 +469,21 @@ class Client():
 
                         elif couleur_case == logique.Couleur.JAUNE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es la case de Depart.","Depeche toi de recuperer les cles","avant les autres joueurs."])
                             self.afficheDialogues()
                             
                         elif couleur_case == logique.Couleur.NOIR.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu n'as pas de chance...", "Tu es tombe sur la case de Mort...", "La partie est finie pour toi."])
                             self.afficheDialogues()
 
                         elif couleur_case == logique.Couleur.ORANGE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case Malus.", "Clique pour savoir quel sort", "le jeu te reserve."])
                             self.afficheDialogues()
@@ -512,6 +492,7 @@ class Client():
         
                         elif couleur_case == logique.Couleur.ROSE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case Chance","Clique pour decouvrir le pouvoir","que le jeu va te donner."])
                             self.afficheDialogues()
@@ -523,12 +504,14 @@ class Client():
 
                         elif couleur_case == logique.Couleur.TURQUOISE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case Grrr", "Un tremblement de terre surgit de nul part", "et teleporte tous les joueurs !!!"])
                             self.afficheDialogues()
 
                         elif couleur_case == logique.Couleur.VIOLET.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichagePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case Rejoue !","Relance le de pour avoir un","deuxieme lance"])
                             self.afficheDialogues()
@@ -536,24 +519,28 @@ class Client():
                     
                     case game.GameState.CASE_CHANCE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Tou-dou-dou-doum","Tu vas {}".format(self.getGame().getChanceAction())])
                         self.afficheDialogues()
 
                     case game.GameState.CASE_MALUS:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Tou-dou-dou-doum","Tu vas {}".format(self.getGame().getMalusAction())])
                         self.afficheDialogues()
                     
                     case game.GameState.CASE_RETOUR:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Dommage, retente ta chance une prochaine fois","et dépêche toi de récupérer les clés avant", "les autres joueurs !!!"])
                         self.afficheDialogues()
                     
                     case game.GameState.CASE_TELEPORTE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.affichagePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Tou-dou-dou-doum","Teleportation sur la deuxieme case de téléportation"])
                         self.afficheDialogues()
