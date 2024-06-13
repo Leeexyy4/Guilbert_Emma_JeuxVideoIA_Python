@@ -4,8 +4,12 @@ import pygame, joueur
 import interface, game
 from utils import image, texte, logique, rectangle
 from input import inputs, direction
-import time, random
+import time, random, pickle, socket
 from utils.rectangle import Rectangle
+    
+host = '192.168.1.159'
+firstport = 12345
+clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 class ClientState(Enum):
     """ClientState(Enum) contient tous les états dans lesquels le client de jeu peut se trouver"""
@@ -161,7 +165,7 @@ class Client():
             # Ajouter la photo de Pierre
             self.afficheImage(24,598,un_joueur)
         
-    def affichagePlateau(self):
+    def affichePlateau(self):
         """Met à jour le plateau en affichant les cases découvertes."""
         font = pygame.font.Font(('./assets/font/Dosis-VariableFont_wght.ttf'), 11)
         for i in self.getGame().getPlateau().getCasesDecouvertes():
@@ -170,7 +174,7 @@ class Client():
             y = i[0] * self.getGame().getPlateau().getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
             rectangle = pygame.Rect(x, y, self.getGame().getPlateau().getTailleCase(), self.getGame().getPlateau().getTailleCase())  # Créer un rectangle
             pygame.draw.rect(self.getFenetre(), couleur_case.value, rectangle)  # Dessiner le rectangle avec la couleur
-            if (self.getGame().getPlateau().getCases(i[0],i[1]).name != 'MORT' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'SPAWN' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'NOTHING'):
+            if (self.getGame().getPlateau().getCases(i[0],i[1]).name != 'MORT' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'Depart' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'Vide'):
                 texte_surface = font.render(str(self.getGame().getPlateau().getCases(i[0],i[1]).name), True, logique.Couleur.NOIR.value)
                 self.getFenetre().blit(texte_surface, (x + 9, y + 15))
         self.afficheJoueurs()
@@ -365,7 +369,7 @@ class Client():
 
                 
             # En local
-            case ClientState.LOCAL:
+            case ClientState.LOCAL | ClientState.ONLINE:
                 match self.getGame().getEtat():
 
                     # Page_ChoixPerso
@@ -385,9 +389,9 @@ class Client():
                     # Page_PremierMouvement
                     case game.GameState.USE_DIE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton déplacement :"," haut, bas, gauche ou droite"])
+                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
                         self.afficheDialogues()
                         image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
                     
@@ -395,9 +399,9 @@ class Client():
                     case game.GameState.SELECT_ACTION:
                         player = self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()]
                         image.Image(0,468, image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(player)
-                        self.setDialogues(["Joueur " + str(player.getId() + 1) + " : " + player.getPrenom() + " clique sur le de afin d'attaquer"," un joueur ou de lancer le dé"])
+                        self.setDialogues(["Joueur " + str(player.getId() + 1) + " : " + player.getPrenom() + " clique sur le de afin d'attaquer","un joueur ou de lancer le dé"])
                         self.afficheDialogues()
                         # Affiche le de sur la face 1
                         image.Image(220,480,image.Interaction.ATTAQUER.value).affiche(self.getFenetre())
@@ -408,26 +412,27 @@ class Client():
                     # Page_LancementDe
                     case game.GameState.LANCEMENT_DE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.afficheAnimationDe()
 
                     # Page_Direction
                     case game.GameState.MOVE_PLAYER:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         temp_texte=("Bravo ! Tu peux avancer de {} cases ! Où ".format(self.getGame().getDeValue()))
                         self.setDialogues([temp_texte, "veux-tu aller ? (haut, bas, gauche, droite)"])
                         self.afficheDialogues()
-                        image.Image(350,475,self.currentImageDe).affiche(self.getFenetre())
+                        listeDe = [image.De.FACE1.value, image.De.FACE2.value, image.De.FACE3.value, image.De.FACE4.value, image.De.FACE5.value, image.De.FACE6.value]
+                        image.Image(350,475,listeDe[self.__game.getlastdeVal()-1]).affiche(self.getFenetre())
 
                     # Page_Action
                     case game.GameState.STAY_ON_CASE:
                         couleur_case = self.getGame().getPlateau().getCases(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateaux(),self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateauy()).value.value
                         if couleur_case == logique.Couleur.BEIGE.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es devant la Hutte de la sorciere.","Veux-tu essayer de l'ouvrir à l'aide","des cles des quatre boss ?"])
                             self.afficheDialogues()
@@ -438,14 +443,14 @@ class Client():
                             
                         elif couleur_case == logique.Couleur.BLANC.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es dans une case Vide.", "Il ne t'arrivera rien tu peux etre rassure."])
                             self.afficheDialogues()
                             
                         elif couleur_case == logique.Couleur.BLEU.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es tombe dans la case Puit... Pour t'en","sortir, tu dois sacrifier une de tes cles","ou 200 pv."])        
                             self.getFenetre().blit(image.Interaction.PV.value, (220, 480))
@@ -455,7 +460,7 @@ class Client():
 
                         elif couleur_case == logique.Couleur.GRIS.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case Speciale ! Si tu tente","ta chance, tu as une chance sur deux gagner", "deux cles que tu n'as pas ou de tout perdre."])
                             self.afficheDialogues()
@@ -466,7 +471,7 @@ class Client():
 
                         elif couleur_case == logique.Couleur.INDIGO.value:
                             image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case de Teleportation.","Veux-tu etre teleporter ?"])
                             self.afficheDialogues()
@@ -478,32 +483,32 @@ class Client():
 
                         elif couleur_case == logique.Couleur.JAUNE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                            self.setDialogues(["Tu es la case de Depart.","Depeche toi de recuperer les cles","avant les autres joueurs."])
+                            self.setDialogues(["Tu es la case de Depart, dépêche toi de","récupérer les clés avant les autres joueurs","afin de gagner le jeu"])
                             self.afficheDialogues()
                             
                         elif couleur_case == logique.Couleur.NOIR.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu n'as pas de chance...", "Tu es tombe sur la case de Mort...", "La partie est finie pour toi."])
                             self.afficheDialogues()
 
                         elif couleur_case == logique.Couleur.ORANGE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                            self.setDialogues(["Tu es sur une case Malus.", "Clique pour savoir quel sort", "le jeu te reserve."])
+                            self.setDialogues(["Tu es sur une case Malus, clique sur le symbole chance", "afin de savoir quel sort le jeu te réserve."])
                             self.afficheDialogues()
                             self.getFenetre().blit(image.Interaction.MALUS.value, (360,475))
                             texte.Texte("Malus",logique.Couleur.NOIR.value,372,545).affiche(self.getFenetre())
         
                         elif couleur_case == logique.Couleur.ROSE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                            self.setDialogues(["Tu es sur une case Chance","Clique pour decouvrir le pouvoir","que le jeu va te donner."])
+                            self.setDialogues(["Tu es sur une case Chance, clique sur le symbole chance", "afin de savoir quel sort le jeu te réserve."])
                             self.afficheDialogues()
                             self.getFenetre().blit(image.Interaction.CHANCE.value, (360,475))
                             texte.Texte("Chance",logique.Couleur.NOIR.value,369,545).affiche(self.getFenetre())
@@ -513,43 +518,43 @@ class Client():
 
                         elif couleur_case == logique.Couleur.TURQUOISE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es sur une case Grrr", "Un tremblement de terre surgit de nul part", "et teleporte tous les joueurs !!!"])
                             self.afficheDialogues()
 
                         elif couleur_case == logique.Couleur.VIOLET.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                            self.affichagePlateau()
+                            self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                            self.setDialogues(["Tu es sur une case Rejoue !","Relance le de pour avoir un","deuxieme lance"])
+                            self.setDialogues(["Tu es sur une case Rejoue ! Tu as la","chance de pouvoir relancer le dé pour avoir une","deuxième chance"])
                             self.afficheDialogues()
                             self.getFenetre().blit(image.De.FACE1.value,(350,475))
                     
                     case game.GameState.CASE_CHANCE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        self.setDialogues(["Tou-dou-dou-doum","Tu vas gagner {} pvs".format(self.getGame().getChanceAction()),"Utilise les à bon escient"])
+                        self.setDialogues(["Tou-dou-dou-doum","Tu vas gagner {} pvs, utilise les à bon escient".format(self.getGame().getChanceAction()),"afin de t'en sortir vainqueur"])
                         self.afficheDialogues()
 
                     case game.GameState.CASE_MALUS:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        self.setDialogues(["Tou-dou-dou-doum","Tu vas perdre {} pvs".format(self.getGame().getMalusAction()),"Fais attention où tu mets les pieds"])
+                        self.setDialogues(["Tou-dou-dou-doum","Tu vas perdre {} pvs, fais attention où tu mets les pieds".format(self.getGame().getMalusAction()),"la prochaine fois"])
                         self.afficheDialogues()
                     
                     case game.GameState.CASE_RETOUR:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Dommage, retente ta chance une prochaine fois","et dépêche toi de récupérer les clés avant", "les autres joueurs !!!"])
                         self.afficheDialogues()
                     
                     case game.GameState.CASE_TELEPORTE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
-                        self.affichagePlateau()
+                        self.affichePlateau()
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Tou-dou-dou-doum","Teleportation sur la deuxieme case de téléportation"])
                         self.afficheDialogues()
@@ -597,8 +602,8 @@ class Client():
                         self.setEtatPartie(PartieState.NB_PLAYER)
                         self.setInterface(interface.Interface(False))
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
-                        self.setEtatPartie(PartieState.NB_PLAYER)
-                        self.setInterface(interface.Interface(True))
+                        self.__game = game.Game(4,0)
+                        self.setEtatClient(ClientState.ONLINE)
                     if 700 <= mouse_x <= 764 and 25 <= mouse_y <= 89 : # si appuie sur info
                         self.setEtatPartie(PartieState.HELPER)
                 pass
@@ -710,7 +715,25 @@ class Client():
                 case ClientState.LOCAL:
                     self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.ONLINE:
+                    print("online")
+                    clientSock.sendto(pickle.dumps('hello'), (host, firstport))
+                    self.__game.loop(inputs(mouse_x, mouse_y))
                     # envoyé les inputs au server
+                    try:
+                        data, serveur = clientSock.recvfrom(20480)
+                        print('a')
+                        resp  = 'OK'
+                        data = pickle.loads(data)
+                        if(type(data) == game.Game):
+                            print("change game")
+                            self.setGame(data)
+                        elif isinstance(data, dict):
+                            print("input")
+                            if( 'input' in data.keys()):
+                                clientSock.sendto(pickle.dumps(inputs(mouse_x, mouse_y, click, dir)), (host, firstport))
+                        else : print(type(data))
+                    except TimeoutError:
+                        print('REQUEST TIMED OUT')
                     pass
                 case ClientState.QUIT:
                     pass
@@ -718,3 +741,4 @@ class Client():
             
 if __name__ == "__main__":
     Client().main()
+

@@ -19,15 +19,15 @@ class Couleur(Enum):
 
 class CASE_TYPE(Enum):
     """La classe CASE_TYPE définit le type de case présent sur le plateau."""
-    LUCK = Couleur.ROSE # click pour savoir le résultat
-    UNLUCK = Couleur.ORANGE # click pour savoir le résultat
-    SPECIAL = Couleur.GRIS # choisit de prendre le risque ou pas, SI choisit, att 2eme click
-    NOTHING = Couleur.BLANC # Se pas rien, pas de click
-    DEATH = Couleur.NOIR
-    WITCH = Couleur.BEIGE # choix entre use clef si non rien, pour finir la partie
-    RANDOM = Couleur.TURQUOISE# click pour être tp aléatoirement
-    REPLAY = Couleur.VIOLET# rejour à partir du lancé de dée
-    WELL = Couleur.BLEU # Choisit quoi abandoné, Si n'as pas de clef, boucle sur lui meme
-    TP = Couleur.INDIGO # click pour être tp
-    SPAWN = Couleur.JAUNE # Se pas rien, pas de click
+    BONUS = Couleur.ROSE # click pour savoir le résultat
+    MALUS = Couleur.ORANGE # click pour savoir le résultat
+    SPECIALE = Couleur.GRIS # choisit de prendre le risque ou pas, SI choisit, att 2eme click
+    VIDE = Couleur.BLANC # Se pas rien, pas de click
+    MORT = Couleur.NOIR
+    HUTTE = Couleur.BEIGE # choix entre use clef si non rien, pour finir la partie
+    POUF = Couleur.TURQUOISE# click pour être tp aléatoirement
+    REJOUE = Couleur.VIOLET# rejour à partir du lancé de dée
+    PUIT = Couleur.BLEU # Choisit quoi abandoné, Si n'as pas de clef, boucle sur lui meme
+    GRRR = Couleur.INDIGO # click pour être tp
+    DEPART = Couleur.JAUNE # Se pas rien, pas de click
     BOSS = Couleur.ROUGE  # début du fight

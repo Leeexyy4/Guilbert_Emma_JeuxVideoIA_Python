@@ -14,32 +14,32 @@ class Plateau():
 
         self.__nomCase:dict = {
             CASE_TYPE.BOSS: "Boss",
-            CASE_TYPE.LUCK: "Chance",
-            CASE_TYPE.UNLUCK: "Malus",
-            CASE_TYPE.TP: "Pouf",
-            CASE_TYPE.REPLAY: "Rejoue",
-            CASE_TYPE.RANDOM: "Grrr",
-            CASE_TYPE.WITCH: "Hutte",
-            CASE_TYPE.SPECIAL: "Spéciale",
-            CASE_TYPE.WELL: "Puit",
-            CASE_TYPE.NOTHING: "Vide",
-            CASE_TYPE.DEATH: "Mort",
-            CASE_TYPE.SPAWN: "Départ"
+            CASE_TYPE.BONUS: "Chance",
+            CASE_TYPE.MALUS: "Malus",
+            CASE_TYPE.POUF: "Pouf",
+            CASE_TYPE.REJOUE: "Rejoue",
+            CASE_TYPE.GRRR: "Grrr",
+            CASE_TYPE.HUTTE: "Hutte",
+            CASE_TYPE.SPECIALE: "Spéciale",
+            CASE_TYPE.PUIT: "Puit",
+            CASE_TYPE.VIDE: "Vide",
+            CASE_TYPE.MORT: "Mort",
+            CASE_TYPE.DEPART: "Départ"
         }
 
         self.__maxCases:dict = {
             CASE_TYPE.BOSS: 4,
-            CASE_TYPE.LUCK: 26,
-            CASE_TYPE.UNLUCK: 29,
-            CASE_TYPE.TP: 2,
-            CASE_TYPE.REPLAY: 20,
-            CASE_TYPE.RANDOM: 20,
-            CASE_TYPE.WITCH: 1,
-            CASE_TYPE.SPECIAL: 10,
-            CASE_TYPE.WELL: 1,
-            CASE_TYPE.DEATH: 1,
-            CASE_TYPE.SPAWN:1,
-            CASE_TYPE.NOTHING:55
+            CASE_TYPE.BONUS: 26,
+            CASE_TYPE.MALUS: 29,
+            CASE_TYPE.POUF: 2,
+            CASE_TYPE.REJOUE: 20,
+            CASE_TYPE.GRRR: 20,
+            CASE_TYPE.HUTTE: 1,
+            CASE_TYPE.SPECIALE: 10,
+            CASE_TYPE.PUIT: 1,
+            CASE_TYPE.MORT: 1,
+            CASE_TYPE.DEPART:1,
+            CASE_TYPE.VIDE:55
         }
         self.remplirPlateauAleatoirement()
         self.setCasesDecouvertes(self.getCasesDecouvertes() + [[self.getCaseJaune()[0], self.getCaseJaune()[1]]])   
