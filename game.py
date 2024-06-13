@@ -370,8 +370,8 @@ class Game():
                         pass
                         
                     case logique.Couleur.TURQUOISE.value:
-                        self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(random.randint(0,10))
-                        self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(random.randint(0,17))
+                        self.getListeJoueur()[self.getIdJoueurActuel()].setPlateaux(random.randint(0,9))
+                        self.getListeJoueur()[self.getIdJoueurActuel()].setPlateauy(random.randint(0,16))
                         self.__timeaction = time.time()
                         if self.__timeaction + self.__delay > time.time():
                             self.__delay = 8
