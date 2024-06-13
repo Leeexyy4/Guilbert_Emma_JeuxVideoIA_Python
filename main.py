@@ -24,6 +24,9 @@ from classe.jeu import interfaces
 from classe.visuel import texte, couleur, image
 from classe.personnage import joueur
 from database import nbCases
+from database import creer_partie
+from database import envoyer_donnees_bdd
+from database import recuperer_donnees_bdd
 
 # ----------------------- Jeu de plateau - Logique du jeu ------------------------ #
      
@@ -51,9 +54,36 @@ if __name__ == "__main__":
     pv_moy_j4 = 0
     nombre_case_decouverte = 0
     nb_mort = 0
+
+    nb_pv_j1_final = nb_pv_j1[-1] if nb_pv_j1 else 0
+    pv_moy_j1_final = sum(nb_pv_j1) / len(nb_pv_j1) if nb_pv_j1 else 0
+    nb_pv_j2_final = nb_pv_j2[-1] if nb_pv_j2 else 0 
+    pv_moy_j2_final = sum(nb_pv_j2) / len(nb_pv_j2) if nb_pv_j2 else 0
+    nb_pv_j3_final = nb_pv_j3[-1] if nb_pv_j3 else 0
+    pv_moy_j3_final = sum(nb_pv_j3) / len(nb_pv_j3) if nb_pv_j3 else 0
+    nb_pv_j4_final = nb_pv_j4[-1] if nb_pv_j4 else 0
+    pv_moy_j4_final = sum(nb_pv_j4) / len(nb_pv_j4) if nb_pv_j4 else 0
     
     page = interfaces.Interface()
-    page.Page_demarrage(nombre_cases_decouvertes)
+    page.Page_demarrage(nb_tour, 
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
+                                    nombre_case_decouverte,
+                                    nb_mort)
     # Pour tous les joueurs encore en vie
     while page.get_etat_de_jeu() != "fin_du_jeu": 
         print(nombre_case_decouverte)
@@ -98,6 +128,15 @@ if __name__ == "__main__":
             if pv_joueurs['Kevin'] is not None:
                 nb_pv_j4.append(pv_joueurs['Kevin'])
                 nb_combat_j4 += combat_joueur["Kevin"]
+
+            nb_pv_j1_final = nb_pv_j1[-1] if nb_pv_j1 else 0
+            pv_moy_j1_final = sum(nb_pv_j1) / len(nb_pv_j1) if nb_pv_j1 else 0
+            nb_pv_j2_final = nb_pv_j2[-1] if nb_pv_j2 else 0 
+            pv_moy_j2_final = sum(nb_pv_j2) / len(nb_pv_j2) if nb_pv_j2 else 0
+            nb_pv_j3_final = nb_pv_j3[-1] if nb_pv_j3 else 0
+            pv_moy_j3_final = sum(nb_pv_j3) / len(nb_pv_j3) if nb_pv_j3 else 0
+            nb_pv_j4_final = nb_pv_j4[-1] if nb_pv_j4 else 0
+            pv_moy_j4_final = sum(nb_pv_j4) / len(nb_pv_j4) if nb_pv_j4 else 0   
 
             nombre_case_decouverte = len(page.get_plateau_de_jeu().get_cases_decouvertes())
             print(f"nombre de tours : {nb_tour}"),
@@ -169,14 +208,40 @@ if __name__ == "__main__":
                 page.set_etat_de_jeu("fin_du_jeu")
 
         if page.get_etat_de_jeu() == "fin_du_jeu":
+
+            if(un_joueur.avoir_tt_cles == True):
+                gagnant = True
+            else:
+                gagnant = False
+
+            print(gagnant)
+            partie_id = creer_partie(gagnant)
+            print(partie_id)
+
+            for joueur_data in page.get_liste_joueur():
+                envoyer_donnees_bdd(
+                    partie_id,
+                    2 if un_joueur.get_prenom() == 'Pierre' else 3 if un_joueur.get_prenom() == 'Flora' else 4 if un_joueur.get_prenom() == 'Ondine' else 5,
+                    nombre_case_decouverte,
+                    nb_tour,
+                    nb_mort,
+                    nb_cle_j1 if un_joueur.get_prenom() == 'Pierre' else nb_cle_j2 if un_joueur.get_prenom() == 'Flora' else nb_cle_j3 if un_joueur.get_prenom() == 'Ondine' else nb_cle_j4,
+                    nb_pv_j1_final if un_joueur.get_prenom() == 'Pierre' else nb_pv_j2_final if un_joueur.get_prenom() == 'Flora' else nb_pv_j3_final if un_joueur.get_prenom() == 'Ondine' else nb_pv_j4_final,
+                    nb_combat_j1 if un_joueur.get_prenom() == 'Pierre' else nb_combat_j2 if un_joueur.get_prenom() == 'Flora' else nb_combat_j3 if un_joueur.get_prenom() == 'Ondine' else nb_combat_j4,
+                    pv_moy_j1_final if un_joueur.get_prenom() == 'Pierre' else pv_moy_j2_final if un_joueur.get_prenom() == 'Flora' else pv_moy_j3_final if un_joueur.get_prenom() == 'Ondine' else pv_moy_j4_final,
+                )
+            
+            stat = recuperer_donnees_bdd(partie_id)
+            print(stat)
+
             if un_joueur.a_gagne(page.get_plateau_de_jeu()) == True:
                 un_joueur.set_inventaire([])
                 page.Page_sorciere( un_joueur, 
                                     nb_tour, 
-                                    nb_pv_j1,
-                                    nb_pv_j2 ,
-                                    nb_pv_j3,
-                                    nb_pv_j4,
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
                                     nb_cle_j1,
                                     nb_cle_j2,
                                     nb_cle_j3,
@@ -185,17 +250,36 @@ if __name__ == "__main__":
                                     nb_combat_j2,
                                     nb_combat_j3,
                                     nb_combat_j4,
-                                    pv_moy_j1,
-                                    pv_moy_j2,
-                                    pv_moy_j3,
-                                    pv_moy_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
                                     nombre_case_decouverte,
                                     nb_mort
                                 )
                 pygame.quit()
             else:
                 # Page de la sorcière quan don a réussi le jeu
-                page.Page_fin(nombre_cases_decouvertes)
+                page.Page_fin(un_joueur, 
+                                    nb_tour, 
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
+                                    nombre_case_decouverte,
+                                    nb_mort)
                 # Dessiner la partie basse
                 pygame.draw.rect(page.get_fenetre(),page.get_couleur().get_Gris(),(10,580,780,102))
                 texte.Texte("Aucun des joueurs n'a réussi à finir le jeu",couleur.Couleur().get_Noir(),30,600).affiche(page.get_police(),page.get_fenetre())

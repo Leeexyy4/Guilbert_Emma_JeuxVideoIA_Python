@@ -127,7 +127,25 @@ class Interface:
         else:
             self.get_liste_joueur().pop(joueur.get_id())
     
-    def Page_demarrage(self, nombre_cases_decouvertes):    
+    def Page_demarrage(self, nb_tour, 
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
+                                    nombre_case_decouverte,
+                                    nb_mort):    
         # Affiche l'image de fond 
         image.Image(0,0,'assets/img/illustrations/Page_demarrage.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())    
         # Mettre à jour l'affichage
@@ -141,7 +159,25 @@ class Interface:
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # si appuie bouton stats
-                        self.Page_statistiques(nombre_cases_decouvertes)
+                        self.Page2_statistiques(nb_tour, 
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
+                                    nombre_case_decouverte,
+                                    nb_mort)
                     if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # si appuie bouton en local
                         self.Page_nb_joueur()
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
@@ -841,25 +877,25 @@ class Interface:
         pygame.display.update()  
 
 
-    def Page_fin(self,  nb_tour, 
-                        nb_pv_j1,
-                        nb_pv_j2 ,
-                        nb_pv_j3,
-                        nb_pv_j4,
-                        nb_cle_j1,
-                        nb_cle_j2,
-                        nb_cle_j3,
-                        nb_cle_j4,
-                        nb_combat_j1,
-                        nb_combat_j2,
-                        nb_combat_j3,
-                        nb_combat_j4,
-                        pv_moy_j1,
-                        pv_moy_j2,
-                        pv_moy_j3,
-                        pv_moy_j4,
-                        nombre_case_decouverte,
-                        nb_mort):    
+    def Page_fin(self, nb_tour, 
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
+                                    nombre_case_decouverte,
+                                    nb_mort):    
         # Affiche l'image de fond 
         image.Image(0,0,'assets/img/illustrations/Page_findujeu.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
         # Mettre à jour l'affichage
@@ -875,12 +911,12 @@ class Interface:
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # si appuie bouton stats
                         pygame.quit()
-                    if (320 <= mouse_x <= 470 and 400 <= mouse_y <= 450) : # si appuie bouton en local
+                    if (320 <= mouse_x <= 470 and 430 <= mouse_y <= 465) : # si appuie bouton en local
                         self.Page2_statistiques(nb_tour, 
-                                    nb_pv_j1,
-                                    nb_pv_j2 ,
-                                    nb_pv_j3,
-                                    nb_pv_j4,
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
                                     nb_cle_j1,
                                     nb_cle_j2,
                                     nb_cle_j3,
@@ -889,10 +925,10 @@ class Interface:
                                     nb_combat_j2,
                                     nb_combat_j3,
                                     nb_combat_j4,
-                                    pv_moy_j1,
-                                    pv_moy_j2,
-                                    pv_moy_j3,
-                                    pv_moy_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
                                     nombre_case_decouverte,
                                     nb_mort)
                 # Si le joueur quitte la fenetre
@@ -901,10 +937,10 @@ class Interface:
                     exit()
 
     def Page2_statistiques(self,    nb_tour, 
-                                    nb_pv_j1,
-                                    nb_pv_j2 ,
-                                    nb_pv_j3,
-                                    nb_pv_j4,
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
                                     nb_cle_j1,
                                     nb_cle_j2,
                                     nb_cle_j3,
@@ -913,38 +949,38 @@ class Interface:
                                     nb_combat_j2,
                                     nb_combat_j3,
                                     nb_combat_j4,
-                                    pv_moy_j1,
-                                    pv_moy_j2,
-                                    pv_moy_j3,
-                                    pv_moy_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
                                     nombre_case_decouverte,
                                     nb_mort):    
         # Affiche l'image de fond 
         image.Image(0,0,'assets/img/illustrations/Page_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
 
-        texte.Texte("Joueur 1 : {}".format(pv_moy_j1), couleur.Couleur().get_Blanc(), 100, 100).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j1), couleur.Couleur().get_Blanc(), 100, 150).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Joueur 1", couleur.Couleur().get_Blanc(), 100, 100).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j1), couleur.Couleur().get_Blanc(), 100, 150).affiche(self.get_police(), self.get_fenetre())
         texte.Texte("Nombre de combats : {}".format(nb_combat_j1), couleur.Couleur().get_Blanc(), 100, 200).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de clé : {}".format(nb_cle_j1), couleur.Couleur().get_Blanc(), 100, 250).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j1), couleur.Couleur().get_Blanc(), 100, 300).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j1_final), couleur.Couleur().get_Blanc(), 100, 250).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j1_final), couleur.Couleur().get_Blanc(), 100, 300).affiche(self.get_police(), self.get_fenetre())
 
-        texte.Texte("Joueur 2 : {}".format(pv_moy_j2), couleur.Couleur().get_Blanc(), 450, 100).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j2), couleur.Couleur().get_Blanc(), 450, 150).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de combats : {}".format(nb_combat_j2), couleur.Couleur().get_Blanc(), 450, 200).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de clé : {}".format(nb_cle_j2), couleur.Couleur().get_Blanc(), 450, 250).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j2), couleur.Couleur().get_Blanc(), 450, 300).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Joueur 2", couleur.Couleur().get_Blanc(), 450, 100).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j3), couleur.Couleur().get_Blanc(), 450, 150).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de combats : {}".format(nb_combat_j3), couleur.Couleur().get_Blanc(), 450, 200).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j3_final), couleur.Couleur().get_Blanc(), 450, 250).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j3_final), couleur.Couleur().get_Blanc(), 450, 300).affiche(self.get_police(), self.get_fenetre())
+        
+        texte.Texte("Joueur 3", couleur.Couleur().get_Blanc(), 100, 400).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j2), couleur.Couleur().get_Blanc(), 100, 450).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de combats : {}".format(nb_combat_j2), couleur.Couleur().get_Blanc(), 100, 500).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j2_final), couleur.Couleur().get_Blanc(), 100, 550).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j2_final), couleur.Couleur().get_Blanc(), 100, 600).affiche(self.get_police(), self.get_fenetre())
 
-        texte.Texte("Joueur 3 : {}".format(pv_moy_j3), couleur.Couleur().get_Blanc(), 100, 400).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j3), couleur.Couleur().get_Blanc(), 100, 450).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de combats : {}".format(nb_combat_j3), couleur.Couleur().get_Blanc(), 100, 500).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de clé : {}".format(nb_cle_j3), couleur.Couleur().get_Blanc(), 100, 550).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j3), couleur.Couleur().get_Blanc(), 100, 600).affiche(self.get_police(), self.get_fenetre())
-
-        texte.Texte("Joueur 4 : {}".format(pv_moy_j4), couleur.Couleur().get_Blanc(), 450, 400).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j4), couleur.Couleur().get_Blanc(), 450, 450).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Joueur 4", couleur.Couleur().get_Blanc(), 450, 400).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j4), couleur.Couleur().get_Blanc(), 450, 450).affiche(self.get_police(), self.get_fenetre())
         texte.Texte("Nombre de combats : {}".format(nb_combat_j4), couleur.Couleur().get_Blanc(), 450, 500).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de clé : {}".format(nb_cle_j4), couleur.Couleur().get_Blanc(), 450, 550).affiche(self.get_police(), self.get_fenetre())
-        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j4), couleur.Couleur().get_Blanc(), 450, 600).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j4_final), couleur.Couleur().get_Blanc(), 450, 550).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j4_final), couleur.Couleur().get_Blanc(), 450, 600).affiche(self.get_police(), self.get_fenetre())
 
         texte.Texte("Nombre total de cases décourvertes : {}".format(nombre_case_decouverte), couleur.Couleur().get_Blanc(), 100, 650).affiche(self.get_police(), self.get_fenetre())
         texte.Texte("Nombre total de tours : {}".format(nb_tour), couleur.Couleur().get_Blanc(), 450, 650).affiche(self.get_police(), self.get_fenetre())
@@ -962,7 +998,25 @@ class Interface:
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
-                        self.Page_demarrage(nombre_case_decouverte)
+                        self.Page_demarrage(nb_tour, 
+                                    nb_pv_j1_final,
+                                    nb_pv_j2_final ,
+                                    nb_pv_j3_final,
+                                    nb_pv_j4_final,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1_final,
+                                    pv_moy_j2_final,
+                                    pv_moy_j3_final,
+                                    pv_moy_j4_final,
+                                    nombre_case_decouverte,
+                                    nb_mort)
                         stats = True
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
