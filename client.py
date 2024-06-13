@@ -389,6 +389,8 @@ class Client():
             # En local
             case ClientState.LOCAL:
                 match self.getGame().getEtat():
+
+                    # Page_ChoixPerso
                     case game.GameState.SELECT_AVATAR:
                         image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
                         self.setDialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien","ici demarre une nouvelle aventure ! Je t'invite à","choisir un personnage parmi la liste suivante :"])
@@ -401,17 +403,28 @@ class Client():
                         texte.Texte(joueur.Nom.TOWN.value, logique.Couleur.NOIR.value, 613, 650).affiche(self.getFenetre())
                         image.Image(700, 585, image.Personnages.GRASS.value).affiche(self.getFenetre())
                         texte.Texte(joueur.Nom.GRASS.value, logique.Couleur.NOIR.value, 715, 650).affiche(self.getFenetre())
-                    case game.GameState.SELECT_ACTION:
-                        pass
+                    
+                    # Page_PremierMouvement
                     case game.GameState.USE_DIE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                         self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
                         self.afficheDialogues()
                         image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
+                    
+                    # Page_Mouvement
+                    case game.GameState.SELECT_ACTION:
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Tu es le joueur " + str(self.getGame().getIdJoueurActuel() + 1) + ", clique sur le de afin de faire ton","déplacement : haut, bas, gauche ou droite"])
+                        self.afficheDialogues()
+                        image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
+
+                    # Page_LancementDe
                     case game.GameState.LANCEMENT_DE:
                         self.afficheAnimationDe()
 
+                    # Page_Direction
                     case game.GameState.MOVE_PLAYER:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
@@ -419,10 +432,52 @@ class Client():
                         self.setDialogues([temp_texte, "veux-tu aller ? (haut, bas, gauche, droite)"])
                         self.afficheDialogues()
                         image.Image(350,475,self.currentImageDe).affiche(self.getFenetre())
+
+                    # Page_Action
                     case game.GameState.STAY_ON_CASE:
                         image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
                         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
-                        texte.Texte("Tu as atterris sur une case {}".format(self.getGame().getPlateau().getNom(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateaux(),self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateauy())), logique.Couleur.NOIR.value, 110, 600).affiche(self.getFenetre())
+                        couleur_case = self.getGame().getPlateau().getCases(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateaux(),self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].getPlateauy())
+                        
+                        if couleur_case == logique.Couleur.BEIGE.value:
+                            image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
+                            self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                            self.setDialogues(["Tu es tombe dans la case Puit... Pour t'en","sortir, tu dois sacrifier une de tes cles","ou 200 pv."],logique.Couleur.NOIR.value,110, 600).affiche(self.getFenetre())        
+                            pv = image.Interaction.PV.value; self.getFenetre().blit(pv, (220, 480))
+                            cles = image.Interaction.CLES.value; self.getFenetre().blit(cles, (510, 480))
+                            texte.Texte("200 PV",logique.Couleur.BLANC.value,235,545).affiche(self.getFenetre())
+                            texte.Texte("1 clee",logique.Couleur.BLANC.value,525,545).affiche(self.getFenetre())
+                            
+                        elif couleur_case == logique.Couleur.BLANC.value:
+                            # Dessiner le rectangle pour les dialogues
+                            self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                            self.setDialogues(["Tu es dans une case Vide.", "Il ne t'arrivera rien tu peux etre rassure."])
+                            self.afficheDialogues()
+                            
+                        elif couleur_case == logique.Couleur.BLEU.value:
+                                  pass
+                        elif couleur_case == logique.Couleur.GRIS.value:
+                            pass
+                        elif couleur_case == logique.Couleur.INDIGO.value:
+                            pass
+                        elif couleur_case == logique.Couleur.JAUNE.value:
+                            # Dessiner le rectangle pour les dialogues
+                            self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                            self.setDialogues(["Tu es la case de Depart.","Depeche toi de recuperer les cles","avant les autres joueurs."])
+                            self.afficheDialogues()
+                            
+                        elif couleur_case == logique.Couleur.NOIR.value:
+                            pass
+                        elif couleur_case == logique.Couleur.ORANGE.value:
+                            pass
+                        elif couleur_case == logique.Couleur.ROSE.value:
+                            pass
+                        elif couleur_case == logique.Couleur.ROUGE.value:
+                            pass
+                        elif couleur_case == logique.Couleur.TURQUOISE.value:
+                            pass
+                        elif couleur_case == logique.Couleur.VIOLET.value:
+                            pass
                     case game.GameState.FIGHT:
                         pass
                     case game.GameState.WAIT_FIGHT_ACTION:

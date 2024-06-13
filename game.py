@@ -125,6 +125,8 @@ class Game():
             self.setEtat(GameState.SELECT_AVATAR)
         player:joueur.Joueur = self.getListeJoueur()[self.getIdJoueurActuel()]
         match self.getEtat():
+
+            # Logique_ChoixPerso
             case GameState.SELECT_AVATAR:
                 if input.estClique(): 
                     start:tuple[int, int] = self.getPlateau().getCaseJaune()
@@ -141,20 +143,24 @@ class Game():
                         self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN))
                     self.setEtat(GameState.USE_DIE)
 
-            case GameState.SELECT_ACTION:
-                if input.estClique(): 
-                    if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: self.setEtat(GameState.DO_FIGHT_ACTION)
-                    if 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544: self.setEtat(GameState.USE_DIE)
-            
+            # Logique_PremierMouvement
             case GameState.USE_DIE:
                 if input.estClique(): 
                     if 350 <= input.getSourisx() <= 435 and 475 <= input.getSourisy() <= 560:
                         self.setDeValue(random.randint(1,6))
                         self.setEtat(GameState.LANCEMENT_DE)
             
+            # Logique_Mouvement
+            case GameState.SELECT_ACTION:
+                if input.estClique(): 
+                    if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: self.setEtat(GameState.DO_FIGHT_ACTION)
+                    if 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544: self.setEtat(GameState.USE_DIE)
+            
+            # Logique_LancementDe
             case GameState.LANCEMENT_DE:
                 pass
-
+            
+            # Logique_Direction
             case GameState.MOVE_PLAYER:
                 if(self.getDeValue() == 0):
                     self.setEtat(GameState.STAY_ON_CASE)
@@ -177,12 +183,11 @@ class Game():
                         self.setDeValue(self.getDeValue() - 1)
                         print(self.getDeValue())
                 
+            # Logique_Action
             case GameState.STAY_ON_CASE:
                 # Rajouté les effets de la case
-                couleur_case = self.getPlateau()[self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux()][self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()]
-                self.joueurSuivant()
-                self.setEtat(GameState.SELECT_ACTION)
-                
+                couleur_case = self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy())
+
             case GameState.FIGHT:
                 pass
             case GameState.WAIT_FIGHT_ACTION:
