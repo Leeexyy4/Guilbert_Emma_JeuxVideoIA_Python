@@ -1,34 +1,50 @@
 from plateau import Plateau
-import random
-import joueur
+import random, joueur, time
 from input import inputs, direction
 from enum import Enum
 from utils import logique
 class GameState(Enum):
     """la classe GameState regroupe les états de la partie selon les actions du joueur"""
-    WAIT_PLAYER = 0 # attente d'action d'un joueur (idJOueur + GameState action)
+    # attente d'action d'un joueur (idJOueur + GameState action)
+    WAIT_PLAYER = 0 
     
+    # Avatar ou Action
     SELECT_AVATAR = 1 # si !0 = dée sinn fight
-    
     SELECT_ACTION = 2 # si !0 = dée sinn fight
-    
+
+    # De
     USE_DIE = 3 # envoie NB MOVE
-    
     LANCEMENT_DE = 4 # Lance l'animation du dé et envoie le nb de déplacement possible
     
+    # Direction
     MOVE_PLAYER = 5 # envoie nb déplacement restant + pos
 
-    STAY_ON_CASE = 6 # envoie CASE_ACTION + changement en question
+    # Action_Case
+    STAY_ON_CASE = 6 # envoie CASE_ACTION
+    CASE_CHANCE = 7 # envoie CASE_CHANCE
+    CASE_MALUS = 8 # envoie CASE_MALUS
+    CASE_REJOUE = 9 # envoie CASE_REJOUE
+    CASE_CLE_PUIT = 10 # envoie CASE_CLE_PUIT
+    CASE_TELEPORTE = 11 # envoie CASE_TELEPORTE
+    CASE_CLE_SPECIALE = 12 # envoie CASE_CLE_SPECIALE
+    CASE_RETOUR = 13 # envoie CASE_CLE_SPECIALE
+    CASE_VIDE = 14
 
-    FIGHT = 7 # envoi les 2joueur dans l'ordre d'action
-    
-    WAIT_FIGHT_ACTION = 8 # att les action de l'autre joueur
+    # Sorciere
+    CASE_FIN_DU_JEU = 15
+    CASE_SORCIERE_SANS_CLE = 16
 
-    DO_FIGHT_ACTION = 9 # envoi l'action chois
+    # Combat
+    FIGHT = 17
+    WAIT_FIGHT_ACTION = 18
+    DO_FIGHT_ACTION = 19 
     
-    DEAD = 10 # envoi l'action chois
+    SWITCH_PLAYER = 20
+
+    # Mort du joueur
+    DEAD = 21
     
-    SWITCH_PLAYER = 11
+
 class Game():
     """la Classe Game initialise les paramètres de la partie"""
     def __init__(self, nombreJoueur:int, nombreIA:int) -> None:
@@ -38,6 +54,9 @@ class Game():
         self.__idJoueurActuel:int = 0
         self.__deValue:int = 0
         self.__etat:GameState = GameState.SELECT_AVATAR
+        self.__timeaction:int = 0
+        self.__chance_action:str = None
+        self.__malus_action:str = None
 
     def getNombreJoueur(self)->int:
         """_summary_
@@ -74,6 +93,30 @@ class Game():
             Setter de l'etat du joueur
         """
         self.__idJoueurActuel = idJoueurActuel
+
+    def getChanceAction(self)->str:
+        """_summary_
+            Getter de l'etat du joueur
+        """
+        return self.__chance_action
+    
+    def setChanceAction(self, chanceaction):
+        """_summary_
+            Setter de l'etat du joueur
+        """
+        self.__chance_action = chanceaction
+    
+    def getMalusAction(self)->str:
+        """_summary_
+            Getter de l'etat du joueur
+        """
+        return self.__malus_action
+    
+    def setMalusAction(self, malusaction):
+        """_summary_
+            Setter de l'etat du joueur
+        """
+        self.__malus_action = malusaction
     
     def getDeValue(self)->int:
         """_summary_
@@ -112,18 +155,20 @@ class Game():
     
     def joueurSuivant(self):
         """Fonction qui décide quel est le joueur qui joue au prochain tour"""
-        self.setIdJoueurActuel(self.getIdJoueurActuel()+1 if self.getIdJoueurActuel() < len(self.getListeJoueur())-2 else 0)
+        if self.getListeJoueur()[self.getIdJoueurActuel()].getPv() == 0:
+            self.setListeJoueur(self.getListeJoueur().pop(self.getIdJoueurActuel()))
+        self.setIdJoueurActuel(self.getIdJoueurActuel()+1 if self.getIdJoueurActuel() < len(self.getListeJoueur())-1 else 0)
     
     def personnageSelectionnable(self):
         """Renvoie la liste des personnages sélectionnables"""
         elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
         for player in self.getListeJoueur():
             if isinstance(player, joueur.Joueur):
-                elems.remove(player.get_element())
+                elems.remove(player.getElement())
         return elems
     
     def loop(self, input:inputs):
-        if self.getListeJoueur()[self.getIdJoueurActuel()] == None and self.getEtat() == GameState.SELECT_AVATAR :
+        if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
             self.setEtat(GameState.SELECT_AVATAR)
         player:joueur.Joueur = self.getListeJoueur()[self.getIdJoueurActuel()]
         match self.getEtat():
@@ -187,42 +232,111 @@ class Game():
                 
             # Logique_Action
             case GameState.STAY_ON_CASE:
-                couleur_case = self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy())
-                if couleur_case == logique.Couleur.BEIGE.value:
-                    pass
-                            
-                elif couleur_case == logique.Couleur.BLANC.value:
-                    pass
-                
-                elif couleur_case == logique.Couleur.BLEU.value:
-                    pass
+                couleur_case = self.getPlateau().getCases(self.getListeJoueur()[self.getIdJoueurActuel()].getPlateaux(),self.getListeJoueur()[self.getIdJoueurActuel()].getPlateauy()).value.value
+                print(couleur_case)
+                match couleur_case:
+                    case logique.Couleur.BEIGE.value:
+                        if input.estClique():
+                            if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
+                                if self.getListeJoueur()[self.getIdJoueurActuel()].avoir_tt_cles() == True:
+                                    self.setEtat(GameState.CASE_FIN_DU_JEU)
+                                else:
+                                    self.setEtat(GameState.CASE_SORCIERE_SANS_CLE)
+                            elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
+                                self.setEtat(GameState.CASE_RETOUR)
 
-                elif couleur_case == logique.Couleur.GRIS.value:
-                    pass
+                    case logique.Couleur.BLANC.value:
+                        delay = 8
+                        self.__timeaction = time.time()
+                        if self.__timeaction + delay > time.time():
+                            self.setEtat(GameState.SWITCH_PLAYER)
+                
+                    case logique.Couleur.BLEU.value:
+                        if input.estClique():
+                            if (self.getListeJoueur()[self.getIdJoueurActuel()].get_pv() > 200 and self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() != []):
+                                if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
+                                    if self.getListeJoueur()[self.getIdJoueurActuel()].get_pv() > 200:
+                                        self.getListeJoueur()[self.getIdJoueurActuel()].setPv(self.getListeJoueur()[self.getIdJoueurActuel()] - 200)
+                                        self.setEtat(GameState.SWITCH_PLAYER)
+                                elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
+                                    if self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() != []:
+                                        self.getListeJoueur()[self.getIdJoueurActuel()].setInventaire(self.getListeJoueur()[self.getIdJoueurActuel()].pop(random.randint(0,len(self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire()))))
+                                        self.setEtat(GameState.SWITCH_PLAYER)
+                            else:
+                                self.getListeJoueur()[self.getIdJoueurActuel()].setPv(0)
+                                self.setEtat(GameState.DEAD)
 
-                elif couleur_case == logique.Couleur.INDIGO.value:
-                    pass
-                
-                elif couleur_case == logique.Couleur.JAUNE.value:
-                    pass
-                
-                elif couleur_case == logique.Couleur.NOIR.value:
-                    self.getListeJoueur()[self.getIdJoueurActuel()].setPv(0)
-                
-                elif couleur_case == logique.Couleur.ORANGE.value:
-                    pass
-                    
-                elif couleur_case == logique.Couleur.ROSE.value:
-                    pass
-                    
-                elif couleur_case == logique.Couleur.ROUGE.value:
-                    pass
-                    
-                elif couleur_case == logique.Couleur.TURQUOISE.value:
-                    pass
+                    case logique.Couleur.GRIS.value:
+                        if input.estClique():
+                            if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
+                                if self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() != []:
+                                    self.getListeJoueur()[self.getIdJoueurActuel()].setPv(self.getListeJoueur()[self.getIdJoueurActuel()] - 200)
+                                    self.setEtat(GameState.SWITCH_PLAYER)
+                            elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
+                                self.setEtat(GameState.CASE_RETOUR)
 
-                elif couleur_case == logique.Couleur.VIOLET.value:
-                    pass
+                    case logique.Couleur.INDIGO.value:
+                        if input.estClique():
+                            if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
+                                self.setEtat(GameState.CASE_TELEPORTE)
+                            elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
+                                self.setEtat(GameState.CASE_RETOUR)
+                    
+                    case logique.Couleur.JAUNE.value:
+                        self.setEtat(GameState.SWITCH_PLAYER)
+                    
+                    case logique.Couleur.NOIR.value:
+                        delay = 8
+                        self.__timeaction = time.time()
+                        if self.__timeaction + delay > time.time():
+                            self.getListeJoueur()[self.getIdJoueurActuel()].setPv(0)
+                            self.setEtat(GameState.DEAD)
+                    
+                    case logique.Couleur.ORANGE.value:
+                        if input.estClique():
+                            if 360 < input.getSourisx() < 424 and 475 < input.getSourisy() < 539:
+                                liste_malus = ["perdre 20 pv","perdre 50 pv","perdre 80 pv","perdre 120 pv"]
+                                self.setMalusAction(random.choice(liste_malus))
+                                self.setEtat(GameState.CASE_MALUS)
+                        
+                    case logique.Couleur.ROSE.value:
+                        if input.estClique():
+                            if 360 < input.getSourisx() < 424 and 475 < input.getSourisy() < 539:
+                                liste_chance = ["gagner 100 pv","gagner 200 pv","gagner 500 pv", "gagner 150 pv","gagner 400 pv","gagner 1050 pv"]
+                                self.setChanceAction(random.choice(liste_chance))
+                                self.setEtat(GameState.CASE_CHANCE)
+                        
+                    case logique.Couleur.ROUGE.value:
+                        pass
+                        
+                    case logique.Couleur.TURQUOISE.value:
+                        delay = 8
+                        self.__timeaction = time.time()
+                        if self.__timeaction + delay > time.time():
+                            self.setEtat(GameState.SWITCH_PLAYER)
+
+                    case logique.Couleur.VIOLET.value:
+                        self.setEtat(GameState.USE_DIE)
+
+            case GameState.CASE_CHANCE:
+                delay = 8
+                self.__timeaction = time.time()
+                if self.__timeaction + delay > time.time():
+                    self.setEtat(GameState.SWITCH_PLAYER)
+
+            case GameState.CASE_RETOUR:
+                delay = 8
+                self.__timeaction = time.time()
+                if self.__timeaction + delay > time.time():
+                    self.setEtat(GameState.SWITCH_PLAYER)
+            
+            case GameState.CASE_TELEPORTE:
+                delay = 8
+                self.__timeaction = time.time()
+                if self.__timeaction + delay > time.time():
+                    self.setEtat(GameState.SWITCH_PLAYER)
+        
+            # Combat
             case GameState.FIGHT:
                 pass
             case GameState.WAIT_FIGHT_ACTION:
@@ -232,4 +346,7 @@ class Game():
             case GameState.DEAD:
                 pass
             case GameState.SWITCH_PLAYER:
-                pass
+                self.joueurSuivant()
+                self.setEtat(GameState.SELECT_ACTION)
+                if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
+                    self.setEtat(GameState.SELECT_AVATAR)

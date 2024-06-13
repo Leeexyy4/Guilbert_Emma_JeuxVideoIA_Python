@@ -4,24 +4,24 @@ import pygame, joueur
 import interface, game
 from utils import image, texte, logique, rectangle
 from input import inputs, direction
-import time
+import time, random
 from utils.rectangle import Rectangle
 
 class ClientState(Enum):
 
-    LOCAL = 2 # création de la map, envoi des donné au joueur
+    LOCAL = 1 # création de la map, envoi des donné au joueur
 
-    ONLINE = 3 # attente que le MAX_PLAYER sois atteint
+    ONLINE = 2 # attente que le MAX_PLAYER sois atteint
 
-    MENU = 1 # creation d'une instance de serveur
+    MENU = 3 # creation d'une instance de serveur
 
-    STARTING = 2 # création de la map, envoi des donné au joueur
+    STARTING = 4 # création de la map, envoi des donné au joueur
 
-    WAIT_CONNECION = 3 # attente que le MAX_PLAYER sois atteint
+    WAIT_CONNECION = 4 # attente que le MAX_PLAYER sois atteint
 
-    IN_GAME = 4 # boucle de jeu principal
+    IN_GAME = 5 # boucle de jeu principal
 
-    QUIT = 5 # fin du serveur envoi des donné à la bd pour les stat
+    QUIT = 6 # fin du serveur envoi des donné à la bd pour les stat
 
 class PartieState(Enum):
 
@@ -145,19 +145,19 @@ class Client():
         rectangle.Rectangle(20,590,70,80,logique.Couleur.ROSE.value).affiche(self.getFenetre())
         
         # Prendre la variable du personnage choisi de "Position_choix_perso()""
-        if un_joueur.get_prenom() == joueur.Nom.ROCK.value:
+        if un_joueur.getPrenom() == joueur.Nom.ROCK.value:
             # Ajouter la photo de Pierre
             self.afficheImage(24,598,un_joueur)
         
-        if un_joueur.get_prenom() == joueur.Nom.WATER.value:
+        if un_joueur.getPrenom() == joueur.Nom.WATER.value:
             # Ajouter la photo de Ondine
             self.afficheImage(24,598,un_joueur)
         
-        if un_joueur.get_prenom() == joueur.Nom.GRASS.value:
+        if un_joueur.getPrenom() == joueur.Nom.GRASS.value:
             # Ajouter la photo de Pierre
             self.afficheImage(24,598,un_joueur)
         
-        if un_joueur.get_prenom() == joueur.Nom.TOWN.value:
+        if un_joueur.getPrenom() == joueur.Nom.TOWN.value:
             # Ajouter la photo de Pierre
             self.afficheImage(24,598,un_joueur)
     
@@ -201,7 +201,7 @@ class Client():
         """
             La fonction affichage_cle permet d'afficher les cle dans le menu(int x, int y, Surface surface, Font font)
         """
-        for i in joueur.get_inventaire():
+        for i in joueur.getInventaire():
             if i == "cle de la Ville" :
                 image.Image(660,640,image.Cle.TOWN.value).affichageImageRedimensionnee(48,30,self.getFenetre())
             elif i == "cle de la Rivière" :
@@ -219,21 +219,21 @@ class Client():
             La fonction afficheImage permet d'afficher le personnage dans le menu(int x, int y, Surface surface, Font font)
         """        
         # Afficher l'image sur la fenetre
-        self.getFenetre().blit(joueur.get_image(), (x, y))
+        self.getFenetre().blit(joueur.getImage(), (x, y))
         
         # Dessiner le rectangle pour les pv du joueur
         rectangle.Rectangle(500,590,130,35,logique.Couleur.VERT.value).affiche(self.getFenetre())
     
         # Charger les pv
-        texte.Texte(joueur.get_pv(),logique.Couleur.NOIR.value,538,598).affiche(self.getFenetre())
+        texte.Texte(joueur.getPv(),logique.Couleur.NOIR.value,538,598).affiche(self.getFenetre())
         
     # Definir l'affichage de l'adversaire lors des combats
     def afficheImage_adv(self,x,y,joueur):
         """Affiche l'image de l'ennemi dans le menu."""
-        image = pygame.image.load(joueur.get_image())
+        image = pygame.image.load(joueur.getImage())
         self.getFenetre().blit(image, (x,y))
         rectangle.Rectangle(500, 635, 130, 35, logique.Couleur.ROUGE.value).affiche(self.getFenetre())
-        texte.Texte(joueur.get_pv(), logique.Couleur.NOIR.value, 538, 645).affiche(self.getFenetre())
+        texte.Texte(joueur.getPv(), logique.Couleur.NOIR.value, 538, 645).affiche(self.getFenetre())
     
     # Definir l'affichage sur le plateau
     def afficheImagePlateau(self):
@@ -241,10 +241,10 @@ class Client():
             La fonction afficheImage_plateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
         """
         # Charger l'image
-        image_redimensionnee = pygame.transform.scale(self.getGame().getJoueurActuel().get_image(), (47, 47))
+        image_redimensionnee = pygame.transform.scale(self.getGame().getJoueurActuel().getImage(), (47, 47))
         
         # Afficher l'image redimensionnee sur la fenetre
-        self.getFenetre().blit(image_redimensionnee, (self.getGame().getJoueurActuel().get_x(), self.getGame().getJoueurActuel().get_y()))
+        self.getFenetre().blit(image_redimensionnee, (self.getGame().getJoueurActuel().getX(), self.getGame().getJoueurActuel().getY()))
                 
 
     # Definir l'affichage des joueurs sur le plateau
@@ -296,7 +296,6 @@ class Client():
         if 'de' not in self.__timerAnimation.keys():
             self.__timerAnimation['de'] = time.time()
         if self.currentIdDe >= len(listeDe):
-            print("b")
             self.__timerAnimation['de'] = time.time()
             self.currentIdDe = 0
             self.affichageResultatDe()
@@ -304,11 +303,8 @@ class Client():
             self.getFenetre().blit(listeDe[self.currentIdDe],(350,475))
         animationDelay = 0.23 - int(0.19*(self.currentIdDe/len(listeDe)))
         if self.__timerAnimation['de'] + animationDelay < time.time() :
-                print("a" + str(self.currentIdDe))
                 self.currentIdDe += 1
                 self.__timerAnimation['de'] = time.time()
-        # else: print("nul")
-        # print(self.__timerAnimation['de'])
 
     def affichageResultatDe(self):
         if self.getGame().getDeValue() == 1:
@@ -484,7 +480,15 @@ class Client():
                             texte.Texte("Passer son tour",logique.Couleur.BLANC.value,505,545).affiche(self.getFenetre())
 
                         elif couleur_case == logique.Couleur.INDIGO.value:
-                            pass
+                            image.Image(0,468,image.Page.CHOIX_DOUBLE.value).affiche(self.getFenetre())
+                            self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                            self.setDialogues(["Tu es sur une case de Teleportation.","Veux-tu etre teleporter ?"])
+                            self.afficheDialogues()
+                            self.getFenetre().blit(image.Interaction.TP.value, (220, 480))
+                            self.getFenetre().blit(image.Interaction.RETOUR.value, (510,480))
+                            texte.Texte("Se teleporter",logique.Couleur.BLANC.value,212,545).affiche(self.getFenetre())
+                            texte.Texte("Non merci",logique.Couleur.BLANC.value,502,545).affiche(self.getFenetre())
+                            pygame.display.update()
 
                         elif couleur_case == logique.Couleur.JAUNE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
@@ -504,7 +508,7 @@ class Client():
                             self.setDialogues(["Tu es sur une case Malus.", "Clique pour savoir quel sort", "le jeu te reserve."])
                             self.afficheDialogues()
                             self.getFenetre().blit(image.Interaction.MALUS.value, (360,475))
-                            texte.Texte("Malus",logique.Couleur.BLANC.value,372,545).affiche(self.getFenetre())
+                            texte.Texte("Malus",logique.Couleur.NOIR.value,372,545).affiche(self.getFenetre())
         
                         elif couleur_case == logique.Couleur.ROSE.value:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
@@ -512,7 +516,7 @@ class Client():
                             self.setDialogues(["Tu es sur une case Chance","Clique pour decouvrir le pouvoir","que le jeu va te donner."])
                             self.afficheDialogues()
                             self.getFenetre().blit(image.Interaction.CHANCE.value, (360,475))
-                            texte.Texte("Chance",logique.Couleur.BLANC.value,369,545).affiche(self.getFenetre())
+                            texte.Texte("Chance",logique.Couleur.NOIR.value,369,545).affiche(self.getFenetre())
 
                         elif couleur_case == logique.Couleur.ROUGE.value:
                             pass
@@ -529,6 +533,30 @@ class Client():
                             self.setDialogues(["Tu es sur une case Rejoue !","Relance le de pour avoir un","deuxieme lance"])
                             self.afficheDialogues()
                             self.getFenetre().blit(image.De.FACE1.value,(350,475))
+                    
+                    case game.GameState.CASE_CHANCE:
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Tou-dou-dou-doum","Tu vas {}".format(self.getGame().getChanceAction())])
+                        self.afficheDialogues()
+
+                    case game.GameState.CASE_MALUS:
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Tou-dou-dou-doum","Tu vas {}".format(self.getGame().getMalusAction())])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.CASE_RETOUR:
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Dommage, retente ta chance une prochaine fois","et dépêche toi de récupérer les clés avant", "les autres joueurs !!!"])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.CASE_TELEPORTE:
+                        image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Tou-dou-dou-doum","Teleportation sur la deuxieme case de téléportation"])
+                        self.afficheDialogues()
 
                     case game.GameState.FIGHT:
                         pass
@@ -666,7 +694,7 @@ class Client():
                         dir = direction.WEST
                      
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            match self.getEtatClient() :
+            match self.getEtatClient():
                 case ClientState.MENU:
                     self.menu_logical(mouse_x, mouse_y, click)
                 case ClientState.LOCAL:

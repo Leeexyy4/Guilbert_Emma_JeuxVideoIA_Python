@@ -43,60 +43,60 @@ class Joueur:
         
 
     # Definir les getters
-    def get_x(self):
+    def getX(self):
         """_summary_
             Getter de la position x
         """
         return self.__plateaux *47
     
-    def get_y(self):
+    def getY(self):
         """_summary_
             Getter de la position y
         """
         return self.__plateauy *47
     
-    def get_prenom(self)->str:
+    def getPrenom(self)->str:
         """_summary_
             Getter du prenom du joueur
         """
-        if(self.get_element() == Element.GRASS): return Nom.GRASS.value
-        if(self.get_element() == Element.WATER): return Nom.WATER.value
-        if(self.get_element() == Element.TOWN): return Nom.TOWN.value
-        if(self.get_element() == Element.ROCK): return Nom.ROCK.value
+        if(self.getElement() == Element.GRASS): return Nom.GRASS.value
+        if(self.getElement() == Element.WATER): return Nom.WATER.value
+        if(self.getElement() == Element.TOWN): return Nom.TOWN.value
+        if(self.getElement() == Element.ROCK): return Nom.ROCK.value
         return None
     
-    def get_image(self):
-        if(self.get_element() == Element.GRASS): return image.Personnages.GRASS.value
-        if(self.get_element() == Element.WATER): return image.Personnages.WATER.value
-        if(self.get_element() == Element.TOWN): return image.Personnages.TOWN.value
-        if(self.get_element() == Element.ROCK): return image.Personnages.ROCK.value
+    def getImage(self):
+        if(self.getElement() == Element.GRASS): return image.Personnages.GRASS.value
+        if(self.getElement() == Element.WATER): return image.Personnages.WATER.value
+        if(self.getElement() == Element.TOWN): return image.Personnages.TOWN.value
+        if(self.getElement() == Element.ROCK): return image.Personnages.ROCK.value
         return None
 
-    def get_id(self):
+    def getId(self):
         """_summary_
             Getter de l'id du joueur
         """
         return self.__id
     
-    def get_pv(self):
+    def getPv(self):
         """_summary_
             Getter des pv du joueur
         """
         return self.__pv
     
-    def get_attaque(self):
+    def getAttaque(self):
         """_summary_
             Getter des attaques du joueur
         """
         return self.__attaque
     
-    def get_element(self):
+    def getElement(self):
         """_summary_
             Getter de l'__element du joueur
         """
         return self.__element
     
-    def get_inventaire(self):
+    def getInventaire(self):
         """_summary_
             Getter de l'inventaire du joueur
         """
@@ -114,40 +114,40 @@ class Joueur:
             """
             return self.__plateauy
     
-    def get_attaque(self):
+    def getAttaque(self):
             """_summary_
                 Getter de l'attaque sur le plateau
             """
             return self.__attaque
             
-    def set_lien(self, lien):
+    def setLien(self, lien):
         """_summary_
             Setter du lien de l'image du joueur
         """
         self.__lien = lien
     
-    def set_pv(self,pv):
+    def setPv(self,pv):
         """_summary_
             Setter de la vie du joueur
         """
         self.__pv = pv
     
-    def set_element(self, element):
+    def setElement(self, element):
         """_summary_
             Setter de l'element du joueur
         """
-        if(self.get_element() == None): pass
-        elif(self.get_element() == Element.GRASS): Joueur.grass_is_used = False
-        elif(self.get_element() == Element.WATER): Joueur.water_is_used = False
-        elif(self.get_element() == Element.TOWN): Joueur.town_is_used = False
+        if(self.getElement() == None): pass
+        elif(self.getElement() == Element.GRASS): Joueur.grass_is_used = False
+        elif(self.getElement() == Element.WATER): Joueur.water_is_used = False
+        elif(self.getElement() == Element.TOWN): Joueur.town_is_used = False
         else: Joueur.rock_is_used = False
-        self.set_element(element)
-        if(self.get_element() == Element.ROCK): Joueur.rock_is_used = True
-        elif(self.get_element() == Element.GRASS): Joueur.grass_is_used = True
-        elif(self.get_element() == Element.WATER): Joueur.water_is_used = True
-        elif(self.get_element() == Element.TOWN): Joueur.town_is_used = True
+        self.setElement(element)
+        if(self.getElement() == Element.ROCK): Joueur.rock_is_used = True
+        elif(self.getElement() == Element.GRASS): Joueur.grass_is_used = True
+        elif(self.getElement() == Element.WATER): Joueur.water_is_used = True
+        elif(self.getElement() == Element.TOWN): Joueur.town_is_used = True
         
-    def set_inventaire(self,inventaire):
+    def setInventaire(self,inventaire):
         """_summary_
             Setter de l'inventaire du joueur
         """
@@ -165,8 +165,25 @@ class Joueur:
         """
         self.__plateauy = plateauy
 
-    def set_attaque(self,attaque):
+    def setAttaque(self,attaque):
         """
             Setter de l'attaque sur le plateau
         """
         self.__attaque = attaque
+
+    def avoirCles(self) -> bool : 
+        """Verifie si le joueur a toutes les cles necessaires."""
+        nombre_cles = 0
+        for i in self.getInventaire():
+            nombre_cles += 1
+        if nombre_cles == 4:
+            return True
+        else:
+            return False
+    
+    def aGagne(self,plateau) -> bool:
+        """Verifie si le joueur a gagne en ayant toutes les cles et en etant dans une hutte."""
+        gagne = False
+        if self.avoirCles() == True and plateau.getNom(self.getPlateaux(),self.getPlateauy()) == "Hutte":
+            gagne = True
+        return gagne
