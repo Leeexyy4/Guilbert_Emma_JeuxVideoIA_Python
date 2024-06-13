@@ -6,7 +6,7 @@ from utils import image, texte, logique, rectangle
 from input import inputs, direction
 import time, random, pickle, socket
 from utils.rectangle import Rectangle
-    
+
 host = '192.168.1.159'
 firstport = 12345
 clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -310,7 +310,6 @@ class Client():
             # Affiche le de sur la face 6
             self.currentImageDe = image.De.FACE6.value
             self.getFenetre().blit(self.currentImageDe,(350,475))
-        self.getGame().setEtat(game.GameState.MOVE_PLAYER)
 
 # --------- Boucle principale du jeu qui fait l'affichage et la logique --------- #
 
@@ -715,9 +714,6 @@ class Client():
                 case ClientState.LOCAL:
                     self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.ONLINE:
-                    print("online")
-                    clientSock.sendto(pickle.dumps('hello'), (host, firstport))
-                    self.__game.loop(inputs(mouse_x, mouse_y))
                     # envoyé les inputs au server
                     try:
                         data, serveur = clientSock.recvfrom(20480)
