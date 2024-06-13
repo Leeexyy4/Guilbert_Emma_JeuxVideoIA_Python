@@ -127,9 +127,9 @@ class Interface:
         else:
             self.get_liste_joueur().pop(joueur.get_id())
     
-    def Page_demarrage(self):    
+    def Page_demarrage(self, nombre_cases_decouvertes):    
         # Affiche l'image de fond 
-        image.Image(0,0,'assets/img/illustrations/Page_demarrage.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+        image.Image(0,0,'assets/img/illustrations/Page_demarrage.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())    
         # Mettre à jour l'affichage
         pygame.display.update()
         
@@ -141,7 +141,7 @@ class Interface:
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # si appuie bouton stats
-                        self.Page_statistiques()
+                        self.Page_statistiques(nombre_cases_decouvertes)
                     if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # si appuie bouton en local
                         self.Page_nb_joueur()
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # si appuie bouton en ligne
@@ -199,9 +199,12 @@ class Interface:
         # Mettre à jour l'affichage
         pygame.display.update()
     
-    def Page_statistiques(self):    
+    def Page_statistiques(self, nombre_cases_decouvertes):    
         # Affiche l'image de fond 
         image.Image(0,0,'assets/img/illustrations/Page_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+
+        texte.Texte("Cases découvertes : {}".format(nombre_cases_decouvertes), couleur.Couleur().get_Blanc(), 100, 100).affiche(self.get_police(), self.get_fenetre())
+
         # Mettre à jour l'affichage
         pygame.display.update()
         
@@ -215,7 +218,7 @@ class Interface:
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
-                        self.Page_demarrage()
+                        self.Page_demarrage(nombre_cases_decouvertes)
                         stats = True
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
@@ -631,7 +634,26 @@ class Interface:
 
 
     
-    def Page_sorciere(self, joueur):
+    def Page_sorciere(self, joueur, 
+                                    nb_tour, 
+                                    nb_pv_j1,
+                                    nb_pv_j2 ,
+                                    nb_pv_j3,
+                                    nb_pv_j4,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1,
+                                    pv_moy_j2,
+                                    pv_moy_j3,
+                                    pv_moy_j4,
+                                    nombre_case_decouverte,
+                                    nb_mort):
         # Page de la sorcière quan don a réussi le jeu
         image.Image(0,0,'assets/img/illustrations/Page_maisonsorciere.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
         self.Menu_bas(joueur)
@@ -686,12 +708,31 @@ class Interface:
                         self.affichage_potion()
                         pygame.display.update()
                         pygame.time.delay(2500)
-                        image.Image(0,0,'assets/img/illustrations/Page_findujeu.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
-                        self.Menu_bas(joueur)
-                        texte.Texte("Tu as terminé le jeu bravo à toi jeune aventurier",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
-                        texte.Texte("Tu es le premier a t'être libéré du sort !!",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
-                        pygame.display.update()
-                        pygame.time.delay(2500)
+                        #image.Image(0,0,'assets/img/illustrations/Page_findujeu.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+                        self.Page_fin(nb_tour, 
+                                    nb_pv_j1,
+                                    nb_pv_j2 ,
+                                    nb_pv_j3,
+                                    nb_pv_j4,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1,
+                                    pv_moy_j2,
+                                    pv_moy_j3,
+                                    pv_moy_j4,
+                                    nombre_case_decouverte,
+                                    nb_mort)
+                        #self.Menu_bas(joueur)
+                        #texte.Texte("Tu as terminé le jeu bravo à toi jeune aventurier",couleur.Couleur().get_Noir(),110,600).affiche(self.get_police(),self.get_fenetre())
+                        #texte.Texte("Tu es le premier a t'être libéré du sort !!",couleur.Couleur().get_Noir(),110,620).affiche(self.get_police(),self.get_fenetre())
+                        #pygame.display.update()
+                        #pygame.time.delay(2500)
     
     # Definir l'affichage sur le menu
     def affichage_image(self,x,y,joueur):
@@ -798,3 +839,133 @@ class Interface:
         
         # Mettre à jour l'affichage
         pygame.display.update()  
+
+
+    def Page_fin(self,  nb_tour, 
+                        nb_pv_j1,
+                        nb_pv_j2 ,
+                        nb_pv_j3,
+                        nb_pv_j4,
+                        nb_cle_j1,
+                        nb_cle_j2,
+                        nb_cle_j3,
+                        nb_cle_j4,
+                        nb_combat_j1,
+                        nb_combat_j2,
+                        nb_combat_j3,
+                        nb_combat_j4,
+                        pv_moy_j1,
+                        pv_moy_j2,
+                        pv_moy_j3,
+                        pv_moy_j4,
+                        nombre_case_decouverte,
+                        nb_mort):    
+        # Affiche l'image de fond 
+        image.Image(0,0,'assets/img/illustrations/Page_findujeu.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+        # Mettre à jour l'affichage
+        pygame.display.update()  
+
+        
+        # Boucle while pour voir quand le joueur clique sur quitter
+        while (self.get_etat_de_jeu() != "demarrage_jeu"):
+            mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+            # Pour tous les evenements
+            for event in pygame.event.get():
+                # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
+                if (event.type == pygame.MOUSEBUTTONDOWN):
+                    if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # si appuie bouton stats
+                        pygame.quit()
+                    if (320 <= mouse_x <= 470 and 400 <= mouse_y <= 450) : # si appuie bouton en local
+                        self.Page2_statistiques(nb_tour, 
+                                    nb_pv_j1,
+                                    nb_pv_j2 ,
+                                    nb_pv_j3,
+                                    nb_pv_j4,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1,
+                                    pv_moy_j2,
+                                    pv_moy_j3,
+                                    pv_moy_j4,
+                                    nombre_case_decouverte,
+                                    nb_mort)
+                # Si le joueur quitte la fenetre
+                if (event.type == pygame.QUIT):
+                    pygame.quit()
+                    exit()
+
+    def Page2_statistiques(self,    nb_tour, 
+                                    nb_pv_j1,
+                                    nb_pv_j2 ,
+                                    nb_pv_j3,
+                                    nb_pv_j4,
+                                    nb_cle_j1,
+                                    nb_cle_j2,
+                                    nb_cle_j3,
+                                    nb_cle_j4,
+                                    nb_combat_j1,
+                                    nb_combat_j2,
+                                    nb_combat_j3,
+                                    nb_combat_j4,
+                                    pv_moy_j1,
+                                    pv_moy_j2,
+                                    pv_moy_j3,
+                                    pv_moy_j4,
+                                    nombre_case_decouverte,
+                                    nb_mort):    
+        # Affiche l'image de fond 
+        image.Image(0,0,'assets/img/illustrations/Page_statistiques.png').affichage_image_redimensionnee(800, 700,self.get_fenetre())
+
+        texte.Texte("Joueur 1 : {}".format(pv_moy_j1), couleur.Couleur().get_Blanc(), 100, 100).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j1), couleur.Couleur().get_Blanc(), 100, 150).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de combats : {}".format(nb_combat_j1), couleur.Couleur().get_Blanc(), 100, 200).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j1), couleur.Couleur().get_Blanc(), 100, 250).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j1), couleur.Couleur().get_Blanc(), 100, 300).affiche(self.get_police(), self.get_fenetre())
+
+        texte.Texte("Joueur 2 : {}".format(pv_moy_j2), couleur.Couleur().get_Blanc(), 450, 100).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j2), couleur.Couleur().get_Blanc(), 450, 150).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de combats : {}".format(nb_combat_j2), couleur.Couleur().get_Blanc(), 450, 200).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j2), couleur.Couleur().get_Blanc(), 450, 250).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j2), couleur.Couleur().get_Blanc(), 450, 300).affiche(self.get_police(), self.get_fenetre())
+
+        texte.Texte("Joueur 3 : {}".format(pv_moy_j3), couleur.Couleur().get_Blanc(), 100, 400).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j3), couleur.Couleur().get_Blanc(), 100, 450).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de combats : {}".format(nb_combat_j3), couleur.Couleur().get_Blanc(), 100, 500).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j3), couleur.Couleur().get_Blanc(), 100, 550).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j3), couleur.Couleur().get_Blanc(), 100, 600).affiche(self.get_police(), self.get_fenetre())
+
+        texte.Texte("Joueur 4 : {}".format(pv_moy_j4), couleur.Couleur().get_Blanc(), 450, 400).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV moyen : {}".format(pv_moy_j4), couleur.Couleur().get_Blanc(), 450, 450).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de combats : {}".format(nb_combat_j4), couleur.Couleur().get_Blanc(), 450, 500).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de clé : {}".format(nb_cle_j4), couleur.Couleur().get_Blanc(), 450, 550).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre de PV finaux : {}".format(nb_pv_j4), couleur.Couleur().get_Blanc(), 450, 600).affiche(self.get_police(), self.get_fenetre())
+
+        texte.Texte("Nombre total de cases décourvertes : {}".format(nombre_case_decouverte), couleur.Couleur().get_Blanc(), 100, 650).affiche(self.get_police(), self.get_fenetre())
+        texte.Texte("Nombre total de tours : {}".format(nb_tour), couleur.Couleur().get_Blanc(), 450, 650).affiche(self.get_police(), self.get_fenetre())
+
+        # Mettre à jour l'affichage
+        pygame.display.update()
+        
+        # Faire un systeme pour la selection de la position du clic pour la selection du personnage
+        stats = False
+        # Boucle while pour voir quand le joueur clique sur start
+        while (stats != True):
+            mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+            # Pour tous les evenements
+            for event in pygame.event.get():
+                # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
+                if (event.type == pygame.MOUSEBUTTONDOWN):
+                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
+                        self.Page_demarrage(nombre_case_decouverte)
+                        stats = True
+                # Si le joueur quitte la fenetre
+                if (event.type == pygame.QUIT):
+                    pygame.quit()
+                    exit()
+            
