@@ -25,9 +25,9 @@ class CASE_TYPE(Enum):
     VIDE = Couleur.BLANC # Se pas rien, pas de click
     MORT = Couleur.NOIR
     HUTTE = Couleur.BEIGE # choix entre use clef si non rien, pour finir la partie
-    POUF = Couleur.TURQUOISE# click pour être tp aléatoirement
+    POUF = Couleur.INDIGO# click pour être tp aléatoirement
     REJOUE = Couleur.VIOLET# rejour à partir du lancé de dée
     PUIT = Couleur.BLEU # Choisit quoi abandoné, Si n'as pas de clef, boucle sur lui meme
-    GRRR = Couleur.INDIGO # click pour être tp
+    GRRR = Couleur.TURQUOISE # click pour être tp
     DEPART = Couleur.JAUNE # Se pas rien, pas de click
     BOSS = Couleur.ROUGE  # début du fight

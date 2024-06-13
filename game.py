@@ -102,7 +102,7 @@ class Game():
         """
         self.__listeJoueur = listeJoueur
     
-    def getIdJoueurActuel(self)->joueur.Joueur:
+    def getIdJoueurActuel(self)->int:
         """_summary_
             Getter de l'etat du joueur
         """
@@ -224,19 +224,19 @@ class Game():
                 if input.estClique(): 
                     start:tuple[int, int] = self.getPlateau().getCaseJaune()
                     if (500 <= input.getSourisx() <= 600 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.water_is_used):
-                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER))
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER)
                         self.setEtat(GameState.USE_DIE)
                         # Si le personnage sur lequel on clique est Flora
                     elif (700 <= input.getSourisx() <= 800 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.grass_is_used): 
-                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS))
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS)
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Pierre
                     elif (400 <= input.getSourisx() <= 500 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.rock_is_used): 
-                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK))
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK)
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Kevin
                     elif (600 <= input.getSourisx() <= 700 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.town_is_used):
-                        self.setListeJoueur(joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN))
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
                         self.setEtat(GameState.USE_DIE)
 
             # Logique_PremierMouvement
