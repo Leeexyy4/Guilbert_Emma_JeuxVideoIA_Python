@@ -324,7 +324,7 @@ class Game():
                         self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
                         self.setEtat(GameState.USE_DIE)
                 else:
-                    if isinstance(player, intelA.IntelA) or player == None:
+                    if isinstance(player, intelA.IntelA) and player == None:
                         start:tuple[int, int] = self.getPlateau().getCaseJaune()
                         self.getListeJoueur()[self.getIdJoueurActuel()] = intelA.IntelA(self.getIdJoueurActuel(), start[0], start[1], random.choice(self.personnageSelectionnable()))
                         self.setEtat(GameState.USE_DIE)

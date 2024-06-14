@@ -1,11 +1,11 @@
 import psycopg2
 
 conn = psycopg2.connect(
-        database="SAE_jv",
+        database="sae_jv",
         host="localhost",
-        user="postgres",
-        password="Paulbrp5",
-        port="5433"
+        user="emma",
+        password="alexis",
+        port="5432"
     )
 
 def nbCases():

@@ -276,7 +276,6 @@ class Client():
         """La fonction afficheImagePlateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)"""
         image_redimensionnee = pygame.transform.scale(joueur.getImage(), (47, 47))
         self.getFenetre().blit(image_redimensionnee, (joueur.getY(), joueur.getX()))
-                
 
     # Definir l'affichage des joueurs sur le plateau
     def afficheJoueurs(self):
