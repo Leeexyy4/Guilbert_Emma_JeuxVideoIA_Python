@@ -763,9 +763,15 @@ class Client():
                         if(type(data) == game.Game):
                             print("change game")
                             self.setGame(data)
+                            
                         elif isinstance(data, dict):
-                            print("input")
-                            if( 'input' in data.keys()):
+                            if( 'end' in data.keys()):
+                                if data['end']:
+                                    self.setEtatClient(ClientState.SORCIERE)
+                                    self.__sorciere = END_MENU.SORCIERE
+                                else:
+                                    self.setEtatClient(ClientState.STATS)
+                            elif( 'input' in data.keys()):
                                 clientSock.sendto(pickle.dumps(inputs(mouse_x, mouse_y, click, dir)), (host, firstport))
                         else : print(type(data))
                     except TimeoutError:

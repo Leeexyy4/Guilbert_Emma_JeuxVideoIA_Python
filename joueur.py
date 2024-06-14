@@ -3,6 +3,7 @@
 # Bibliotheques utilisees pour le code
 import pygame, random
 from utils import image
+from utils.logique import CASE_TYPE
 # from utils import texte, couleur, image, rectangle, logique
 
 from enum import Enum
@@ -183,9 +184,9 @@ class Joueur:
         else:
             return False
     
-    def aGagne(self,plateau) -> bool:
+    def aGagne(self,cases_plateau:list[CASE_TYPE]) -> bool:
         """Verifie si le joueur a gagne en ayant toutes les cles et en etant dans une hutte."""
         gagne = False
-        if self.avoirCles() == True and plateau.getNom(self.getPlateaux(),self.getPlateauy()) == "Hutte":
+        if self.avoirCles() == True and cases_plateau[self.__plateaux][ self.__plateauy] == CASE_TYPE.HUTTE:
             gagne = True
         return gagne

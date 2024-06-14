@@ -54,7 +54,13 @@ while isOn:
             if (type(input) == inputs):
                 game.loop(input)
                 for player in players:
-                    sock.sendto(pickle.dumps(game), player) 
+                    sock.sendto(pickle.dumps(game), player)
+            if (game.isEnd()):
+                for i in range(len(game.getListeJoueur())):
+                    if game.getListeJoueur()[i].aGagne(game.getPlateau().getPlateau()):
+                        sock.sendto(pickle.dumps({'end': True}), players[i])
+                    else:
+                        sock.sendto(pickle.dumps({'end': False}), players[i])
         case ServerState.ENDING:
             # Envoi donné à la bd
             for player in players:
