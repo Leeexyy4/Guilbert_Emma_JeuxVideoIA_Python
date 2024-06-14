@@ -43,7 +43,10 @@ class Plateau():
         }
         self.remplirPlateauAleatoirement()
         self.setCasesDecouvertes(self.getCasesDecouvertes() + [[self.getCaseJaune()[0], self.getCaseJaune()[1]]])   
-        
+        for ligne in range(10):
+            for colonne in range(17):
+                self.setCasesDecouvertes(self.getCasesDecouvertes() + [[ligne, colonne]])     
+
     def getPlateau(self):
         """Renvoie le plateau de jeu."""
         return self.__plateau
