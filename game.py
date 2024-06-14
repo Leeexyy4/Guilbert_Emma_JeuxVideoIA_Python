@@ -298,12 +298,12 @@ class Game():
     def loop(self, input:inputs):
         if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
             self.setEtat(GameState.SELECT_AVATAR)
-        if self.getIdJoueurActuel() <= self.getNombreJoueur():
+        if self.getIdJoueurActuel() < self.getNombreJoueur():
             player:joueur.Joueur = self.getListeJoueur()[self.getIdJoueurActuel()]
         else:
             player:intelA.IntelA = self.getListeJoueur()[self.getIdJoueurActuel()]
+        
         match self.getEtat():
-
             # Logique_ChoixPerso
             case GameState.SELECT_AVATAR:
                 if input.estClique(): 
@@ -324,23 +324,10 @@ class Game():
                         self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
                         self.setEtat(GameState.USE_DIE)
                 else:
-                    if isinstance(player, intelA.IntelA):
+                    if isinstance(player, intelA.IntelA) or player == None:
                         start:tuple[int, int] = self.getPlateau().getCaseJaune()
-                        if joueur.Element.WATER in self.personnageSelectionnable():
-                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER)
-                            self.setEtat(GameState.USE_DIE)
-                            # Si le personnage sur lequel on clique est Flora
-                        elif joueur.Element.GRASS in self.personnageSelectionnable(): 
-                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS)
-                            self.setEtat(GameState.USE_DIE)
-                        # Si le personnage sur lequel on clique est Pierre
-                        elif joueur.Element.ROCK in self.personnageSelectionnable(): 
-                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK)
-                            self.setEtat(GameState.USE_DIE)
-                        # Si le personnage sur lequel on clique est Kevin
-                        elif joueur.Element.TOWN in self.personnageSelectionnable():
-                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
-                            self.setEtat(GameState.USE_DIE)
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = intelA.IntelA(self.getIdJoueurActuel(), start[0], start[1], random.choice(self.personnageSelectionnable()))
+                        self.setEtat(GameState.USE_DIE)
 
             # Logique_PremierMouvement
             case GameState.USE_DIE:

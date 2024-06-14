@@ -4,9 +4,32 @@ from math import sqrt
 import joueur
 from utils import image
 
+
+from enum import Enum
+
+class Nom(Enum):
+    """La classe Nom(Enum) regroupe le nom des personnages jouables."""
+    WATER = "Ondine"
+    GRASS = "Flora"
+    ROCK = "Pierre"
+    TOWN = "Kevin"
+class Element(Enum):
+    """La classe Element(Enum) regroupe les 'titres' des personnages jouables"""
+    WATER = "de la Riviere"
+    GRASS = "de la Foret"
+    ROCK = "du Rocher"
+    TOWN = "de la Ville"
+
 class IntelA (joueur.Joueur):
-    def __init__(self, id, prenom, element, plateaux, plateauy, pv, attaque, inventaire) -> None:
-        super().__init__(id, prenom, element, plateaux, plateauy, pv, attaque, inventaire)
+    def __init__(self,id:int, plateaux:int, plateauy:int,element:joueur.Element, inventaire:list=[]) -> None:
+
+        self.__id:int = id
+        self.__element:joueur.Element = element
+        self.__plateaux:int = plateaux
+        self.__plateauy:int = plateauy
+        self.__pv:int = 700
+        self.__attaque:int = 110
+        self.__inventaire:list = inventaire
 
     
     def choix_case_IA(self):
