@@ -880,26 +880,26 @@ class Client():
     def afficheSorciere(self):
         match self.__sorciere:
             case END_MENU.SORCIERE:
-                image.Image(0,0,image.Sorciere.MAISON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                image.Image(0,0,image.Sorciere.MAISON.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
                 self.setDialogues(["Tu es chez la sorciere, mais j'ai l'impression","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
             case END_MENU.SORCIERE_DRAGON:
-                image.Image(0,0,image.Sorciere.MAISON_DRAGON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                image.Image(0,0,image.Sorciere.MAISON_DRAGON.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
                 if not self.__sorciere_parti_2:
                     self.setDialogues(["Un dragon de pierre... ce n'est pas très","rassurant, trouvons vite un remède et sortons","d'ici très vite"])
                 else:
                     self.setDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
             case END_MENU.SORCIERE_SYMBOLE:
-                image.Image(0,0,image.Sorciere.MAISON_SYMBOLE.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                image.Image(0,0,image.Sorciere.MAISON_SYMBOLE.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
                 if not self.__sorciere_parti_2:
                     self.setDialogues(["C'est un symbole astral, si c'est chez la","sorciere, il vaut mieux ne pas y toucher"])
                 else:
                     self.setDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
             case END_MENU.SORCIERE_POTION:
                 if not self.__sorciere_parti_2:
-                    image.Image(0,0,image.Sorciere.MAISON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                    image.Image(0,0,image.Sorciere.MAISON.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
                     self.setDialogues(["Tu as trouvé une potion... Potion inverstium","Tu décides de la boire afin d'inverser le","sortilège"])
                 else:
-                    image.Image(0,0,image.Page.FIN_JEU.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                    image.Image(0,0,image.Page.FIN_JEU.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
                     self.setDialogues(["Tu as terminé le jeu bravo à toi jeune aventurier","Tu es le premier a t'être libéré du sort !!"])
         self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
         self.afficheDialogues()

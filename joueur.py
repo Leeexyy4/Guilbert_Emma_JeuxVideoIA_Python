@@ -40,7 +40,7 @@ class Joueur:
         self.__plateauy:int = plateauy
         self.__pv:int = 700
         self.__attaque:int = 110
-        self.__inventaire:list = inventaire
+        self.__inventaire:list = ["cle de la Ville","cle de la Foret", "cle de la Riviere", "cle du Rocher"]
         
 
     # Definir les getters
