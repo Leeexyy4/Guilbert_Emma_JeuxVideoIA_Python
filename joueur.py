@@ -40,7 +40,7 @@ class Joueur:
         self.__plateauy:int = plateauy
         self.__pv:int = 700
         self.__attaque:int = 110
-        self.__inventaire:list = ["cle de la Ville","cle de la Foret", "cle de la Riviere", "cle du Rocher"]
+        self.__inventaire:list = inventaire
         
 
     # Definir les getters
@@ -174,10 +174,19 @@ class Joueur:
         """
         self.__attaque = attaque
 
+    def advPossibleAttaquer(self, liste_joueur)->list[int]:
+        # Savoir si on a quelqu'un a attaqué
+        advPossible = []
+        x1 = self.getPlateaux()
+        y1 = self.getPlateauy()
+        for i in liste_joueur:
+            if (((i.getPlateaux() == x1) or (i.getPlateaux() == x1 + 1) or (i.getPlateaux() == x1 - 1)) and ((i.getPlateauy() == y1) or (i.getPlateauy() == y1 + 1) or (i.getPlateauy() == y1 - 1)) and (i.getId() != self.getId())):
+                advPossible.append(i.getId())
+        return advPossible
+
     def avoirCles(self) -> bool : 
         """Verifie si le joueur a toutes les cles necessaires."""
         nombre_cles = 0
-        print(self.getInventaire())
         for i in self.getInventaire():
             nombre_cles += 1
         if nombre_cles == 4:

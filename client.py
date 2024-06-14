@@ -279,7 +279,8 @@ class Client():
         """Affiche tous les joueurs sur le plateau."""
         if len(self.getGame().getListeJoueur()) != 0 and self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()] != None:
             for i in self.getGame().getListeJoueur():
-                self.afficheImagePlateau(i)
+                if i != None:
+                    self.afficheImagePlateau(i)
 
     def affichePotion(self):
         """La fonction affichePotion permet d'afficher la potion dans l'inventaire du joueur"""
@@ -417,6 +418,18 @@ class Client():
                         self.afficheDialogues()
                         image.Image(350,475,image.De.FACE1.value).affiche(self.getFenetre())
                     
+                    case game.GameState.ATTACK:
+                        pass
+
+                    case game.GameState.COMBAT_JOUEUR1:
+                        joueur_adv = self.getGame().getJoueurAdv()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,joueur_adv)
+                        self.setDialogues(["Tu as décidé de combattre un joueur. Le celebre ","{}. Prepare toi à le combattre afin de prendre".format(joueur_adv.getPrenom()), "l'avantage sur lui !"])
+                        self.afficheDialogues()
+
                     # Page_Mouvement
                     case game.GameState.SELECT_ACTION:
                         player = self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()]
@@ -721,25 +734,14 @@ class Client():
                             else:
                                 self.setDialogues(["Tu n'as pas encore recuperer toutes","et dépêche toi de récupérer les clés avant", "Tu n'as pas encore recuperer toutes","la sorciere. Depeche-toi !"])
                             self.afficheDialogues()
-                    case game.GameState.WAIT_FIGHT_ACTION:
-                        pass
-                    case game.GameState.DO_FIGHT_ACTION:
-                        pass
-                    case game.GameState.DEAD:
-                        pass
                     case game.GameState.SWITCH_PLAYER:
                         pass
             
-            case ClientState.STATS :
+            case ClientState.STATS:
                 self.afficheStats()
             case ClientState.SORCIERE:
                 self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].setInventaire([])
                 self.afficheSorciere()
-            # En ligne
-            case ClientState.STATS :
-                self.draw_stats()
-            case ClientState.SORCIERE:
-                self.draw_sorciere()
             case ClientState.ONLINE:
                 pass
         
@@ -969,7 +971,6 @@ class Client():
                         resp  = 'OK'
                         data = pickle.loads(data)
                         if(type(data) == game.Game):
-                            print("change game")
                             self.setGame(data)
                             
                         elif isinstance(data, dict):
@@ -981,37 +982,29 @@ class Client():
                                     self.setEtatClient(ClientState.STATS)
                             elif( 'input' in data.keys()):
                                 clientSock.sendto(pickle.dumps(inputs(mouse_x, mouse_y, click, dir)), (host, firstport))
-                        else : print(type(data))
                     except TimeoutError:
-                        print('REQUEST TIMED OUT')
-                    pass
+                        pass
                 case ClientState.SORCIERE:
                     self.sorciere_logique(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.STATS:
                     self.stats_logique(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.QUIT:
                     pass
+
     def sorciere_logique(self, input:inputs):
         match self.__sorciere:
             case END_MENU.SORCIERE:
                 if input.estClique():
-                    print("click")
                     if 500 < input.getSourisx() < 725 and 150 < input.getSourisy() < 450:
-                        print("a")
                         self.__sorciere = END_MENU.SORCIERE_SYMBOLE                        
                     if 90 < input.getSourisx() < 190 and 180 < input.getSourisy() < 350:
-                        print("b")
                         self.__sorciere = END_MENU.SORCIERE_DRAGON                        
                     if 330 < input.getSourisx() < 430 and 480 < input.getSourisy() < 580:
-                        print("c")
                         self.__sorciere = END_MENU.SORCIERE_POTION                        
-                        
-                        print(self.__sorciere_parti_2)
             case END_MENU.SORCIERE_DRAGON:
                 animationDelay = 2.5
                 if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
                     self.__timerAnimation['sorciere'] = time.time()
-                print (self.__timerAnimation['sorciere'])
                 if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
                         self.__timerAnimation['sorciere'] = 0
                         if self.__sorciere_parti_2:
@@ -1035,22 +1028,18 @@ class Client():
                 if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
                     self.__timerAnimation['sorciere'] = time.time()
                 if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
-                        print('qa')
                         self.__timerAnimation['sorciere'] = 0
                         if self.__sorciere_parti_2:
                             self.__sorciere_parti_2 = False
                             self.__etatClient = ClientState.STATS
                             self.setEtatPartie(PartieState.INDEX)
-                            self.__sorciere = END_MENU.SORCIERE
-                            print("e")
-                            
+                            self.__sorciere = END_MENU.SORCIERE                            
                         else:
-                            print("d")
                             self.__sorciere_parti_2 = True
+
     def draw_sorciere(self):
         match self.__sorciere:
             case END_MENU.SORCIERE:
-                # print('sorciere')
                 image.Image(0,0,image.Sorciere.MAISON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
                 self.setDialogues(["Tu es chez la sorciere, mais j'ai l'impression","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
             case END_MENU.SORCIERE_DRAGON:

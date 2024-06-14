@@ -22,45 +22,51 @@ class GameState(Enum):
     # Action_Case
     STAY_ON_CASE = 6 # envoie CASE_ACTION
     ATTACK = 7 # attaquer joueur proche
+    COMBAT_JOUEUR1 = 8 #le joueur adv est proche
+    COMBAT_JOUEUR2 = 9 #attend la decision du joueur
 
-    CASE_CHANCE = 8 # envoie CASE_CHANCE
-    CASE_MALUS = 9 # envoie CASE_MALUS
-    CASE_REJOUE = 10 # envoie CASE_REJOUE
-    CASE_CLE_PUIT = 11 # envoie CASE_CLE_PUIT
-    CASE_PV_PUIT = 12 # envoie CASE_CLE_PUIT
-    CASE_TELEPORTE = 13 # envoie CASE_TELEPORTE
-    CASE_CLE_SPECIALE = 14 # envoie CASE_CLE_SPECIALE
-    CASE_PERDU_SPECIALE = 15 # envoie CASE_CLE_SPECIALE
-    CASE_RETOUR = 16 # envoie CASE_CLE_SPECIALE
-    CASE_BOSS_TERMINE = 17 # envoie CASE_BOSS_TERMINE
+    COMBAT_JOUEUR3 = 10 #attaque basique
+    COMBAT_JOUEUR4 = 11 #attaque speciale
+    COMBAT_JOUEUR5 = 12 #defence
+    COMBAT_JOUEUR6 = 13 #prendre la fuite
+    COMBAT_JOUEUR7 = 14 #attaque raté
+
+    COMBAT_JOUEUR8 = 15 #joueur perdu
+    COMBAT_JOUEUR9 = 16 #joueur_adv perdu
+
+    CASE_CHANCE = 17 # envoie CASE_CHANCE
+    CASE_MALUS = 18 # envoie CASE_MALUS
+    CASE_REJOUE = 19 # envoie CASE_REJOUE
+    CASE_CLE_PUIT = 20 # envoie CASE_CLE_PUIT
+    CASE_PV_PUIT = 21 # envoie CASE_CLE_PUIT
+    CASE_TELEPORTE = 22 # envoie CASE_TELEPORTE
+    CASE_CLE_SPECIALE = 23 # envoie CASE_CLE_SPECIALE
+    CASE_PERDU_SPECIALE = 24 # envoie CASE_CLE_SPECIALE
+    CASE_RETOUR = 25 # envoie CASE_CLE_SPECIALE
+    CASE_BOSS_TERMINE = 26 # envoie CASE_BOSS_TERMINE
 
     # Sorciere
-    CASE_FIN_DU_JEU = 18
+    CASE_FIN_DU_JEU = 27
 
     # Combat
-    FIGHT1 = 19 #affichage debut combat
-    FIGHT2 = 20 #attend la decision du joueur
+    FIGHT1 = 28 #affichage debut combat
+    FIGHT2 = 29 #attend la decision du joueur
 
-    FIGHT3 = 21 #attaque basique
-    FIGHT4 = 22 #attaque spéciale
-    FIGHT5 = 23 #defence
-    FIGHT6 = 24 #Prendre la fuite
-    FIGHT7 = 25 #attaque raté
+    FIGHT3 = 30 #attaque basique
+    FIGHT4 = 31 #attaque spéciale
+    FIGHT5 = 32 #defence
+    FIGHT6 = 33 #Prendre la fuite
+    FIGHT7 = 34 #attaque raté
 
-    FIGHT8 = 26 #attaque boss reussie
-    FIGHT9 = 27 #attaque boss raté
+    FIGHT8 = 35 #attaque boss reussie
+    FIGHT9 = 36 #attaque boss raté
 
-    FIGHT10 = 28 #joueur perdu
-    FIGHT11 = 29 #boss perdu
-    FIGHT12 = 30 #boss perdu + joueur.avoirCles()
-
-    WAIT_FIGHT_ACTION = 31
-    DO_FIGHT_ACTION = 32
+    FIGHT10 = 37 #joueur perdu
+    FIGHT11 = 38 #boss perdu
+    FIGHT12 = 39 #boss perdu + joueur.avoirCles()
     
-    SWITCH_PLAYER = 33
+    SWITCH_PLAYER = 40
 
-    # Mort du joueur
-    DEAD = 34
     
 
 class Game():
@@ -71,6 +77,7 @@ class Game():
         self.__plateau:Plateau = Plateau()
         self.__idJoueurActuel:int = 0
         self.__bossActuel:ennemis.Ennemis = None
+        self.__joueurAdverse:joueur.Joueur = None
         self.__pvInflige:int = 0
         self.__deValue:int = 0
         self.__etat:GameState = GameState.SELECT_AVATAR
@@ -89,7 +96,7 @@ class Game():
     def autoInitPlayer(self) :
         start = self.__plateau.getCaseJaune()
         elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
-        self.__listeJoueur:list[joueur.Joueur] = [joueur.Joueur(i, start[0], start[1],elems[i] , ['a','a','a','a']) for i in range(self.__nombreJoueur)]
+        self.__listeJoueur:list[joueur.Joueur] = [joueur.Joueur(i, start[0], start[1],elems[i]) for i in range(self.__nombreJoueur)]
 
     def isEnd(self)->bool:
         """_summary_
@@ -101,8 +108,8 @@ class Game():
         """_summary_
             la partie est fin?
         """
-        print(self.__fin)
         return self.__fin
+
     def getlastdeVal(self)->int:
         """_summary_
             Getter de l'etat du joueur
@@ -120,6 +127,16 @@ class Game():
             Setter du nombre du joueur
         """
         self.__nombreJoueur = nombreJoueur
+
+    def getJoueurAdv(self)->int:
+        """_summary_
+            Getter du joueur adversaire
+        """
+        return self.__joueurAdverse
+
+    def setJoueurAdv(self, joueurAdv):
+        """Setter du joueur adversaire"""
+        self.__joueurAdverse = joueurAdv
 
     def getPvInflige(self)->int:
         """_summary_
@@ -243,7 +260,7 @@ class Game():
     
     def joueurSuivant(self):
         """Fonction qui décide quel est le joueur qui joue au prochain tour"""
-        if self.getListeJoueur()[self.getIdJoueurActuel()].getPv() == 0:
+        if self.getListeJoueur()[self.getIdJoueurActuel()].getPv() <= 0:
             self.setListeJoueur(self.getListeJoueur().pop(self.getIdJoueurActuel()))
         if self.getIdJoueurActuel() < len(self.getListeJoueur())-1:
             self.setIdJoueurActuel(self.getIdJoueurActuel()+1)
@@ -276,19 +293,19 @@ class Game():
                 if input.estClique(): 
                     start:tuple[int, int] = self.getPlateau().getCaseJaune()
                     if (500 <= input.getSourisx() <= 600 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.water_is_used):
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER, ['a','a','a','a'])
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER)
                         self.setEtat(GameState.USE_DIE)
                         # Si le personnage sur lequel on clique est Flora
                     elif (700 <= input.getSourisx() <= 800 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.grass_is_used): 
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS, ['a','a','a','a'])
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS)
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Pierre
                     elif (400 <= input.getSourisx() <= 500 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.rock_is_used): 
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK, ['a','a','a','a'])
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK)
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Kevin
                     elif (600 <= input.getSourisx() <= 700 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.town_is_used):
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN, ['a','a','a','a'])
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
                         self.setEtat(GameState.USE_DIE)
 
             # Logique_PremierMouvement
@@ -302,7 +319,7 @@ class Game():
             # Logique_Mouvement
             case GameState.SELECT_ACTION:
                 if input.estClique(): 
-                    if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: self.setEtat(GameState.DO_FIGHT_ACTION)
+                    if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: self.setEtat(GameState.ATTACK)
                     if 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544: self.setEtat(GameState.USE_DIE)
             
             # Logique_LancementDe
@@ -388,7 +405,6 @@ class Game():
                                         self.setEtat(GameState.SWITCH_PLAYER)
                             else:
                                 player.setPv(0)
-                                self.setEtat(GameState.DEAD)
 
                     case logique.Couleur.GRIS.value:
                         if input.estClique():
@@ -413,9 +429,7 @@ class Game():
                     case logique.Couleur.NOIR.value:
                         if self.__timeaction > time.time():
                             self.__delay = 75; self.__timeaction=0
-
                             player.setPv(0)
-                            self.setEtat(GameState.DEAD)
                         else:
                             self.__delay -= 1
                             self.__timeaction = time.time() - self.__delay
@@ -515,7 +529,7 @@ class Game():
             case GameState.CASE_PV_PUIT:
                 if self.__timeaction > time.time():
                     self.__delay = 75; self.__timeaction=0
-                    self.setEtat(GameState.SWITCH_PLAYER if(player.getPv()>0) else GameState.DEAD)
+                    self.setEtat(GameState.SWITCH_PLAYER)
                 else:
                     self.__delay -= 1
                     self.__timeaction = time.time() - self.__delay
@@ -544,6 +558,78 @@ class Game():
                     self.setEtat(GameState.ATTACK)
                 elif 510 <= input.getSourisx() <= 574 and 480 < input.getSourisy() < 544:
                     self.setEtat(GameState.USE_DIE)
+            
+            case GameState.ATTACK:
+                if player.advPossibleAttaquer(self.getListeJoueur()) != - 1:
+                    listeadvPossible = player.advPossibleAttaquer(self.getListeJoueur())
+                    if len(listeadvPossible) == 1:
+                        self.setJoueurAdv(self.getListeJoueur()[listeadvPossible[0]])
+                        self.setEtat(GameState.COMBAT_JOUEUR1)
+                    else:
+                        self.setEtat(GameState.USE_DIE)
+                else:
+                    self.setEtat(GameState.USE_DIE)
+
+            case GameState.COMBAT_JOUEUR1:
+                if self.__timeaction > time.time():
+                    self.__delay = 75; self.__timeaction=0
+                    self.setEtat(GameState.COMBAT_JOUEUR2)
+                else:
+                    self.__delay -= 1
+                    self.__timeaction = time.time() - self.__delay
+            
+            case GameState.COMBAT_JOUEUR2:
+                if player.getPv() <= 0:
+                    self.getListeJoueur()[self.getIdJoueurActuel()].setPv(0)
+                    self.setEtat(GameState.COMBAT_JOUEUR7)
+                elif self.getBossActuel().getPv() <= 0:
+                    self.getListeJoueur()[self.getIdJoueurActuel()].setInventaire(self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() + ["cle " + self.getBossActuel().getElement()])
+                    self.setEtat(GameState.COMBAT_JOUEUR8)
+                elif self.getBossActuel().getPv() <= 0 and self.getListeJoueur()[self.getIdJoueurActuel()].avoirCles():
+                    self.getListeJoueur()[self.getIdJoueurActuel()].setInventaire(self.getListeJoueur()[self.getIdJoueurActuel()].getInventaire() + ["cle " + self.getBossActuel().getElement()])
+                    self.setEtat(GameState.COMBAT_JOUEUR9)
+                elif self.getBossActuel().getPv() > 0 and self.getListeJoueur()[self.getIdJoueurActuel()].getPv() > 0:
+                    if input.estClique():
+                        if 100 < input.getSourisx() < 164 and 508 < input.getSourisy() < 572:
+                            #action_joueur = "attaque basique"
+                            toucher = random.choice([True,False,True])
+                            if toucher == True:
+                                self.setPvInflige(random.randint(player.getAttaque(),player.getAttaque()))
+                                self.getBossActuel().setPv(self.getBossActuel().getPv()-self.getPvInflige())
+                                if self.getBossActuel().getPv() > 0 and self.getListeJoueur()[self.getIdJoueurActuel()].getPv() > 0:
+                                    self.setEtat(GameState.FIGHT3)
+                                else:
+                                    self.setEtat(GameState.FIGHT2)
+                            else:
+                                self.setEtat(GameState.FIGHT7)
+
+                        elif 250 < input.getSourisx() < 314 and 508 < input.getSourisy() < 572:
+                            #action_joueur = "attaque speciale"
+                            toucher = random.choice([True,False])
+                            if toucher == True:
+                                self.setPvInflige(random.randint(player.getAttaque(),player.getAttaque()+50))
+                                self.getBossActuel().setPv(self.getBossActuel().getPv()-self.getPvInflige())
+                                if self.getBossActuel().getPv() > 0 and self.getListeJoueur()[self.getIdJoueurActuel()].getPv() > 0:
+                                    self.setEtat(GameState.FIGHT4)
+                                else:
+                                    self.setEtat(GameState.FIGHT2)
+                            else:
+                                self.setEtat(GameState.FIGHT7)
+                        
+                        elif 400 < input.getSourisx() < 464 and 508 < input.getSourisy() < 572:
+                            #action_joueur = "se defendre"
+                            toucher = random.choice([True,False])
+                            if toucher == True:
+                                self.getBossActuel().setAttaque(self.getBossActuel().getAttaque()-20)
+                                if self.getBossActuel().getPv() > 0 and self.getListeJoueur()[self.getIdJoueurActuel()].getPv() > 0:
+                                    self.setEtat(GameState.FIGHT5)
+                                else:
+                                    self.setEtat(GameState.FIGHT2)
+                            else:
+                                self.setEtat(GameState.FIGHT7)
+
+                        elif 550 < input.getSourisx() < 614 and 508 < input.getSourisy() < 572:
+                            self.setEtat(GameState.FIGHT6)
             
             case GameState.CASE_BOSS_TERMINE:
                 if self.__timeaction > time.time():
@@ -699,13 +785,7 @@ class Game():
                 else:
                     self.__delay -= 1
                     self.__timeaction = time.time() - self.__delay
-
-            case GameState.WAIT_FIGHT_ACTION:
-                pass
-            case GameState.DO_FIGHT_ACTION:
-                self.setEtat(GameState.USE_DIE)
-            case GameState.DEAD:
-                pass
+            
             case GameState.CASE_FIN_DU_JEU:
                 if self.__timeaction > time.time():
                     self.__delay = 150; self.__timeaction=0
@@ -713,6 +793,7 @@ class Game():
                 else:
                     self.__delay -= 1
                     self.__timeaction = time.time() - self.__delay
+            
             case GameState.SWITCH_PLAYER:
                 self.joueurSuivant()
                 self.resetTours()
