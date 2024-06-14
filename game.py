@@ -459,10 +459,10 @@ class Game():
                                     
                         
                     case logique.Couleur.ROUGE.value:
-                        self.setBossActuel(ennemis.Ennemis.Choix_ennemis(self.getListeJoueur()[self.getIdJoueurActuel()]))
                         if player.avoirCles():
                             self.setEtat(GameState.CASE_BOSS_TERMINE)
                         else:
+                            self.setBossActuel(ennemis.Ennemis.Choix_ennemis(self.getListeJoueur()[self.getIdJoueurActuel()]))
                             self.setEtat(GameState.FIGHT1)
                         
                     case logique.Couleur.TURQUOISE.value:
