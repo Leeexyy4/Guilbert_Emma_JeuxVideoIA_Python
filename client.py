@@ -22,9 +22,9 @@ class ClientState(Enum):
 
     STARTING = 4 # création de la map, envoi des donné au joueur
 
-    WAIT_CONNECION = 4 # attente que le MAX_PLAYER sois atteint
+    SORCIERE = 4 # attente que le MAX_PLAYER sois atteint
 
-    IN_GAME = 5 # boucle de jeu principal
+    STATS = 5 # boucle de jeu principal
 
     QUIT = 6 # fin du serveur envoi des donné à la bd pour les stat
 
@@ -40,10 +40,18 @@ class PartieState(Enum):
 
     NB_IA = 7
 
+class END_MENU(Enum):
+    SORCIERE=0
+    SORCIERE_DRAGON=1
+    SORCIERE_SYMBOLE=2
+    SORCIERE_POTION=3
+
 class Client():
 
 # --------- Initialisation du client --------- #
     def __init__(self) -> None:
+        self.__sorciere_parti_2:bool = False
+        self.__sorciere:END_MENU = END_MENU.SORCIERE
         self.__clock:pygame.time.Clock =  pygame.time.Clock()
         self.__fenetre = pygame.display.set_mode((800, 700))
         self.__etatPartie:PartieState = PartieState.INDEX
@@ -57,6 +65,18 @@ class Client():
         self.__timerAnimation = {}
 
 # --------- Getter et Setter du client --------- #
+    
+    def resetMenu(self):
+        self.__etatPartie:PartieState = PartieState.INDEX
+        self.__etatClient:ClientState = ClientState.MENU
+        self.__dialogues:str = ""
+        self.__interface:interface.Interface = None
+        self.__game:game.Game = None
+        self.__sorciere:END_MENU = END_MENU.SORCIERE
+        self.__joueurLocal:list[int] = []
+        self.currentIdDe:int = 0
+        self.currentImageDe:image.De = None
+        self.__timerAnimation = {}
 
     def getClock(self):
         """Renvoie le temps écoulé dans la partie"""
@@ -127,8 +147,8 @@ class Client():
         mouse_x, mouse_y = pygame.mouse.get_pos()
         return 40 <= mouse_x <= 100 and 40 <= mouse_y <= 100
     
-    # Affichage de la partie basse du jeu en focntion du joueur qui joue
     def MenuBas(self, un_joueur):
+        """Affichage de la partie basse du jeu en focntion du joueur qui joue"""
         # Dessiner la partie basse
         pygame.draw.rect(self.getFenetre(),logique.Couleur.GRIS.value,(10,580,780,102))
         
@@ -175,11 +195,10 @@ class Client():
             y = i[0] * self.getGame().getPlateau().getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
             rectangle = pygame.Rect(x, y, self.getGame().getPlateau().getTailleCase(), self.getGame().getPlateau().getTailleCase())  # Créer un rectangle
             pygame.draw.rect(self.getFenetre(), couleur_case.value, rectangle)  # Dessiner le rectangle avec la couleur
-            if (self.getGame().getPlateau().getCases(i[0],i[1]).name != 'MORT' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'Depart' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'Vide'):
+            if (self.getGame().getPlateau().getCases(i[0],i[1]).name != 'MORT' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'DEPART' and self.getGame().getPlateau().getCases(i[0],i[1]).name != 'VIDE'):
                 texte_surface = font.render(str(self.getGame().getPlateau().getCases(i[0],i[1]).name), True, logique.Couleur.NOIR.value)
                 self.getFenetre().blit(texte_surface, (x + 9, y + 15))
         self.afficheJoueurs()
-
     
     def afficheDialogues(self):
         """Afficher les dialogues."""
@@ -196,28 +215,25 @@ class Client():
     # Définir l'affichage des clés dans l'inventaire du joueur
     def afficheCle(self,joueur):
         """
-            La fonction affichage_cle permet d'afficher les cle dans le menu(int x, int y, Surface surface, Font font)
+            La fonction afficheCle permet d'afficher les cle dans le menu(int x, int y, Surface surface, Font font)
         """
         for i in joueur.getInventaire():
             if i == "cle de la Ville" :
-                image.Image(660,640,image.Cle.TOWN.value).affichageImageRedimensionnee(48,30,self.getFenetre())
-            elif i == "cle de la Rivière" :
-                image.Image(660,595,image.Cle.WATER.value).affichageImageRedimensionnee(48,30,self.getFenetre())
-            elif i == "cle de la Forêt" :
-                image.Image(725,595,image.Cle.GRASS.value).affichageImageRedimensionnee(48,30,self.getFenetre())
+                image.Image(660,640,image.Cle.TOWN.value).afficheImageRedimensionnee(48,30,self.getFenetre())
+            elif i == "cle de la Riviere" :
+                image.Image(660,595,image.Cle.WATER.value).afficheImageRedimensionnee(48,30,self.getFenetre())
+            elif i == "cle de la Foret" :
+                image.Image(725,595,image.Cle.GRASS.value).afficheImageRedimensionnee(48,30,self.getFenetre())
             elif i == "cle du Rocher" :
-                image.Image(725,640,image.Cle.ROCK.value).affichageImageRedimensionnee(48,30,self.getFenetre())
+                image.Image(725,640,image.Cle.ROCK.value).afficheImageRedimensionnee(48,30,self.getFenetre())
         pygame.draw.line(self.getFenetre(), logique.Couleur.NOIR.value, (660, 632), (770, 632), 2)
         pygame.draw.line(self.getFenetre(), logique.Couleur.NOIR.value, (715, 595), (715, 670), 2)
 
     # Definir l'affichage sur le menu
     def afficheImage(self,x,y,joueur):
-        """
-            La fonction afficheImage permet d'afficher le personnage dans le menu(int x, int y, Surface surface, Font font)
-        """        
+        """La fonction afficheImage permet d'afficher le personnage dans le menu(int x, int y, Surface surface, Font font)"""        
         # Afficher l'image sur la fenetre
         self.getFenetre().blit(joueur.getImage(), (x, y))
-        
         # Dessiner le rectangle pour les pv du joueur
         rectangle.Rectangle(500,590,130,35,logique.Couleur.VERT.value).affiche(self.getFenetre())
     
@@ -225,22 +241,15 @@ class Client():
         texte.Texte(joueur.getPv(),logique.Couleur.NOIR.value,538,598).affiche(self.getFenetre())
         
     # Definir l'affichage de l'adversaire lors des combats
-    def afficheImage_adv(self,x,y,joueur):
-        """La fonction AfficheImage_adv affiche l'image de l'ennemi dans le menu."""
-        image = pygame.image.load(joueur.getImage())
-        self.getFenetre().blit(image, (x,y))
+    def afficheImageAdv(self,x,y,joueur):
+        """La fonction afficheImageAdv affiche l'image de l'ennemi dans le menu."""
+        self.getFenetre().blit(joueur.getImage(), (x, y))
         rectangle.Rectangle(500, 635, 130, 35, logique.Couleur.ROUGE.value).affiche(self.getFenetre())
         texte.Texte(joueur.getPv(), logique.Couleur.NOIR.value, 538, 645).affiche(self.getFenetre())
     
-    # Definir l'affichage sur le plateau
     def afficheImagePlateau(self, joueur):
-        """
-            La fonction afficheImagePlateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)
-        """
-        # Charger l'image
+        """La fonction afficheImagePlateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)"""
         image_redimensionnee = pygame.transform.scale(joueur.getImage(), (47, 47))
-        
-        # Afficher l'image redimensionnee sur la fenetre
         self.getFenetre().blit(image_redimensionnee, (joueur.getY(), joueur.getX()))
                 
 
@@ -251,19 +260,11 @@ class Client():
             for i in self.getGame().getListeJoueur():
                 self.afficheImagePlateau(i)
 
-    
-    # Définir l'affichage de la potion
     def affichePotion(self):
-        """
-            La fonction affichePotion permet d'afficher la potion dans l'inventaire du joueur
-        """
-        # Charger l'image
+        """La fonction affichePotion permet d'afficher la potion dans l'inventaire du joueur"""
         potion = image.Sorciere.POTION.value
-        
-        # Afficher l'image redimensionnee sur la fenetre
         self.getFenetre().blit(potion, (668, 593))
           
-    
     def afficheAnimationDe(self):
         """La fonction afficheAnimationDe permet d'afficher les différentes face du dé lors du jet de dés"""
         listeDe = [image.De.FACE2.value, image.De.FACE1.value, image.De.FACE4.value, image.De.FACE6.value, image.De.FACE5.value, image.De.FACE3.value]
@@ -272,7 +273,7 @@ class Client():
         if self.currentIdDe >= len(listeDe):
             self.__timerAnimation['de'] = time.time()
             self.currentIdDe = 0
-            self.affichageResultatDe()
+            self.afficheResultatDe()
         else:
             self.getFenetre().blit(listeDe[self.currentIdDe],(350,475))
         animationDelay = 0.23 - int(0.19*(self.currentIdDe/len(listeDe)))
@@ -280,8 +281,8 @@ class Client():
                 self.currentIdDe += 1
                 self.__timerAnimation['de'] = time.time()
 
-    def affichageResultatDe(self):
-        """La fonction affichageResultatDe renvoie l'image correspondant au résultat du lancer au joueur"""
+    def afficheResultatDe(self):
+        """La fonction afficheResultatDe renvoie l'image correspondant au résultat du lancer au joueur"""
         if self.getGame().getDeValue() == 1:
             # Affiche le de sur la face 1
             self.currentImageDe = image.De.FACE1.value
@@ -315,8 +316,8 @@ class Client():
 # --------- Boucle principale du jeu qui fait l'affichage et la logique --------- #
 
     # Permets de switcher entre les affichage des pages
-    def affichagePartie(self):
-        """La fonction affichagePartie permet d'afficher les différentes pages du jeu et des menus"""
+    def affichePartie(self):
+        """La fonction affichePartie permet d'afficher les différentes pages du jeu et des menus"""
         self.getFenetre().fill(logique.Couleur.NOIR.value)
         match self.getEtatClient() :
             
@@ -374,7 +375,7 @@ class Client():
 
                     # Page_ChoixPerso
                     case game.GameState.SELECT_AVATAR:
-                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                        image.Image(0, 0, image.Page.CHOIX_PERSO.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
                         self.setDialogues(["Bienvenue à toi jeune aventurier ! Amusez-vous bien","ici demarre une nouvelle aventure ! Je t'invite à","choisir un personnage parmi la liste suivante :"])
                         self.afficheDialoguesDeb()
                         image.Image(400, 585, image.Personnages.ROCK.value).affiche(self.getFenetre())
@@ -453,6 +454,7 @@ class Client():
                             self.affichePlateau()
                             self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
                             self.setDialogues(["Tu es tombe dans la case Puit... Pour t'en","sortir, tu dois sacrifier une de tes cles","ou 200 pv."])        
+                            self.afficheDialogues()
                             self.getFenetre().blit(image.Interaction.PV.value, (220, 480))
                             self.getFenetre().blit(image.Interaction.CLES.value, (510, 480))
                             texte.Texte("200 PV",logique.Couleur.BLANC.value,235,545).affiche(self.getFenetre())
@@ -573,8 +575,132 @@ class Client():
                         dialogue = ["Bravo tu as gagner !!!","Voilà deux cles supplementaires que tu peux", "voir apparaître dans ton inventaire."] if self.__game.getSpecialAction()  == "bravo" else ["Oh non dommage...","Tu peux retenter ta chance si tu as", "d'autres cles :)"]
                         self.setDialogues(dialogue)
                         self.afficheDialogues()
-                    case game.GameState.FIGHT:
-                        pass
+
+                    case game.GameState.CASE_BOSS_TERMINE:
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Tu as déja combatu tous les boss, déplace-toi ","jusqu'à la hutte de la sorciere pour la tuer", "et sortir vainqueur de cette partie !"])
+                        self.afficheDialogues()
+
+                    case game.GameState.FIGHT1:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["Tu as décidé de combattre un joueur. Le celebre ","{}. Prepare toi à le combattre afin de prendre".format(boss.getPrenom()), "l'avantage sur lui !"])
+                        self.afficheDialogues()
+
+                    case game.GameState.FIGHT2:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["Que veux-tu faire ? Une attaque basique, une ","attaque speciale, te defendre ou prendre", "la fuite ?"])
+                        self.afficheDialogues()
+                        image.Image(100, 508, image.BtnAttaque.BASIQUE.value).affiche(self.getFenetre())
+                        image.Image(250, 508, image.BtnAttaque.SPECIALE.value).affiche(self.getFenetre())
+                        image.Image(400, 508, image.BtnAttaque.DEFENSE.value).affiche(self.getFenetre())
+                        image.Image(550, 508, image.BtnAttaque.FUITE.value).affiche(self.getFenetre())
+                        
+                    case game.GameState.FIGHT3:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["Tu as choisi de faire une attaque basique,","tu as touché l'adversaire, il a perdu {} pvs".format(self.getGame().getPvInflige())])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT4:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["Tu as choisi de faire une attaque speciale,","tu as touché l'adversaire, il a perdu {} pvs".format(self.getGame().getPvInflige())])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT5:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["Tu as choisi de te defendre, tu fais une","grimace au boss et cela reduit les degâts","qu'il peut t'infliger."])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT6:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["Tu as choisi de prendre la fuite,","retente ta chance une prochaine fois."])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT7:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["L'ennemis a esquivé le coup,","c'est au tour du boss de joueur"])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT8:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,boss)
+                        self.afficheImageAdv(620,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["C'est au tour du boss d'attaquer","Le boss reflechit...","Il te fait perdre {} pvs".format(self.getGame().getPvInflige())])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT9:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(100,400,boss)
+                        self.afficheImageAdv(620,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["C'est au tour du boss d'attaquer","Le boss reflechit...","L'adversaire a raté son coup"])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT10:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImageAdv(620,400,boss)
+                        self.setDialogues(["Fin du combat... Tu n'as pas survecu","à l'attaque du boss...", "Retour au plateau !"])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT11:
+                        boss = self.getGame().getBossActuel()
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(620,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Fin du combat... Tu as battu le boss", "recupere les autres cles en tuant les","autres boss et detruit cette sorciere !!!"])
+                        self.afficheDialogues()
+                    
+                    case game.GameState.FIGHT12:
+                        self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
+                        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.afficheImage(620,400,self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                        self.setDialogues(["Fin du combat... Tu as battu le boss", "en plus de ça tu as toutes les cles, depeche ","toi pour etre le premier à tuer la sorciere !!!"])
+                        self.afficheDialogues()
+
+                    case game.GameState.CASE_FIN_DU_JEU:
+                            image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichePlateau()
+                            self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                            if(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].avoirCles()):
+                                self.setDialogues(["Bravo tu as trouve toutes les cles","Ouvre la porte et apprete toi à", "affronter la sorciere."])
+                            else:
+                                self.setDialogues(["Tu n'as pas encore recuperer toutes","et dépêche toi de récupérer les clés avant", "Tu n'as pas encore recuperer toutes","la sorciere. Depeche-toi !"])
+                            self.afficheDialogues()
+
                     case game.GameState.WAIT_FIGHT_ACTION:
                         pass
                     case game.GameState.DO_FIGHT_ACTION:
@@ -584,6 +710,10 @@ class Client():
                     case game.GameState.SWITCH_PLAYER:
                         pass
             
+            case ClientState.STATS :
+                self.afficheStats()
+            case ClientState.SORCIERE:
+                self.afficheSorciere()
             # En ligne
             case ClientState.ONLINE:
                 pass
@@ -676,12 +806,93 @@ class Client():
                     self.setGame(self.getInterface().genererPartie())
                     self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
                     self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
+    
+    def sorciere_logique(self, input:inputs):
+        match self.__sorciere:
+            case END_MENU.SORCIERE:
+                if input.estClique():
+                    if 500 < input.getSourisx() < 725 and 150 < input.getSourisy() < 450:
+                        self.__sorciere = END_MENU.SORCIERE_SYMBOLE                        
+                    if 90 < input.getSourisx() < 190 and 180 < input.getSourisy() < 350:
+                        self.__sorciere = END_MENU.SORCIERE_DRAGON                        
+                    if 330 < input.getSourisx() < 430 and 480 < input.getSourisy() < 580:
+                        self.__sorciere = END_MENU.SORCIERE_POTION                        
+            case END_MENU.SORCIERE_DRAGON:
+                animationDelay = 2.5
+                if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
+                    self.__timerAnimation['sorciere'] = time.time()
+                if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
+                        self.__timerAnimation['sorciere'] = 0
+                        if self.__sorciere_parti_2:
+                            self.__sorciere_parti_2 = False
+                            self.__sorciere = END_MENU.SORCIERE
+                        else:
+                            self.__sorciere_parti_2 = True
+            case END_MENU.SORCIERE_SYMBOLE:
+                animationDelay = 2.5
+                if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
+                    self.__timerAnimation['sorciere'] = time.time()
+                if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
+                        self.__timerAnimation['sorciere'] = 0
+                        if self.__sorciere_parti_2:
+                            self.__sorciere_parti_2 = False
+                            self.__sorciere = END_MENU.SORCIERE
+                        else:
+                            self.__sorciere_parti_2 = True
+            case END_MENU.SORCIERE_POTION:
+                animationDelay = 4
+                if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
+                    self.__timerAnimation['sorciere'] = time.time()
+                if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
+                        self.__timerAnimation['sorciere'] = 0
+                        if self.__sorciere_parti_2:
+                            self.__sorciere_parti_2 = False
+                            self.__etatClient = ClientState.STATS
+                            self.setEtatPartie(PartieState.INDEX)
+                            self.__sorciere = END_MENU.SORCIERE                            
+                        else:
+                            self.__sorciere_parti_2 = True
+
+    def afficheSorciere(self):
+        match self.__sorciere:
+            case END_MENU.SORCIERE:
+                image.Image(0,0,image.Sorciere.MAISON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                self.setDialogues(["Tu es chez la sorciere, mais j'ai l'impression","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+            case END_MENU.SORCIERE_DRAGON:
+                image.Image(0,0,image.Sorciere.MAISON_DRAGON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                if not self.__sorciere_parti_2:
+                    self.setDialogues(["Un dragon de pierre... ce n'est pas très","rassurant, trouvons vite un remède et sortons","d'ici très vite"])
+                else:
+                    self.setDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+            case END_MENU.SORCIERE_SYMBOLE:
+                image.Image(0,0,image.Sorciere.MAISON_SYMBOLE.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                if not self.__sorciere_parti_2:
+                    self.setDialogues(["C'est un symbole astral, si c'est chez la","sorciere, il vaut mieux ne pas y toucher"])
+                else:
+                    self.setDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+            case END_MENU.SORCIERE_POTION:
+                if not self.__sorciere_parti_2:
+                    image.Image(0,0,image.Sorciere.MAISON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                    self.setDialogues(["Tu as trouvé une potion... Potion inverstium","Tu décides de la boire afin d'inverser le","sortilège"])
+                else:
+                    image.Image(0,0,image.Page.FIN_JEU.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                    self.setDialogues(["Tu as terminé le jeu bravo à toi jeune aventurier","Tu es le premier a t'être libéré du sort !!"])
+        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+        self.afficheDialogues()
+            
+        pygame.display.update()
+            
+    def afficheStats(self):
+        image.Image(0,0,image.Page.STATS.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+    def stats_logique(self, input:inputs):
+        if (input.estClique()):
+            self.resetMenu()
 
     # Boucle du jeu lorsque le jeu est démarrer qui permet de gérer les événements
     def main(self):
         self.setEtatPartie(PartieState.INDEX)
         while (self.getEtatClient() != ClientState.QUIT):
-            self.affichagePartie()
+            self.affichePartie()
             click = False
             dir = direction.ANY
 
@@ -715,12 +926,15 @@ class Client():
                 case ClientState.MENU:
                     self.menu_logical(mouse_x, mouse_y, click)
                 case ClientState.LOCAL:
-                    self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
+                    if self.getGame().isEnd():
+                        self.setEtatClient(ClientState.SORCIERE)
+                        self.__sorciere = END_MENU.SORCIERE
+                    else:
+                        self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.ONLINE:
                     # envoyé les inputs au server
                     try:
                         data, serveur = clientSock.recvfrom(20480)
-                        print('a')
                         resp  = 'OK'
                         data = pickle.loads(data)
                         if(type(data) == game.Game):
@@ -734,6 +948,10 @@ class Client():
                     except TimeoutError:
                         print('REQUEST TIMED OUT')
                     pass
+                case ClientState.SORCIERE:
+                    self.sorciere_logique(inputs(mouse_x, mouse_y, click, dir))
+                case ClientState.STATS:
+                    self.stats_logique(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.QUIT:
                     pass
             
