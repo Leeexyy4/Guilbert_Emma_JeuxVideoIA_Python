@@ -357,7 +357,7 @@ class Client():
                     
                     # Page de statistiques
                     case PartieState.GLOBALS_STATS:
-                        image.Image(0,0,image.Page.STATS.value).affiche(self.getFenetre())
+                        self.draw_stats()
                     
                     # Page des règles du jeu
                     case PartieState.HELPER:
@@ -1076,6 +1076,23 @@ class Client():
         self.afficheDialogues()
             
         pygame.display.update()
+
+    
+    def calculer_moyennes(self, donnees):
+        nombre_de_lignes = len(donnees)
+        if nombre_de_lignes == 0:
+            return []
+        
+        # Sommes initiales
+        sommes = [0] * len(donnees[0])
+        
+        for ligne in donnees:
+            for i, valeur in enumerate(ligne):
+                sommes[i] += valeur
+        
+        # Calcul des moyennes
+        moyennes = [somme / nombre_de_lignes for somme in sommes]
+        return moyennes
             
     
     def calculer_moyennes(self, donnees):
