@@ -1,5 +1,5 @@
 from plateau import Plateau
-import random, joueur, time, ennemis
+import random, joueur, time, ennemis, intelA
 from input import inputs, direction
 from enum import Enum
 from utils import logique
@@ -73,6 +73,7 @@ class Game():
     """la Classe Game initialise les paramètres de la partie"""
     def __init__(self, nombreJoueur:int, nombreIA:int, isLocal:bool = True) -> None:
         self.__nombreJoueur:int = nombreJoueur
+        self.__nombreIA:int = nombreIA
         self.__listeJoueur:list[joueur.Joueur] = [None for i in range(nombreIA + nombreJoueur)]
         self.__plateau:Plateau = Plateau()
         self.__idJoueurActuel:int = 0
@@ -127,6 +128,18 @@ class Game():
             Setter du nombre du joueur
         """
         self.__nombreJoueur = nombreJoueur
+    
+    def getNombreIA(self)->int:
+        """_summary_
+            Getter du nombre d'IA
+        """
+        return self.__nombreIA
+
+    def setNombreIA(self, nombreIA):
+        """_summary_
+            Setter du nombre d'IA
+        """
+        self.__nombreIA = nombreIA
 
     def getJoueurAdv(self)->int:
         """_summary_
@@ -272,7 +285,7 @@ class Game():
         """Renvoie la liste des personnages sélectionnables"""
         elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
         for player in self.getListeJoueur():
-            if isinstance(player, joueur.Joueur):
+            if player != None:
                 elems.remove(player.getElement())
         return elems
 
@@ -285,33 +298,59 @@ class Game():
     def loop(self, input:inputs):
         if self.getListeJoueur()[self.getIdJoueurActuel()] == None:
             self.setEtat(GameState.SELECT_AVATAR)
-        player:joueur.Joueur = self.getListeJoueur()[self.getIdJoueurActuel()]
+        if self.getIdJoueurActuel() <= self.getNombreJoueur():
+            player:joueur.Joueur = self.getListeJoueur()[self.getIdJoueurActuel()]
+        else:
+            player:intelA.IntelA = self.getListeJoueur()[self.getIdJoueurActuel()]
         match self.getEtat():
 
             # Logique_ChoixPerso
             case GameState.SELECT_AVATAR:
                 if input.estClique(): 
                     start:tuple[int, int] = self.getPlateau().getCaseJaune()
-                    if (500 <= input.getSourisx() <= 600 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.water_is_used):
+                    if (500 <= input.getSourisx() <= 600 and 582 <= input.getSourisy() <= 652 and joueur.Element.WATER in self.personnageSelectionnable()):
                         self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER)
                         self.setEtat(GameState.USE_DIE)
                         # Si le personnage sur lequel on clique est Flora
-                    elif (700 <= input.getSourisx() <= 800 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.grass_is_used): 
+                    elif (700 <= input.getSourisx() <= 800 and 582 <= input.getSourisy() <= 652 and joueur.Element.GRASS in self.personnageSelectionnable()): 
                         self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS)
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Pierre
-                    elif (400 <= input.getSourisx() <= 500 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.rock_is_used): 
+                    elif (400 <= input.getSourisx() <= 500 and 582 <= input.getSourisy() <= 652 and joueur.Element.ROCK in self.personnageSelectionnable()): 
                         self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK)
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Kevin
-                    elif (600 <= input.getSourisx() <= 700 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.town_is_used):
+                    elif (600 <= input.getSourisx() <= 700 and 582 <= input.getSourisy() <= 652 and joueur.Element.TOWN in self.personnageSelectionnable()):
                         self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
                         self.setEtat(GameState.USE_DIE)
+                else:
+                    if isinstance(player, intelA.IntelA):
+                        start:tuple[int, int] = self.getPlateau().getCaseJaune()
+                        if joueur.Element.WATER in self.personnageSelectionnable():
+                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER)
+                            self.setEtat(GameState.USE_DIE)
+                            # Si le personnage sur lequel on clique est Flora
+                        elif joueur.Element.GRASS in self.personnageSelectionnable(): 
+                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS)
+                            self.setEtat(GameState.USE_DIE)
+                        # Si le personnage sur lequel on clique est Pierre
+                        elif joueur.Element.ROCK in self.personnageSelectionnable(): 
+                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK)
+                            self.setEtat(GameState.USE_DIE)
+                        # Si le personnage sur lequel on clique est Kevin
+                        elif joueur.Element.TOWN in self.personnageSelectionnable():
+                            self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
+                            self.setEtat(GameState.USE_DIE)
 
             # Logique_PremierMouvement
             case GameState.USE_DIE:
                 if input.estClique(): 
                     if 350 <= input.getSourisx() <= 435 and 475 <= input.getSourisy() <= 560:
+                        self.setDeValue(random.randint(1,6))
+                        self.__lastdeVal = self.__deValue
+                        self.setEtat(GameState.LANCEMENT_DE)
+                else:
+                    if isinstance(player, intelA.IntelA):
                         self.setDeValue(random.randint(1,6))
                         self.__lastdeVal = self.__deValue
                         self.setEtat(GameState.LANCEMENT_DE)
@@ -366,7 +405,8 @@ class Game():
                             self.setDeValue(self.getDeValue() - 1)
                             if ([[player.getPlateaux(),player.getPlateauy()]] not in self.getPlateau().getCasesDecouvertes()):
                                 self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[player.getPlateaux(),player.getPlateauy()]])
-            
+                if (isinstance(player, intelA.IntelA)):
+                    player.choix_case_IA(self.getPlateau())
                 
             # Logique_Action
             case GameState.STAY_ON_CASE:

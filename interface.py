@@ -8,10 +8,11 @@ class Interface():
         print("interface online? "+ str(self.getEnLigne()))
         
     def selectionnableNombreIA(self)->list[int]:
-        res = [0]
-        if(self.getNombreJoueur() < 4): res.append(1)
-        if(self.getNombreJoueur() < 3): res.append(2)
-        if(self.getNombreJoueur() < 2): res.append(3)
+        res = []
+        if(self.getNombreJoueur() <= 4): res.append(0)
+        if(self.getNombreJoueur() <= 3): res.append(1)
+        if(self.getNombreJoueur() <= 2): res.append(2)
+        if(self.getNombreJoueur() <= 1): res.append(3)
         return res
         
     def getEnLigne(self)->bool:

@@ -782,7 +782,7 @@ class Client():
                     if (self.boutonRetour()) : # si appuie bouton play
                         self.setEtatPartie(PartieState.INDEX)
                     # Si le personnage sur lequel on clique est J2
-                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 :
+                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652:
                         self.getInterface().setNombreJoueur(2)
                         if self.getInterface().getEnLigne():
                             self.setEtatClient(ClientState.STARTING)
@@ -815,24 +815,31 @@ class Client():
                 selectable_nb_ia = self.getInterface().selectionnableNombreIA()
                 if is_cliked:
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # si appuie bouton play
-                        self.getInterface().setNombreIA(0)
                         self.setEtatPartie(PartieState.NB_PLAYER)
-                    
                     # Si le personnage sur lequel on clique est J1
-                    if 400 <= mouse_x <= 500 and 582 <= mouse_y <= 652 and 0 in selectable_nb_ia:   
+                    if (400 <= mouse_x <= 500 and 582 <= mouse_y <= 652) and 0 in selectable_nb_ia:   
                         self.getInterface().setNombreIA(0)
+                        self.setGame(self.getInterface().genererPartie())
+                        self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
                     # Si le personnage sur lequel on clique est J2   
-                    if 500 <= mouse_x <= 600 and 582 <= mouse_y <= 652 and 1 in selectable_nb_ia:
+                    if (500 <= mouse_x <= 600 and 582 <= mouse_y <= 652) and 1 in selectable_nb_ia:
                         self.getInterface().setNombreIA(1)
+                        self.setGame(self.getInterface().genererPartie())
+                        self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
                     # Si le personnage sur lequel on clique est J3
-                    if 600 <= mouse_x <= 700 and 582 <= mouse_y <= 652 and 2 in selectable_nb_ia:   
+                    if (600 <= mouse_x <= 700 and 582 <= mouse_y <= 652) and 2 in selectable_nb_ia:   
                         self.getInterface().setNombreIA(2)
+                        self.setGame(self.getInterface().genererPartie())
+                        self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
                     # Si le personnage sur lequel on clique est J4
-                    if 700 <= mouse_x <= 800 and 582 <= mouse_y <= 652 and 3 in selectable_nb_ia:   
+                    if (700 <= mouse_x <= 800 and 582 <= mouse_y <= 652) and 3 in selectable_nb_ia:   
                         self.getInterface().setNombreIA(3)
-                    self.setGame(self.getInterface().genererPartie())
-                    self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
-                    self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
+                        self.setGame(self.getInterface().genererPartie())
+                        self.setJoueurLocal([i for i in range(len(self.getGame().getListeJoueur()))])
+                        self.setEtatClient(ClientState.ONLINE if self.getInterface().getEnLigne() else ClientState.LOCAL)
     
     def sorciere_logique(self, input:inputs):
         match self.__sorciere:
