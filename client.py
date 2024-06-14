@@ -22,9 +22,9 @@ class ClientState(Enum):
 
     STARTING = 4 # création de la map, envoi des donné au joueur
 
-    WAIT_CONNECION = 4 # attente que le MAX_PLAYER sois atteint
+    SORCIERE = 4 # attente que le MAX_PLAYER sois atteint
 
-    IN_GAME = 5 # boucle de jeu principal
+    STATS = 5 # boucle de jeu principal
 
     QUIT = 6 # fin du serveur envoi des donné à la bd pour les stat
 
@@ -39,11 +39,18 @@ class PartieState(Enum):
     NB_PLAYER = 6 
 
     NB_IA = 7
+    
+class END_MENU(Enum):
+    SORCIERE=0
+    SORCIERE_DRAGON=1
+    SORCIERE_SYMBOLE=2
+    SORCIERE_POTION=3
 
 class Client():
 
 # --------- Initialisation du client --------- #
     def __init__(self) -> None:
+        self.__sorciere_parti_2:bool = False
         self.__clock:pygame.time.Clock =  pygame.time.Clock()
         self.__fenetre = pygame.display.set_mode((800, 700))
         self.__etatPartie:PartieState = PartieState.INDEX
@@ -51,6 +58,7 @@ class Client():
         self.__dialogues:str = ""
         self.__interface:interface.Interface = None
         self.__game:game.Game = None
+        self.__sorciere:END_MENU = END_MENU.SORCIERE
         self.__joueurLocal:list[int] = []
         self.currentIdDe:int = 0
         self.currentImageDe:image.De = None
@@ -58,6 +66,20 @@ class Client():
 
 # --------- Getter et Setter du client --------- #
 
+    def resetMenu(self):
+        self.__etatPartie:PartieState = PartieState.INDEX
+        self.__etatClient:ClientState = ClientState.MENU
+        self.__dialogues:str = ""
+        self.__interface:interface.Interface = None
+        self.__game:game.Game = None
+        self.__sorciere:END_MENU = END_MENU.SORCIERE
+        self.__joueurLocal:list[int] = []
+        self.currentIdDe:int = 0
+        self.currentImageDe:image.De = None
+        self.__timerAnimation = {}
+        
+        
+        
     def getClock(self):
         """Renvoie le temps écoulé dans la partie"""
         return self.__clock
@@ -573,8 +595,15 @@ class Client():
                         dialogue = ["Bravo tu as gagner !!!","Voilà deux cles supplementaires que tu peux", "voir apparaître dans ton inventaire."] if self.__game.getSpecialAction()  == "bravo" else ["Oh non dommage...","Tu peux retenter ta chance si tu as", "d'autres cles :)"]
                         self.setDialogues(dialogue)
                         self.afficheDialogues()
-                    case game.GameState.FIGHT:
-                        pass
+                    case game.GameState.CASE_FIN_DU_JEU:
+                            image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
+                            self.affichePlateau()
+                            self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+                            if(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()].avoirCles()):
+                                self.setDialogues(["Bravo tu as trouve toutes les cles","Ouvre la porte et apprete toi à", "affronter la sorciere."])
+                            else:
+                                self.setDialogues(["Tu n'as pas encore recuperer toutes","et dépêche toi de récupérer les clés avant", "Tu n'as pas encore recuperer toutes","la sorciere. Depeche-toi !"])
+                            self.afficheDialogues()
                     case game.GameState.WAIT_FIGHT_ACTION:
                         pass
                     case game.GameState.DO_FIGHT_ACTION:
@@ -585,9 +614,13 @@ class Client():
                         pass
             
             # En ligne
+            case ClientState.STATS :
+                self.draw_stats()
+            case ClientState.SORCIERE:
+                self.draw_sorciere()
             case ClientState.ONLINE:
                 pass
-            
+        
         pygame.display.update()
         self.getClock().tick(60)  
 
@@ -715,7 +748,11 @@ class Client():
                 case ClientState.MENU:
                     self.menu_logical(mouse_x, mouse_y, click)
                 case ClientState.LOCAL:
-                    self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
+                    if self.getGame().isEnd():
+                        self.setEtatClient(ClientState.SORCIERE)
+                        self.__sorciere = END_MENU.SORCIERE
+                    else:
+                        self.getGame().loop(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.ONLINE:
                     # envoyé les inputs au server
                     try:
@@ -734,9 +771,103 @@ class Client():
                     except TimeoutError:
                         print('REQUEST TIMED OUT')
                     pass
+                case ClientState.SORCIERE:
+                    self.sorciere_logique(inputs(mouse_x, mouse_y, click, dir))
+                case ClientState.STATS:
+                    self.stats_logique(inputs(mouse_x, mouse_y, click, dir))
                 case ClientState.QUIT:
                     pass
+    def sorciere_logique(self, input:inputs):
+        match self.__sorciere:
+            case END_MENU.SORCIERE:
+                if input.estClique():
+                    print("click")
+                    if 500 < input.getSourisx() < 725 and 150 < input.getSourisy() < 450:
+                        print("a")
+                        self.__sorciere = END_MENU.SORCIERE_SYMBOLE                        
+                    if 90 < input.getSourisx() < 190 and 180 < input.getSourisy() < 350:
+                        print("b")
+                        self.__sorciere = END_MENU.SORCIERE_DRAGON                        
+                    if 330 < input.getSourisx() < 430 and 480 < input.getSourisy() < 580:
+                        print("c")
+                        self.__sorciere = END_MENU.SORCIERE_POTION                        
+                        
+                        print(self.__sorciere_parti_2)
+            case END_MENU.SORCIERE_DRAGON:
+                animationDelay = 2.5
+                if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
+                    self.__timerAnimation['sorciere'] = time.time()
+                print (self.__timerAnimation['sorciere'])
+                if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
+                        self.__timerAnimation['sorciere'] = 0
+                        if self.__sorciere_parti_2:
+                            self.__sorciere_parti_2 = False
+                            self.__sorciere = END_MENU.SORCIERE
+                        else:
+                            self.__sorciere_parti_2 = True
+            case END_MENU.SORCIERE_SYMBOLE:
+                animationDelay = 2.5
+                if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
+                    self.__timerAnimation['sorciere'] = time.time()
+                if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
+                        self.__timerAnimation['sorciere'] = 0
+                        if self.__sorciere_parti_2:
+                            self.__sorciere_parti_2 = False
+                            self.__sorciere = END_MENU.SORCIERE
+                        else:
+                            self.__sorciere_parti_2 = True
+            case END_MENU.SORCIERE_POTION:
+                animationDelay = 4
+                if 'sorciere' not in self.__timerAnimation.keys() or self.__timerAnimation['sorciere'] == 0:
+                    self.__timerAnimation['sorciere'] = time.time()
+                if self.__timerAnimation['sorciere'] + animationDelay < time.time() :
+                        print('qa')
+                        self.__timerAnimation['sorciere'] = 0
+                        if self.__sorciere_parti_2:
+                            self.__sorciere_parti_2 = False
+                            self.__etatClient = ClientState.STATS
+                            self.setEtatPartie(PartieState.INDEX)
+                            self.__sorciere = END_MENU.SORCIERE
+                            print("e")
+                            
+                        else:
+                            print("d")
+                            self.__sorciere_parti_2 = True
+    def draw_sorciere(self):
+        match self.__sorciere:
+            case END_MENU.SORCIERE:
+                # print('sorciere')
+                image.Image(0,0,image.Sorciere.MAISON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                self.setDialogues(["Tu es chez la sorciere, mais j'ai l'impression","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+            case END_MENU.SORCIERE_DRAGON:
+                image.Image(0,0,image.Sorciere.MAISON_DRAGON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                if not self.__sorciere_parti_2:
+                    self.setDialogues(["Un dragon de pierre... ce n'est pas très","rassurant, trouvons vite un remède et sortons","d'ici très vite"])
+                else:
+                    self.setDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+            case END_MENU.SORCIERE_SYMBOLE:
+                image.Image(0,0,image.Sorciere.MAISON_SYMBOLE.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                if not self.__sorciere_parti_2:
+                    self.setDialogues(["C'est un symbole astral, si c'est chez la","sorciere, il vaut mieux ne pas y toucher"])
+                else:
+                    self.setDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
+            case END_MENU.SORCIERE_POTION:
+                if not self.__sorciere_parti_2:
+                    image.Image(0,0,image.Sorciere.MAISON.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                    self.setDialogues(["Tu as trouvé une potion... Potion inverstium","Tu décides de la boire afin d'inverser le","sortilège"])
+                else:
+                    image.Image(0,0,image.Page.FIN_JEU.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+                    self.setDialogues(["Tu as terminé le jeu bravo à toi jeune aventurier","Tu es le premier a t'être libéré du sort !!"])
+        self.MenuBas(self.getGame().getListeJoueur()[self.getGame().getIdJoueurActuel()])
+        self.afficheDialogues()
             
+        pygame.display.update()
+            
+    def draw_stats(self):
+        image.Image(0,0,image.Page.STATS.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+    def stats_logique(self, input:inputs):
+        if (input.estClique()):
+            self.resetMenu()
             
 if __name__ == "__main__":
     Client().main()
