@@ -31,15 +31,12 @@ while isOn:
             game = Game(2,0, False)
             game.autoInitPlayer()
             state = ServerState.WAIT_CONNECION
-            print("fin initialisation")
         case ServerState.WAIT_CONNECION:
             data, addr = sock.recvfrom(20480)
             if addr not in players:
                 players.append(addr)
-                print("Nouvelle connection")
             if len(players) == game.getNombreJoueur():
                 state = ServerState.IN_GAME
-                print("debut du serveur")
                 for player in players:
                     sock.sendto(pickle.dumps(game), player)
         case ServerState.IN_GAME:

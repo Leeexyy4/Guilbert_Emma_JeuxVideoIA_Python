@@ -259,7 +259,6 @@ class Game():
             Setter l'etat du joueur
         """
         self.__etat = etat
-        print(etat)
     
     def getPlateau(self)->Plateau:
         """Renvoie l'état du plateau"""
@@ -509,6 +508,7 @@ class Game():
                     case logique.Couleur.TURQUOISE.value:
                         player.setPlateaux(random.randint(0,9))
                         player.setPlateauy(random.randint(0,16))
+                        self.getPlateau().setCasesDecouvertes(self.getPlateau().getCasesDecouvertes() + [[player.setPlateaux(),player.setPlateauy()]])
                         if self.__timeaction > time.time():
                             self.__delay = 75; self.__timeaction=0
                             self.setEtat(GameState.SWITCH_PLAYER)

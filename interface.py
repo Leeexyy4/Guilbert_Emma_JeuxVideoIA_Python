@@ -5,7 +5,6 @@ class Interface():
         self.__estEnLigne = estEnLigne
         self.__nb_joueur = 4
         self.__nb_IA = 0
-        print("interface online? "+ str(self.getEnLigne()))
         
     def selectionnableNombreIA(self)->list[int]:
         res = []
@@ -26,7 +25,6 @@ class Interface():
     def setNombreIA(self, nb_ia:int):
         """Modifie le nombre d'IA"""
         self.__nb_IA = nb_ia
-        print(str(nb_ia) +" IAs")
 
     def getNombreJoueur(self)->int:
         """Renvoie le nombre de joueur(s)"""
@@ -35,7 +33,6 @@ class Interface():
     def setNombreJoueur(self, nb_joueur:int):
         """Modifie le nombre de joueur(s)"""
         self.__nb_joueur = nb_joueur
-        print(str(nb_joueur) +" players")
     
     def genererPartie(self)->Game:
         """Fonction qui crée la partie"""

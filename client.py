@@ -1041,7 +1041,7 @@ class Client():
                         self.__timerAnimation['sorciere'] = 0
                         if self.__sorciere_parti_2:
                             self.__sorciere_parti_2 = False
-                            self.__etatClient = ClientState.STATS
+                            self.__etatClient = ClientState.GLOBAL_STA
                             self.setEtatPartie(PartieState.INDEX)
                             self.__sorciere = END_MENU.SORCIERE                            
                         else:

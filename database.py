@@ -20,7 +20,6 @@ def envoyer_donnees_bdd(partie_id, joueur_id, cases_decouvertes, manches_effectu
         cur.execute("INSERT INTO statistiques (partie_id, joueur_id, cases_decouvertes, manches_effectuees, morts, cles_recuperees, points_vie, boss_vaincus, pv_moyen) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (partie_id, joueur_id, cases_decouvertes, manches_effectuees, morts, cles_recuperees, points_vie, boss_vaincus, pv_moyen))
         conn.commit()
         cur.close()
-        print("Données envoyées à la base de données avec succès")
 
 def creer_partie(gagnant):
         cur = conn.cursor()

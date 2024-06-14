@@ -22,6 +22,7 @@ class Page(Enum):
     CHOIX_NB_JOUEUR = pygame.image.load("./assets/img/illustrations/Page_nbjoueurs.png")
     BAS_PLATEAU = pygame.image.load("./assets/img/illustrations/Page_plateau.png")
     STATS = pygame.image.load("./assets/img/illustrations/Page_statistiques.png")
+    GLOBAL_STATS = pygame.image.load("./assets/img/illustrations/Page2_statistiques.png")
     ARENE= pygame.image.load("./assets/img/ennemis/Arene.png")
 class BtnAttaque(Enum):
     """La classe BtnAttaque regroupe l'ensemble des boutons d'action durant un combat"""
