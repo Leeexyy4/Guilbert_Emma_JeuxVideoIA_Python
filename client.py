@@ -1168,7 +1168,7 @@ class Client():
                 # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
-                        self.Page_demarrage()
+                        self.setEtatPartie(PartieState.INDEX)
                         stats = True
                 # Si le joueur quitte la fenetre
                 if (event.type == pygame.QUIT):
