@@ -1,12 +1,12 @@
 # ----------------------- Jeu de plateau - Joueur  ------------------------ #
 
 # Bibliotheques utilisees pour le code
-import pygame, random
 from utils import image
 from utils.logique import CASE_TYPE
 # from utils import texte, couleur, image, rectangle, logique
 
 from enum import Enum
+
 class Nom(Enum):
     """La classe Nom(Enum) regroupe le nom des personnages jouables."""
     WATER = "Ondine"
@@ -69,10 +69,11 @@ class Joueur:
     def getImage(self):
         """Renvoie les images correspondantes aux personnages"""
         if(self.getElement() == Element.GRASS): return image.Personnages.GRASS.value
-        if(self.getElement() == Element.WATER): return image.Personnages.WATER.value
-        if(self.getElement() == Element.TOWN): return image.Personnages.TOWN.value
-        if(self.getElement() == Element.ROCK): return image.Personnages.ROCK.value
-        return None
+        elif(self.getElement() == Element.WATER): return image.Personnages.WATER.value
+        elif(self.getElement() == Element.TOWN): return image.Personnages.TOWN.value
+        elif(self.getElement() == Element.ROCK): return image.Personnages.ROCK.value
+        else:
+            return None
 
     def getId(self):
         """_summary_
