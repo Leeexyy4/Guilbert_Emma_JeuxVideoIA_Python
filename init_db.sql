@@ -5,7 +5,7 @@ CREATE DATABASE sae_jv;
 \c sae_jv;
 
 -- creation table des parties
-CREATE TABLE parties (é
+CREATE TABLE parties (
     id SERIAL PRIMARY KEY,
     date_partie TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     gagnant BOOLEAN DEFAULT FALSE
