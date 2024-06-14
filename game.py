@@ -35,11 +35,7 @@ class GameState(Enum):
     CASE_BOSS_TERMINE = 17 # envoie CASE_BOSS_TERMINE
 
     # Sorciere
-<<<<<<< HEAD
     CASE_FIN_DU_JEU = 18
-=======
-    CASE_FIN_DU_JEU = 15
->>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
 
     # Combat
     FIGHT1 = 19 #affichage debut combat
@@ -94,15 +90,12 @@ class Game():
         start = self.__plateau.getCaseJaune()
         elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
         self.__listeJoueur:list[joueur.Joueur] = [joueur.Joueur(i, start[0], start[1],elems[i] , ['a','a','a','a']) for i in range(self.__nombreJoueur)]
-<<<<<<< HEAD
 
     def isEnd(self)->bool:
         """_summary_
             la partie est fin?
         """
         return self.__fin
-=======
->>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
 
     def isEnd(self)->bool:
         """_summary_
@@ -716,21 +709,10 @@ class Game():
             case GameState.CASE_FIN_DU_JEU:
                 if self.__timeaction > time.time():
                     self.__delay = 150; self.__timeaction=0
-<<<<<<< HEAD
                     self.__fin = True
                 else:
                     self.__delay -= 1
                     self.__timeaction = time.time() - self.__delay
-=======
-
-                    self.__fin = True
-                    print("oui")
-                else:
-                    print("en attente")
-                    self.__delay -= 1
-                    self.__timeaction = time.time() - self.__delay
-                    
->>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
             case GameState.SWITCH_PLAYER:
                 self.joueurSuivant()
                 self.resetTours()

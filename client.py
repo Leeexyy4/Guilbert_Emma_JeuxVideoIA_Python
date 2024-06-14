@@ -57,10 +57,7 @@ class Client():
 # --------- Initialisation du client --------- #
     def __init__(self) -> None:
         self.__sorciere_parti_2:bool = False
-<<<<<<< HEAD
         self.__sorciere:END_MENU = END_MENU.SORCIERE
-=======
->>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
         self.__clock:pygame.time.Clock =  pygame.time.Clock()
         self.__fenetre = pygame.display.set_mode((800, 700))
         self.__etatPartie:PartieState = PartieState.INDEX
@@ -599,7 +596,6 @@ class Client():
                         dialogue = ["Bravo tu as gagner !!!","Voilà deux cles supplementaires que tu peux", "voir apparaître dans ton inventaire."] if self.__game.getSpecialAction()  == "bravo" else ["Oh non dommage...","Tu peux retenter ta chance si tu as", "d'autres cles :)"]
                         self.setDialogues(dialogue)
                         self.afficheDialogues()
-<<<<<<< HEAD
 
                     case game.GameState.CASE_BOSS_TERMINE:
                         self.getFenetre().blit(pygame.transform.scale(image.Page.ARENE.value, (800, 500)),(0, 0))
@@ -716,8 +712,6 @@ class Client():
                         self.setDialogues(["Fin du combat... Tu as battu le boss", "en plus de ça tu as toutes les cles, depeche ","toi pour etre le premier à tuer la sorciere !!!"])
                         self.afficheDialogues()
 
-=======
->>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
                     case game.GameState.CASE_FIN_DU_JEU:
                             image.Image(0,468,image.Page.BAS_PLATEAU.value).affiche(self.getFenetre())
                             self.affichePlateau()
@@ -727,10 +721,6 @@ class Client():
                             else:
                                 self.setDialogues(["Tu n'as pas encore recuperer toutes","et dépêche toi de récupérer les clés avant", "Tu n'as pas encore recuperer toutes","la sorciere. Depeche-toi !"])
                             self.afficheDialogues()
-<<<<<<< HEAD
-
-=======
->>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
                     case game.GameState.WAIT_FIGHT_ACTION:
                         pass
                     case game.GameState.DO_FIGHT_ACTION:
