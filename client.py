@@ -7,6 +7,10 @@ from input import inputs, direction
 import time, random, pickle, socket
 from utils.rectangle import Rectangle
 
+from database import creer_partie
+from database import envoyer_donnees_bdd
+from database import recuperer_donnees_bdd
+
 host = '192.168.1.159'
 firstport = 12345
 clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -272,6 +276,7 @@ class Client():
         """La fonction afficheImagePlateau permet d'afficher le personnage dans le plateau(int x, int y, Surface surface)"""
         image_redimensionnee = pygame.transform.scale(joueur.getImage(), (47, 47))
         self.getFenetre().blit(image_redimensionnee, (joueur.getY(), joueur.getX()))
+                
 
     # Definir l'affichage des joueurs sur le plateau
     def afficheJoueurs(self):
@@ -1072,8 +1077,89 @@ class Client():
             
         pygame.display.update()
             
+    
+    def calculer_moyennes(self, donnees):
+        nombre_de_lignes = len(donnees)
+        if nombre_de_lignes == 0:
+            return []
+        
+        # Sommes initiales
+        sommes = [0] * len(donnees[0])
+        
+        for ligne in donnees:
+            for i, valeur in enumerate(ligne):
+                sommes[i] += valeur
+        
+        # Calcul des moyennes
+        moyennes = [somme / nombre_de_lignes for somme in sommes]
+        return moyennes
+            
     def draw_stats(self):
-        image.Image(0,0,image.Page.STATS.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+        image.Image(0,0,image.Page.STATS.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
+        donnees_bdd = recuperer_donnees_bdd()
+
+        moyennes = self.calculer_moyennes(donnees_bdd)
+
+        labels = [
+            "Cases découvertes", 
+            "Manches effectuées", "Morts", "Clés récupérées", 
+            "Boss vaincus", "PV moyen"
+        ]
+
+        if len(moyennes) >= 6:
+            # Affichage des statistiques par groupe de 3
+            y1 = 170
+            y2 = 200
+
+            # Première moitié des statistiques
+            for i in range(len(labels) // 2):
+                label = labels[i]
+                moyenne = moyennes[i]
+
+                texte.Texte(f"{label}", logique.Couleur.BLANC.value, 200, y1).affiche(self.getFenetre())
+                texte.Texte(f"{moyenne:.2f}", logique.Couleur.BLANC.value, 230, y2).affiche(self.getFenetre())
+
+                y1 += 100
+                y2 += 100
+
+            # Seconde moitié des statistiques
+            y1 = 170
+            y2 = 200
+
+            for i in range(len(labels) // 2, len(labels)):
+                label = labels[i]
+                moyenne = moyennes[i]
+
+                texte.Texte(f"{label}", logique.Couleur.BLANC.value, 500, y1).affiche(self.getFenetre())
+                texte.Texte(f"{moyenne:.2f}", logique.Couleur.BLANC.value, 530, y2).affiche(self.getFenetre())
+
+                y1 += 100
+                y2 += 100
+        else:
+            texte.Texte("Les statistiques ne sont pas disponibles pour le moment", logique.Couleur.BLANC.value, 240, 300).affiche(self.getFenetre())
+
+
+        # Mettre à jour l'affichage
+        pygame.display.update()
+        
+        # Faire un systeme pour la selection de la position du clic pour la selection du personnage
+        stats = False
+        # Boucle while pour voir quand le joueur clique sur start
+        while (stats != True):
+            mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+            # Pour tous les evenements
+            for event in pygame.event.get():
+                # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
+                if (event.type == pygame.MOUSEBUTTONDOWN):
+                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # si appuie sur fleche retour
+                        self.Page_demarrage(donnees_bdd)
+                        stats = True
+                # Si le joueur quitte la fenetre
+                if (event.type == pygame.QUIT):
+                    pygame.quit()
+                    exit()
+
+
     def stats_logique(self, input:inputs):
         if (input.estClique()):
             self.resetMenu()
