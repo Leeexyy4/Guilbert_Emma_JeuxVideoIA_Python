@@ -907,7 +907,7 @@ class Client():
         pygame.display.update()
             
     def afficheStats(self):
-        image.Image(0,0,image.Page.STATS.value).affichageImageRedimensionnee(800, 700,self.getFenetre())
+        image.Image(0,0,image.Page.STATS.value).afficheImageRedimensionnee(800, 700,self.getFenetre())
     def stats_logique(self, input:inputs):
         if (input.estClique()):
             self.resetMenu()
