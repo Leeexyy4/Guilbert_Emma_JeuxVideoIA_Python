@@ -31,6 +31,14 @@ class IntelA (joueur.Joueur):
         self.__attaque:int = 110
         self.__inventaire:list = inventaire
 
+    def getImage(self):
+        """Renvoie les images correspondantes aux personnages"""
+        if(self.getElement() == Element.GRASS): return image.Personnages.GRASS.value
+        elif(self.getElement() == Element.WATER): return image.Personnages.WATER.value
+        elif(self.getElement() == Element.TOWN): return image.Personnages.TOWN.value
+        elif(self.getElement() == Element.ROCK): return image.Personnages.ROCK.value
+        else:
+            return None
     
     def choix_case_IA(self):
         case_depart = [self.getPlateaux(), self.getPlateauy()]
