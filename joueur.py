@@ -27,7 +27,7 @@ class Joueur:
     rock_is_used = False 
     
     # Definir un joueur
-    def __init__(self,id:int, plateaux:int, plateauy:int,element:Element) -> None:
+    def __init__(self,id:int, plateaux:int, plateauy:int,element:Element, inventaire:list=[]) -> None:
         """_summary_
             Initialisation du joueur
         """
@@ -37,7 +37,7 @@ class Joueur:
         self.__plateauy:int = plateauy
         self.__pv:int = 700
         self.__attaque:int = 110
-        self.__inventaire:list = []
+        self.__inventaire:list = inventaire
         
 
     # Definir les getters
@@ -174,6 +174,7 @@ class Joueur:
     def avoirCles(self) -> bool : 
         """Verifie si le joueur a toutes les cles necessaires."""
         nombre_cles = 0
+        print(self.getInventaire())
         for i in self.getInventaire():
             nombre_cles += 1
         if nombre_cles == 4:

@@ -35,7 +35,11 @@ class GameState(Enum):
     CASE_BOSS_TERMINE = 17 # envoie CASE_BOSS_TERMINE
 
     # Sorciere
+<<<<<<< HEAD
     CASE_FIN_DU_JEU = 18
+=======
+    CASE_FIN_DU_JEU = 15
+>>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
 
     # Combat
     FIGHT1 = 19 #affichage debut combat
@@ -90,13 +94,22 @@ class Game():
         start = self.__plateau.getCaseJaune()
         elems = [joueur.Element.GRASS, joueur.Element.WATER, joueur.Element.TOWN, joueur.Element.ROCK]
         self.__listeJoueur:list[joueur.Joueur] = [joueur.Joueur(i, start[0], start[1],elems[i] , ['a','a','a','a']) for i in range(self.__nombreJoueur)]
+<<<<<<< HEAD
 
     def isEnd(self)->bool:
         """_summary_
             la partie est fin?
         """
         return self.__fin
+=======
+>>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
 
+    def isEnd(self)->bool:
+        """_summary_
+            la partie est fin?
+        """
+        print(self.__fin)
+        return self.__fin
     def getlastdeVal(self)->int:
         """_summary_
             Getter de l'etat du joueur
@@ -270,19 +283,19 @@ class Game():
                 if input.estClique(): 
                     start:tuple[int, int] = self.getPlateau().getCaseJaune()
                     if (500 <= input.getSourisx() <= 600 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.water_is_used):
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER)
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.WATER, ['a','a','a','a'])
                         self.setEtat(GameState.USE_DIE)
                         # Si le personnage sur lequel on clique est Flora
                     elif (700 <= input.getSourisx() <= 800 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.grass_is_used): 
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS)
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.GRASS, ['a','a','a','a'])
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Pierre
                     elif (400 <= input.getSourisx() <= 500 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.rock_is_used): 
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK)
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.ROCK, ['a','a','a','a'])
                         self.setEtat(GameState.USE_DIE)
                     # Si le personnage sur lequel on clique est Kevin
                     elif (600 <= input.getSourisx() <= 700 and 582 <= input.getSourisy() <= 652 and not joueur.Joueur.town_is_used):
-                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN)
+                        self.getListeJoueur()[self.getIdJoueurActuel()] = joueur.Joueur(self.getIdJoueurActuel(), start[0], start[1], joueur.Element.TOWN, ['a','a','a','a'])
                         self.setEtat(GameState.USE_DIE)
 
             # Logique_PremierMouvement
@@ -355,6 +368,8 @@ class Game():
                             if 220 <= input.getSourisx() <= 284 and 480 <= input.getSourisy() <= 544: 
                                 if player.avoirCles():
                                     self.setEtat(GameState.CASE_FIN_DU_JEU)
+                                else:
+                                    self.setEtat(GameState.CASE_RETOUR)
                             elif 510 <= input.getSourisx() <= 574 and 480 <= input.getSourisy() <= 544:
                                 self.setEtat(GameState.CASE_RETOUR)
 
@@ -701,10 +716,21 @@ class Game():
             case GameState.CASE_FIN_DU_JEU:
                 if self.__timeaction > time.time():
                     self.__delay = 150; self.__timeaction=0
+<<<<<<< HEAD
                     self.__fin = True
                 else:
                     self.__delay -= 1
                     self.__timeaction = time.time() - self.__delay
+=======
+
+                    self.__fin = True
+                    print("oui")
+                else:
+                    print("en attente")
+                    self.__delay -= 1
+                    self.__timeaction = time.time() - self.__delay
+                    
+>>>>>>> 15c8295821044546b42217ba0d4b93d7f4afa8af
             case GameState.SWITCH_PLAYER:
                 self.joueurSuivant()
                 self.resetTours()
