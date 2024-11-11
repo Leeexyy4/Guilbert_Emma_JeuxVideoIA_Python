@@ -9,7 +9,7 @@
     <a src="url source">View Demo</a>
   </p>
   
-<a href="https://github.com/Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python/graphs/contributors">
+<a href="https://contrib.rocks/image?repo=Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python">
   <img src="https://github.com/Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python/blob/main/assets/readme/img/Img_Introduction.png" />
 </a>
   
