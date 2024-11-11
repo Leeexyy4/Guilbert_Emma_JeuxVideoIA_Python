@@ -1,0 +1,6 @@
+dans l'ordre de l'affichage :
+    fondecran
+    plateau
+    menu
+    interraction
+    dialogues

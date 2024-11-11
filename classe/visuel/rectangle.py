@@ -45,20 +45,20 @@ class Rectangle:
         """
         return self.__hauteur
     
-    def get_couleur(self):
+    def getCouleur(self):
         """_summary_
             Getter de la couleur du rectangle
         """
         return self.__couleur
     
     # Definition des setters
-    def set_x(self,x:int):
+    def setX(self,x:int):
         """_summary_
             Setter de la position x
         """
         self.__x = x
     
-    def set_y(self,y:int):
+    def setY(self,y:int):
         """_summary_
             Setter de la position y
         """
@@ -110,10 +110,8 @@ class Rectangle:
     def affiche_contour_couleur(self,surface,contour):
         """_summary_
             La fonction affiche affiche le rectangle et ses contours colores sur l'interface pygame(Surface surface)
-        """     
-        
+        """            
         pygame.draw.rect(surface,self.__couleur,(self.__x,self.__y,self.__largeur,self.__hauteur))
-           
         # Dessiner les bords de la place pour les cles
         pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x + self.__largeur,self.__y),5)
         pygame.draw.line(surface,contour,(self.__x,self.__y),(self.__x,self.__y + self.__hauteur),5)

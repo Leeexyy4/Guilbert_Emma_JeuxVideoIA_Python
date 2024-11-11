@@ -2,189 +2,165 @@
 
 # Bibliotheques utilisees pour le code
 import pygame, random
-from classe.visuel import texte, couleur, image, rectangle
+from classe.visuel import texte, couleur, image
 from classe.jeu import logique
-from enum import Enum
-
-class Nom(Enum):
-    WATER = "Ondine"
-    GRASS = "Flora"
-    ROCK = "Pierre"
-    TOWN = "Kevin"
-class Element(Enum):
-    WATER = "de la Riviere"
-    GRASS = "de la Foret"
-    ROCK = "du Rocher"
-    TOWN = "de la Ville"
 
 class Joueur:
     """La classe Joueur est une classe qui permet d'utiliser un personnage."""
     
     # Definir un joueur
-    def __init__(self,id,prenom,element,plateaux,plateauy,pv,attaque,inventaire) -> None:
+    def __init__(self,id,prenom,element, interface) -> None:
         """_summary_
             Initialisation du joueur
         """
         self.__id = id
         self.__prenom = prenom
         self.__element = element
-        self.__plateaux = plateaux
-        self.__plateauy = plateauy        
-        self.__x = plateauy * 47
-        self.__y = plateaux * 47
+        self.__plateaux = interface.getPlateauJeu().getCaseJaune()[0]
+        self.__plateauy = interface.getPlateauJeu().getCaseJaune()[1]        
+        self.__x = self.getPlateauY() * 47
+        self.__y = self.getPlateauX() * 47
         self.__lien = "./assets/img/personnages/" + prenom + ".png"
-        self.__pv = pv
-        self.__attaque = attaque
-        self.__inventaire = inventaire
+        self.__pv = 1000
+        self.__attaque = 150
+        self.__inventaire = ["clé de la Ville", "clé de la Rivière", "clé de la Forêt", "clé du Rocher"]
         self.__state:logique.Player_State = logique.Player_State.WAIT_PLAYER
 
     # Definir les getters
-    def get_x(self):
+    def getX(self):
         """_summary_
             Getter de la position x
         """
         return self.__x
-    def get_state(self):
-        """_summary_
-            Getter de l'etat du joueur
-        """
-        return self.__state
     
-    def get_y(self):
+    def getY(self):
         """_summary_
             Getter de la position y
         """
         return self.__y
     
-    def get_prenom(self):
+    def getPrenom(self):
         """_summary_
             Getter du prenom du joueur
         """
         return self.__prenom
     
-    def get_lien(self):
+    def getLien(self):
         """_summary_
             Getter du lien de l'image du joueur
         """
         return self.__lien
 
-    def get_id(self):
+    def getId(self):
         """_summary_
             Getter de l'id du joueur
         """
         return self.__id
     
-    def get_pv(self):
+    def getPv(self):
         """_summary_
             Getter des pv du joueur
         """
         return self.__pv
     
-    def get_attaque(self):
+    def getAttaque(self):
         """_summary_
             Getter des attaques du joueur
         """
         return self.__attaque
     
-    def get_element(self):
+    def getElement(self):
         """_summary_
             Getter de l'element du joueur
         """
         return self.__element
     
-    def get_inventaire(self):
+    def getInventaire(self):
         """_summary_
             Getter de l'inventaire du joueur
         """
         return self.__inventaire
     
-    def get_plateaux(self):
+    def getPlateauX(self):
             """_summary_
                 Getter de la position x sur le plateau
             """
             return self.__plateaux
     
-    def get_plateauy(self):
+    def getPlateauY(self):
             """_summary_
                 Getter de la position y sur le plateau
             """
             return self.__plateauy
     
-    def get_attaque(self):
+    def getAttaque(self):
             """_summary_
                 Getter de l'attaque sur le plateau
             """
             return self.__attaque
         
-        
-    def set_state(self,state:logique.Player_State):
-        """_summary_
-            Setter l'etat du joueur
-        """
-        self.__state = state
-        
     # Definir les setters
-    def set_x(self,x):
+    def setX(self,x):
         """_summary_
             Setter de la position x
         """
         self.__x = x
     
-    def set_y(self,y):
+    def setY(self,y):
         """_summary_
             Setter de la position y
         """
         self.__y = y
         
-    def set_prenom(self,prenom):
+    def setPrenom(self,prenom):
         """_summary_
             Setter du prenom
         """
         self.__prenom = prenom
     
-    def set_lien(self, lien):
+    def setLien(self, lien):
         """_summary_
             Setter du lien de l'image du joueur
         """
         self.__lien = lien
     
-    def set_id(self, id):
+    def setId(self, id):
         """_summary_
             Setter de l'id du joueur
         """
         self.id = id
 
-    def set_pv(self,pv):
+    def setPv(self,pv):
         """_summary_
             Setter de la vie du joueur
         """
         self.__pv = pv
     
-    def set_element(self, element):
+    def setElement(self, element):
         """_summary_
             Setter de l'element du joueur
         """
         self.element = element
         
-    def set_inventaire(self,inventaire):
+    def setInventaire(self,inventaire):
         """_summary_
             Setter de l'inventaire du joueur
         """
         self.__inventaire = inventaire
     
-    def set_plateaux(self,plateaux):
+    def setPlateauX(self,plateaux):
         """
             Setter de la position x sur le plateau
         """
         self.__plateaux = plateaux
     
-    def set_plateauy(self,plateauy):
+    def setPlateauY(self,plateauy):
         """
             Setter de la position y sur le plateau
         """
         self.__plateauy = plateauy
 
-    def set_attaque(self,attaque):
+    def setAttaque(self,attaque):
         """
             Setter de l'attaque sur le plateau
         """
@@ -197,9 +173,9 @@ class Joueur:
             La fonction haut permet de delacer un joueur vers le haut(int nombre_pixel)
         """
         avancer = False
-        if self.get_plateaux() > 0:
-            self.set_y(self.__y - dy)
-            self.set_plateaux(self.__plateaux - 1)
+        if self.getPlateauX() > 0:
+            self.setY(self.getY() - dy)
+            self.setPlateauX(self.getPlateauX() - 1)
             avancer = True
             return avancer
         else:
@@ -210,9 +186,9 @@ class Joueur:
             La fonction bas permet de delacer un joueur vers le bas(int nombre_pixel)
         """
         avancer = False
-        if self.get_plateaux() < 9:
-            self.set_y(self.__y + dy)
-            self.set_plateaux(self.__plateaux + 1)
+        if self.getPlateauX() < 9:
+            self.setY(self.getY() + dy)
+            self.setPlateauX(self.getPlateauX() + 1)
             avancer = True
             return avancer
         else:
@@ -223,9 +199,9 @@ class Joueur:
             La fonction droite permet de delacer un joueur vers la droite(int nombre_pixel)
         """
         avancer = False
-        if self.get_plateauy() < 16:
-            self.set_x(self.__x + dx)
-            self.set_plateauy(self.__plateauy + 1)
+        if self.getPlateauY() < 16:
+            self.setX(self.getX() + dx)
+            self.setPlateauY(self.getPlateauY() + 1)
             avancer = True
             return avancer
         else:
@@ -236,224 +212,194 @@ class Joueur:
             La fonction gauche permet de delacer un joueur vers la gauche(int nombre_pixel)
         """
         avancer = False
-        if self.get_plateauy() > 0:
-            self.set_x(self.__x - dx)
-            self.set_plateauy(self.__plateauy - 1)
+        if self.getPlateauY() > 0:
+            self.setX(self.getX() - dx)
+            self.setPlateauY(self.getPlateauY() - 1)
             avancer = True
             return avancer
         else:
             return avancer
     
-    def ajouter_pv(self,liste_joueur,nb_pv,surface):
-        """Ajoute des points de vie au joueur et met à jour l'affichage."""
-        self.set_pv((self.get_pv() + nb_pv))
-        liste_joueur[self.get_id()][5] = self.get_pv()
-        pygame.display.update() # Mettre à jour l'affichage
-        return self
-    
-    def supprimer_pv(self,liste_joueur,nb_pv,surface):
-        """Supprime des points de vie au joueur et met à jour l'affichage."""
-        self.set_pv((self.get_pv() - nb_pv))
-        liste_joueur[self.get_id()][5] = self.get_pv()
-        pygame.display.update() # Mettre à jour l'affichage
-        return self      
-    
-    def adv_a_attaquer(self, liste_joueur):
+    def advDisponible(self, liste_joueur):
         # Savoir si on a quelqu'un a attaqué
         attaquer = False
-        x1 = self.get_plateaux()
-        y1 = self.get_plateauy()
-        for i in liste_joueur:
-            if (((i[3] == x1) or (i[3] == x1 + 1) or (i[3] == x1 - 1)) and ((i[4] == y1) or (i[4] == y1 + 1) or (i[4] == y1 - 1)) and (i[0] != self.get_id())):
+        x1 = self.getPlateauX()
+        y1 = self.getPlateauY()
+        for joueur in liste_joueur:
+            if (((joueur.getPlateauX() == x1) or (joueur.getPlateauX() == x1 + 1) or (joueur.getPlateauX() == x1 - 1)) and ((joueur.getPlateauY() == y1) or (joueur.getPlateauY() == y1 + 1) or (joueur.getPlateauY() == y1 - 1)) and (joueur.getId()!= self.getId())):
                 attaquer = True
         return attaquer
     
-    def adv_nom_attaquer(self, liste_joueur):
+    def advNomDisponible(self, interface):
         # Quel adversaire on peut attaquer
-        x1 = self.get_plateaux()
-        y1 = self.get_plateauy()
-        for i in liste_joueur:
-            if (((i[3] == x1) or (i[3] == x1 + 1) or (i[3] == x1 - 1)) and ((i[4] == y1) or (i[4] == y1 + 1) or (i[4] == y1 - 1)) and (i[0] != self.get_id())):
-                return i[0]
+        x1 = self.getPlateauX()
+        y1 = self.getPlateauY()
+        for i in interface.getListeJoueur():
+            if (((self.getPlateauX() == x1) or (self.getPlateauX() == x1 + 1) or (self.getPlateauX() == x1 - 1)) and ((self.getPlateauY() == y1) or (self.getPlateauY() == y1 + 1) or (self.getPlateauY() == y1 - 1)) and (self.getId() != self.getId())):
+                return self.getId()
         return (-1)
     
-        
-    def combat_joueurs(self, interface, ordre_adv):
+    def combatJoueurs(self, interface, ordre_adv):
         # Combats des joueurs
-        joueur_adv = Joueur(interface.get_liste_joueur()[ordre_adv][0],interface.get_liste_joueur()[ordre_adv][1],interface.get_liste_joueur()[ordre_adv][2],interface.get_liste_joueur()[ordre_adv][3],interface.get_liste_joueur()[ordre_adv][4],interface.get_liste_joueur()[ordre_adv][5],interface.get_liste_joueur()[ordre_adv][6],interface.get_liste_joueur()[ordre_adv][7])
+        joueur_adv = Joueur(interface.getListeJoueur()[ordre_adv][0],interface.getListeJoueur()[ordre_adv][1],interface.getListeJoueur()[ordre_adv][2],interface.getListeJoueur()[ordre_adv][3],interface.getListeJoueur()[ordre_adv][4],interface.getListeJoueur()[ordre_adv][5],interface.getListeJoueur()[ordre_adv][6],interface.getListeJoueur()[ordre_adv][7])
                 
         # Mettre la fenetre combat
-        interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
         image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
         image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
-        interface.get_fenetre().blit(image_redimensionnee, (0, 0))
+        interface.affichageCombat(image_redimensionnee, (0, 0))
             
         #Afficher le joueur et l'adversaire
-        interface.Menu_bas(self)
+        interface.affichageMenu(self)
         interface.affichage_image(100,400,self)
         interface.affichage_image_adv(620,400,joueur_adv)
             
         # Affiche le texte 
-        texte.Texte("Tu as décidé de combattre un joueur. Le celebre ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-        texte.Texte("{}. Prepare toi à le combattre afin de prendre".format(joueur_adv.get_prenom()), couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
-        texte.Texte("l'avantage sur lui !", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
-        pygame.display.update()
+        texte.Texte("Tu as décidé de combattre un joueur. Le celebre ", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+        texte.Texte("{}. Prepare toi à le combattre afin de prendre".format(joueur_adv.get_prenom()), couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
+        texte.Texte("l'avantage sur lui !", couleur.Couleur().getNoir(), 110, 640).affiche(interface.getPolice(),interface.getFenetre())
         pygame.time.delay(1500)
 
-        interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
         image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
         image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
-        interface.get_fenetre().blit(image_redimensionnee, (0, 0))
-        interface.Menu_bas(self)
+        interface.affichageCombat(image_redimensionnee, (0, 0))
+        interface.affichageMenu(self)
         interface.affichage_image(100,400,self)
         interface.affichage_image_adv(620,400,joueur_adv)
-        texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-        texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
-        texte.Texte("la fuite ?", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+        texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+        texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
+        texte.Texte("la fuite ?", couleur.Couleur().getNoir(), 110, 640).affiche(interface.getPolice(),interface.getFenetre())
         image.Image(100,508,'assets/img/illustrations/Basique.png').affiche(interface)
         image.Image(250,508,'assets/img/illustrations/Speciale.png').affiche(interface)
         image.Image(400,508,'assets/img/illustrations/Defense.png').affiche(interface)
         image.Image(550,508,'assets/img/illustrations/Fuite.png').affiche(interface)
-        pygame.display.update()
         
         combat_en_cours = True
         # Tant que l'ennemis est en vie
         while combat_en_cours:
-            if self.get_pv()<=0:
-                self.set_pv(0)
+            if self.getPv()<=0:
+                self.setPv(0)
                 joueur_adv.set_inventaire(joueur_adv.get_inventaire() + self.get_inventaire())
-                interface.Menu_bas(self)
+                interface.affichageMenu(self)
                 interface.affichage_image(100,400,self)
                 interface.affichage_image_adv(620,400,joueur_adv)
-                texte.Texte("Fin du combat... Tu n'as pas survecu",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                texte.Texte("à l'attaque de l'adversaire...",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
-                texte.Texte("Retour au plateau !",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
-                interface.Mise_a_jour(self)
-                interface.Mise_a_jour(joueur_adv)
-                pygame.display.update()
+                texte.Texte("Fin du combat... Tu n'as pas survecu",couleur.Couleur().getNoir(),110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                texte.Texte("à l'attaque de l'adversaire...",couleur.Couleur().getNoir(),110, 620).affiche(interface.getPolice(),interface.getFenetre())
+                texte.Texte("Retour au plateau !",couleur.Couleur().getNoir(),110, 640).affiche(interface.getPolice(),interface.getFenetre())
                 combat_en_cours = False
-            elif joueur_adv.get_pv()<=0:
-                joueur_adv.set_pv(0)
-                interface.Menu_bas(self)
+            elif joueur_adv.getPv()<=0:
+                joueur_adv.setPv(0)
+                interface.affichageMenu(self)
                 interface.affichage_image(100,400,self)
                 interface.affichage_image_adv(620,400,joueur_adv)
-                texte.Texte("Fin du combat... Tu as tué",couleur.Couleur().get_Noir(),110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                texte.Texte("l'adversaire, bravo.",couleur.Couleur().get_Noir(),110, 620).affiche(interface.get_police(),interface.get_fenetre())
-                texte.Texte("Retour au plateau !",couleur.Couleur().get_Noir(),110, 640).affiche(interface.get_police(),interface.get_fenetre())
-                interface.Mise_a_jour(self)
-                interface.Mise_a_jour(joueur_adv)
-                pygame.display.update()
+                texte.Texte("Fin du combat... Tu as tué",couleur.Couleur().getNoir(),110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                texte.Texte("l'adversaire, bravo.",couleur.Couleur().getNoir(),110, 620).affiche(interface.getPolice(),interface.getFenetre())
+                texte.Texte("Retour au plateau !",couleur.Couleur().getNoir(),110, 640).affiche(interface.getPolice(),interface.getFenetre())
                 combat_en_cours = False
-            elif self.get_pv()>0 and joueur_adv.get_pv()>0:
+            elif self.getPv()>0 and joueur_adv.getPv()>0:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
                         pygame.quit()
                         exit() 
                     
-                    # Si le clique est presse
+                    
                     if event.type == pygame.MOUSEBUTTONDOWN:  
-                        mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+                        mouse_x, mouse_y = pygame.mouse.get_pos() 
                         if 100 < mouse_x < 164 and 508 < mouse_y < 572:
                             #action_joueur = "attaque basique"
                             toucher = random.choice([True,False,True])
                             if toucher == True:
                                 if self.get_element() == joueur_adv.get_element():
                                     pv = random.randint(self.get_attaque(),self.get_attaque()+20)
-                                    joueur_adv.set_pv(joueur_adv.get_pv()-pv)
+                                    joueur_adv.setPv(joueur_adv.getPv()-pv)
                                 else:
                                     pv = random.randint(self.get_attaque()-20,self.get_attaque())
-                                    joueur_adv.set_pv(joueur_adv.get_pv()-pv)
-                                interface.Menu_bas(self)
+                                    joueur_adv.setPv(joueur_adv.getPv()-pv)
+                                interface.affichageMenu(self)
                                 interface.affichage_image(100,400,self)
                                 interface.affichage_image_adv(620,400,joueur_adv)
-                                texte.Texte("Tu as choisi de faire une attaque basique,", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("bravo, l'adversaire a perdu {} pvs".format(pv), couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("Tu as choisi de faire une attaque basique,", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("bravo, l'adversaire a perdu {} pvs".format(pv), couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
                             else:
-                                interface.Menu_bas(self)
+                                interface.affichageMenu(self)
                                 interface.affichage_image(100,400,self)
                                 interface.affichage_image_adv(620,400,joueur_adv)
-                                texte.Texte("L'adversaire a esquive le coup, dommage", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("L'adversaire n'a pas perdu de pv", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("L'adversaire a esquive le coup, dommage", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("L'adversaire n'a pas perdu de pv", couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
                         if 250 < mouse_x < 314 and 508 < mouse_y < 572:
                             #action_joueur = "attaque speciale"
                             toucher = random.choice([True,False])
                             if toucher == True:
                                 pv = self.get_attaque()+50
-                                joueur_adv.set_pv(joueur_adv.get_pv()-pv)
-                                interface.Menu_bas(self)
+                                joueur_adv.setPv(joueur_adv.getPv()-pv)
+                                interface.affichageMenu(self)
                                 interface.affichage_image(100,400,self)
                                 interface.affichage_image_adv(620,400,joueur_adv)
-                                texte.Texte("Tu as choisi de faire une attaque speciale,", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("bravo, l'adversaire a perdu {} pvs".format(pv), couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("Tu as choisi de faire une attaque speciale,", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("bravo, l'adversaire a perdu {} pvs".format(pv), couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
                             else:
-                                interface.Menu_bas(self)
+                                interface.affichageMenu(self)
                                 interface.affichage_image(100,400,self)
                                 interface.affichage_image_adv(620,400,joueur_adv)
-                                texte.Texte("L'adversaire a esquive le coup, dommage", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("L'adversaire n'a pas perdu de pv", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("L'adversaire a esquive le coup, dommage", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("L'adversaire n'a pas perdu de pv", couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
                         if 400 < mouse_x < 464 and 508 < mouse_y < 572:
                             #action_joueur = "se defendre"
                             toucher = random.choice([True,False])
                             if toucher == True:
                                 joueur_adv.set_attaque(joueur_adv.get_attaque()-20)
-                                interface.Menu_bas(self)
+                                interface.affichageMenu(self)
                                 interface.affichage_image(100,400,self)
                                 interface.affichage_image_adv(620,400,joueur_adv)
-                                texte.Texte("Tu as choisi de te defendre, tu fais une", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("grimace au boss et cela reduit les degâts", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("qu'il peut t'infliger." ,couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("Tu as choisi de te defendre, tu fais une", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("grimace au boss et cela reduit les degâts", couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("qu'il peut t'infliger." ,couleur.Couleur().getNoir(), 110, 640).affiche(interface.getPolice(),interface.getFenetre())
                             else:
-                                interface.Menu_bas(self)
+                                interface.affichageMenu(self)
                                 interface.affichage_image(100,400,self)
                                 interface.affichage_image_adv(620,400,joueur_adv)
-                                texte.Texte("L'ennemis n'a pas pris peur, les", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("degâts qu'il t'inflige ne sont pas", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
-                                texte.Texte("reduits.", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                                texte.Texte("L'ennemis n'a pas pris peur, les", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("degâts qu'il t'inflige ne sont pas", couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
+                                texte.Texte("reduits.", couleur.Couleur().getNoir(), 110, 640).affiche(interface.getPolice(),interface.getFenetre())
                         if 550 < mouse_x < 614 and 508 < mouse_y < 572:
                             #action_joueur = "prendre la fuite"
-                            interface.Menu_bas(self)
+                            interface.affichageMenu(self)
                             interface.affichage_image(100,400,self)
                             interface.affichage_image_adv(620,400,joueur_adv)
-                            texte.Texte("Tu as choisi de prendre la fuite, c'est", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                            texte.Texte("surement le bon choix retente ta chance plus", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
-                            texte.Texte("tard et detruit moi cet adversaire !!!" ,couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                            texte.Texte("Tu as choisi de prendre la fuite, c'est", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                            texte.Texte("surement le bon choix retente ta chance plus", couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
+                            texte.Texte("tard et detruit moi cet adversaire !!!" ,couleur.Couleur().getNoir(), 110, 640).affiche(interface.getPolice(),interface.getFenetre())
                             combat_en_cours = False
-                        pygame.display.update()
                         pygame.time.delay(2500)
-                        if self.get_pv() >0 and joueur_adv.get_pv()>0 and combat_en_cours == True:
+                        if self.getPv() >0 and joueur_adv.getPv()>0 and combat_en_cours == True:
                             temp = self ; self = joueur_adv ; joueur_adv = temp
-                            interface.Mise_a_jour(self)
-                            interface.Mise_a_jour(joueur_adv)
-                            interface.get_fenetre().fill((couleur.Couleur().get_Noir()))
                             image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
                             image_redimensionnee = pygame.transform.scale(image_Arene, (800, 500))
-                            interface.get_fenetre().blit(image_redimensionnee, (0, 0))
-                            interface.Menu_bas(self)
+                            interface.affichageCombat(image_redimensionnee, (0, 0))
+                            interface.affichageMenu(self)
                             interface.affichage_image(100,400,self)
                             interface.affichage_image_adv(620,400,joueur_adv)
-                            texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().get_Noir(), 110, 600).affiche(interface.get_police(),interface.get_fenetre())
-                            texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().get_Noir(), 110, 620).affiche(interface.get_police(),interface.get_fenetre())
-                            texte.Texte("la fuite ?", couleur.Couleur().get_Noir(), 110, 640).affiche(interface.get_police(),interface.get_fenetre())
+                            texte.Texte("Que veux-tu faire ? Une attaque basique, une ", couleur.Couleur().getNoir(), 110, 600).affiche(interface.getPolice(),interface.getFenetre())
+                            texte.Texte("attaque speciale, te defendre ou prendre", couleur.Couleur().getNoir(), 110, 620).affiche(interface.getPolice(),interface.getFenetre())
+                            texte.Texte("la fuite ?", couleur.Couleur().getNoir(), 110, 640).affiche(interface.getPolice(),interface.getFenetre())
                             image.Image(100,508,'assets/img/illustrations/Basique.png').affiche(interface)
                             image.Image(250,508,'assets/img/illustrations/Speciale.png').affiche(interface)
                             image.Image(400,508,'assets/img/illustrations/Defense.png').affiche(interface)
                             image.Image(550,508,'assets/img/illustrations/Fuite.png').affiche(interface)
-                            pygame.display.update()
-
-    def avoir_tt_cles(self) -> bool : 
+    
+    def aCles(self) -> bool : 
         """Verifie si le joueur a toutes les cles necessaires."""
         nombre_cles = 0
-        for i in self.get_inventaire():
+        for i in self.getInventaire():
             nombre_cles += 1
         if nombre_cles == 4:
             return True
         else:
             return False
     
-    def a_gagne(self,plateau) -> bool:
+    def aGagner(self,plateau) -> bool:
         """Verifie si le joueur a gagne en ayant toutes les cles et en etant dans une hutte."""
         gagne = False
-        if self.avoir_tt_cles() == True and plateau.get_nom(self.get_plateaux(),self.get_plateauy()) == "Hutte":
+        if self.aCles() == True and plateau.getNom(self.getPlateauX(),self.getPlateauY()) == "Hutte":
             gagne = True
         return gagne
     

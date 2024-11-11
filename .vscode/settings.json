@@ -1,9 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./classe",
-        "./classe",
-        "./classe/personnage",
-        "./classe/visuel",
-        "./classe/jeu"
-    ]
-}

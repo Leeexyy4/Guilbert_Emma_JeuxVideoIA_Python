@@ -32,7 +32,7 @@ class Texte:
         """
         return self.__texte
     
-    def get_couleur(self):
+    def getCouleur(self):
         """_summary_
             Getter de la couleur du texte
         """
@@ -47,9 +47,7 @@ class Texte:
         surface.blit(texte_surface, (self.__x, self.__y))
         return
     
-    
-        
-# Tests des fonctions
+   # Tests des fonctions
 """
 if __name__ == "__main__":
     

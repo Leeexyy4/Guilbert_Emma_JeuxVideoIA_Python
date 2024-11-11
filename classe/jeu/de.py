@@ -14,126 +14,97 @@ class De:
         """Initialisation du de."""
         self.__face_choisie = 0
 
-    def get_face_choisie(self):
+    def getFaceDe(self):
         """Getter de la face aleatoire choisie."""
         return self.__face_choisie
 
-    def set_face_choisie(self, face_choisie):
+    def setFaceDe(self, face_choisie):
         """Setter de la face aleatoire choisie."""
         self.__face_choisie = face_choisie
 
-    def desincrement_face_choisie(self, x):
+    def setFaceDeDesincremente(self, x):
         """Setter de la face aleatoire choisie."""
         self.__face_choisie = self.__face_choisie - x
 
-    def Choix_de(self, interface, joueur):
+    def getFaceAleatoireDe(self, interface, joueur):
         """La fonction Choix_De retourne la face aleatoire choisie du de (Surface surface).
 
         Returns:
             int face_choisie: Retourne la face aleatoire choisie
         """
         if isinstance(joueur,intelA.IntelA):
-            joueur.lancement_de(interface)
+            joueur.lancement_de_IA(interface)
+            pygame.time.delay(1500)
         else:
             de_cliquer = False
             while de_cliquer == False:
-                mouse_x, mouse_y = pygame.mouse.get_pos() # Recuperer les coordonnees de la souris
+                mouse_x, mouse_y = pygame.mouse.get_pos() 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT: # si le joueur quitte la fenetre # si le joueur quitte la fenetre
                         pygame.quit()
                         exit()   
                     # Si le personnage sur lequel on clique est Kevin
-                    if 350 <= mouse_x <= 435 and 475 <= mouse_y <= 560 :   
+                    if 360 <= mouse_x <= 435 and 475 <= mouse_y <= 560 :   
                         if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueur clique sur le bouton, on passe à la prochaine page "introduction"
                             
                             # Affiche le de sur la face 2
-                            de_face2 = image.De.FACE2.value
-                            interface.get_fenetre().blit(de_face2,(350,475))
-                            # Mettre à jour l'affichage
-                            pygame.display.update()
+                            interface.affichageAction([image.De.FACE2.value])
                             pygame.time.delay(150)
+                            pygame.display.update()
                             
                             # Affiche le de sur la face 3
-                            de_face3 = image.De.FACE3.value
-                            interface.get_fenetre().blit(de_face3,(350,475))
-                            # Mettre à jour l'affichage
-                            pygame.display.update()
+                            interface.affichageAction([image.De.FACE3.value])
                             pygame.time.delay(200)
-                            
+                            pygame.display.update()
+
                             # Affiche le de sur la face 4
-                            de_face4 = image.De.FACE4.value
-                            interface.get_fenetre().blit(de_face4,(350,475))
-                            # Mettre à jour l'affichage
-                            pygame.display.update()
+                            interface.affichageAction([image.De.FACE4.value])
                             pygame.time.delay(250)
-                            
+                            pygame.display.update()
+
                             # Affiche le de sur la face 5
-                            de_face5 = image.De.FACE5.value
-                            interface.get_fenetre().blit(de_face5,(350,475))
-                            # Mettre à jour l'affichage
-                            pygame.display.update()
+                            interface.affichageAction([image.De.FACE5.value])
                             pygame.time.delay(300)
-                            
+                            pygame.display.update()
+
                             # Affiche le de sur la face 1
-                            de_face1 = image.De.FACE1.value
-                            interface.get_fenetre().blit(de_face1,(350,475))
-                            # Mettre à jour l'affichage
-                            pygame.display.update()
+                            interface.affichageAction([image.De.FACE1.value])
                             pygame.time.delay(400)
-                            
-                            # Affiche le de sur la face 6
-                            de_face6 = image.De.FACE6.value
-                            interface.get_fenetre().blit(de_face6,(350,475))
-                            # Mettre à jour l'affichage
                             pygame.display.update()
+
+                            # Affiche le de sur la face 6
+                            interface.affichageAction([image.De.FACE6.value])
                             pygame.time.delay(450)
+                            pygame.display.update()
                             de_cliquer = True
                             
             # Choisir la face aleatoire
-            self.set_face_choisie(randint(1,6))
+            self.setFaceDe(randint(1,6))
             
-            if self.get_face_choisie() == 1:
+            if self.getFaceDe() == 1:
                 # Affiche le de sur la face 1
-                de_face1 = image.De.FACE1.value
-                interface.get_fenetre().blit(de_face1,(350,475))
-                # Mettre à jour l'affichage
-                pygame.display.update()
+                interface.affichageAction([image.De.FACE1.value])
                 
-            elif self.get_face_choisie() == 2:
+            elif self.getFaceDe() == 2:
                 # Affiche le de sur la face 2
-                de_face2 = image.De.FACE2.value
-                interface.get_fenetre().blit(de_face2,(350,475))
-                # Mettre à jour l'affichage
-                pygame.display.update()
+                interface.affichageAction([image.De.FACE2.value])
                 
-            elif self.get_face_choisie() == 3:
+            elif self.getFaceDe() == 3:
                 # Affiche le de sur la face 3
-                de_face3 = image.De.FACE3.value
-                interface.get_fenetre().blit(de_face3,(350,475))
-                # Mettre à jour l'affichage
-                pygame.display.update()
+                interface.affichageAction([image.De.FACE3.value])
                 
-            elif self.get_face_choisie() == 4:
+            elif self.getFaceDe() == 4:
                 # Affiche le de sur la face 4
-                de_face4 = image.De.FACE4.value
-                interface.get_fenetre().blit(de_face4,(350,475))
-                # Mettre à jour l'affichage
-                pygame.display.update()
+                interface.affichageAction([image.De.FACE4.value])
                 
-            elif self.get_face_choisie() == 5:
+            elif self.getFaceDe() == 5:
                 # Affiche le de sur la face 5
-                de_face5 = image.De.FACE5.value
-                interface.get_fenetre().blit(de_face5,(350,475))
-                # Mettre à jour l'affichage
-                pygame.display.update()
+                interface.affichageAction([image.De.FACE5.value])
                 
-            elif self.get_face_choisie() == 6:
+            elif self.getFaceDe() == 6:
                 # Affiche le de sur la face 6
-                de_face6 = image.De.FACE6.value
-                interface.get_fenetre().blit(de_face6,(350,475))
-                # Mettre à jour l'affichage
-                pygame.display.update()
-                
-            return self.get_face_choisie()
+                interface.affichageAction([image.De.FACE6.value])
+            
+            return self.getFaceDe()
         
 

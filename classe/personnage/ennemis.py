@@ -1,9 +1,7 @@
 # ----------------------- Jeu de plateau - Joueur  ------------------------ #
 
 # Bibliothèques utilisées pour le code
-import pygame, random
-from classe.visuel import texte, couleur, rectangle
-from classe.personnage import joueur
+import random
 
 class Ennemis:
     """La classe Ennemis est une classe qui permet de créer un ennemi."""
@@ -34,7 +32,7 @@ class Ennemis:
         """Getter du lien de l'image de l'ennemi."""
         return self.__lien
     
-    def get_pv(self):
+    def getPv(self):
         """Getter des points de vie de l'ennemi."""
         return self.__pv
     
@@ -46,11 +44,11 @@ class Ennemis:
         """Getter de l'élément de l'ennemi."""
         return self.__element
     
-    def set_x(self, x):
+    def setX(self, x):
         """Setter de la position x."""
         self.__x = x
     
-    def set_y(self, y):
+    def setY(self, y):
         """Setter de la position y."""
         self.__y = y
         
@@ -62,7 +60,7 @@ class Ennemis:
         """Setter du lien de l'image de l'ennemi."""
         self.__lien = lien
     
-    def set_pv(self, pv):
+    def setPv(self, pv):
         """Setter des points de vie de l'ennemi."""
         self.__pv = pv
         
@@ -74,17 +72,17 @@ class Ennemis:
         """Setter de l'attaque de l'ennemi."""
         self.__attaque = attaque
     
-def Choix_ennemis(un_joueur):
+def Choix_ennemis(joueurActuel):
     """Choisit un ennemi en fonction des clés obtenues par le joueur."""
     liste_ennemis = ["Ecureuil", "Crapaud", "Lezard", "Rat"]
-    for i in un_joueur.get_inventaire():
-        if i == "cle du Rocher":
+    for i in joueurActuel.get_inventaire():
+        if i == "clé du Rocher":
             liste_ennemis.remove("Lezard")
-        elif i == "cle de la Forêt":
+        elif i == "clé de la Forêt":
             liste_ennemis.remove("Ecureuil")
-        elif i == "cle de la Ville":
+        elif i == "clé de la Ville":
             liste_ennemis.remove("Rat")
-        elif i == "cle de la Rivière":
+        elif i == "clé de la Rivière":
             liste_ennemis.remove("Crapaud")
             
     ennemis_select = random.choice(liste_ennemis)

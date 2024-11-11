@@ -11,61 +11,56 @@ class Couleur:
         self.__ROUGE = (255, 24, 40)
         self.__GRIS = (192, 192, 192)
         self.__ROSE = (255, 192, 203)
-        self.__TURQUOISE = (175, 238, 238)
         self.__INDIGO = (60, 0, 225)
         self.__ORANGE = (255, 127, 0)
         self.__BLEU = (0, 204, 204)
         self.__BEIGE = (255, 255, 204)
 
-    def get_Noir(self):
+    def getNoir(self):
         """Getter de la couleur Noir."""
         return self.__NOIR
 
-    def get_Blanc(self):
+    def getBlanc(self):
         """Getter de la couleur Blanche."""
         return self.__BLANC
 
-    def get_Bleu(self):
+    def getBleu(self):
         """Getter de la couleur Bleu."""
         return self.__BLEU
 
-    def get_Jaune(self):
+    def getJaune(self):
         """Getter de la couleur Jaune."""
         return self.__JAUNE
 
-    def get_Orange(self):
+    def getOrange(self):
         """Getter de la couleur Orange."""
         return self.__ORANGE
 
-    def get_Gris(self):
+    def getGris(self):
         """Getter de la couleur Gris."""
         return self.__GRIS
 
-    def get_Beige(self):
+    def getBeige(self):
         """Getter de la couleur Beige."""
         return self.__BEIGE
 
-    def get_Violet(self):
+    def getViolet(self):
         """Getter de la couleur Violet."""
         return self.__VIOLET
 
-    def get_Rose(self):
+    def getRose(self):
         """Getter de la couleur Rose."""
         return self.__ROSE
 
-    def get_Rouge(self):
+    def getRouge(self):
         """Getter de la couleur Rouge."""
         return self.__ROUGE
-
-    def get_Turquoise(self):
-        """Getter de la couleur Turquoise."""
-        return self.__TURQUOISE
-
-    def get_Indigo(self):
+    
+    def getIndigo(self):
         """Getter de la couleur Indigo."""
         return self.__INDIGO
 
-    def get_Vert(self):
+    def getVert(self):
         """Getter de la couleur Verte."""
         return self.__VERT
 
@@ -77,8 +72,8 @@ if __name__ == "__main__":
     nouvelle_couleur = Couleur()
 
     # Exemples d'utilisation
-    noir = nouvelle_couleur.get_Noir()
-    blanc = nouvelle_couleur.get_Blanc()
+    noir = nouvelle_couleur.getNoir()
+    blanc = nouvelle_couleur.getBlanc()
     bleu = nouvelle_couleur.get_Bleu()
 
 """
