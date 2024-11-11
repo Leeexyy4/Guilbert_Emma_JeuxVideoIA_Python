@@ -1,7 +1,7 @@
 <!-- INTRODUCTION -->
 <br />
 <div align="center">
-  <img src="../Guilbert_Emma_JeuxVideoIA_Python-main/assets/readme/img/Img_Introduction.png" alt="Logo" width="*" height="*">
+  <img src="https://github.com/Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python-main/assets/readme/img/Img_Introduction.png" alt="Logo" width="*" height="*">
 
   <p align="center">
     Projet réalisé en 2ème année de BUT Informatique - 2023     
@@ -72,7 +72,7 @@ Le plateau contient plusieurs types de cases :
 * Vert : La case téléporte tous les joueurs aléatoirement sur le plateau
 * Violet : La case permet de relancer le dé ou d'attaquer le joueur le plus proche de toi
 
-<img src="../Guilbert_Emma_JeuxVideoIA_Python-main/assets/readme/img/Img_Plateau.png" alt="Logo" width="*" height="*"/></br>
+<img src="https://github.com/Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python-main/assets/readme/img/Img_Plateau.png" alt="Logo" width="*" height="*"/></br>
 
 
 <!-- Actions possibles -->
