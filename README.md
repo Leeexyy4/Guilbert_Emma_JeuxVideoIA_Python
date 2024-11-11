@@ -10,8 +10,7 @@
   </p>
   
 
-  <img src="https://contrib.rocks/image?repo=Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python
-  " />
+  <img src="https://contrib.rocks/image?repo=Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python" />
   
   </br>
   Statut du projet : Terminé
