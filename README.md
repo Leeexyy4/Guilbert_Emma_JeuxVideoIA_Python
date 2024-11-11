@@ -1,7 +1,7 @@
 <!-- INTRODUCTION -->
 <br />
 <div align="center">
-  <img src="https://github.com/Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python-main/assets/readme/img/Img_Introduction.png" alt="Logo" width="*" height="*">
+  <img src="https://github.com/Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python/blob/main/assets/readme/img/Img_Introduction.png" alt="Logo" width="*" height="*">
 
   <p align="center">
     Projet réalisé en 2ème année de BUT Informatique - 2023     
@@ -9,10 +9,9 @@
     <a src="url source">View Demo</a>
   </p>
   
-<a href="https://contrib.rocks/image?repo=Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python
-">
-  <img src="https://github.com/Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python/blob/main/assets/readme/img/Img_Introduction.png" />
-</a>
+
+  <img src="https://contrib.rocks/image?repo=Leeexyy4/Guilbert_Emma_JeuxVideoIA_Python
+  " />
   
   </br>
   Statut du projet : Terminé
