@@ -1,68 +1,32 @@
 #  ----------------------- Jeu de plateau - Interface ------------------------ #
 
 # Bibliothèques utilisées pour le code
-import pygame
+import pygame, random
 from classe.personnage import joueur, intelA
-from main import PageState
+from classe.visuel import couleur
+from classe.jeu.game import PageState
 
 # ----------------------- Jeu de plateau - Logique ------------------------ #
 class Logique:
-    def __init__(self) -> None:
+    def __init__(self, game) -> None:
         """Initialisation de l'interface."""
         self.__mouse = pygame.mouse
-        self.__etatJeu = "demarrage_jeu"
-        self.__horsLigneOuLigne = "HL"
-        self.__listeJoueurs = []
-        self.__nbJoueur = -1
-        self.__nbIntelligenceA = -1
+        self.__game = game
+        self.__couleur = couleur.Couleur()
+
+# ----------------------------------- Getter des élements ----------------------------------- #
 
     def getMouse(self):
         """Getter de la fenetre."""
         return self.__mouse
     
-    def getInterface(self):
-        """Getter de la fenetre."""
-        return self.__interface
-    
-    def getEtatJeu(self):
-        """Getter de l'etat de jeu."""
-        return self.__etatJeu
-
-    def setEtatJeu(self, etat_jeu):
-        """Setter de l'etat de jeu."""
-        self.__etatJeu = etat_jeu
-        
-    def getListeJoueur(self):
-        """Getter de la liste de joueur."""
-        return self.__listeJoueurs
-
-    def setListeJoueur(self, listeJoueur):
-        """Setter de la liste de joueur."""
-        self.__listeJoueurs = listeJoueur
-
-    def getNbJoueur(self):
-        """Getter du nb de joueur."""
-        return self.__nbJoueur
-
-    def setNbJoueur(self, nbJoueur):
-        """Setter du nb de joueur."""
-        self.__nbJoueur = nbJoueur
-
-    def getHorsLigneOuLigne(self):
-        """Getter du mode de jeu."""
-        return self.__horsLigneOuLigne
-
-    def setHorsLigneOuLigne(self, horsLigneOuLigne):
-        """Setter du mode de jeu."""
-        self.__horsLigneOuLigne = horsLigneOuLigne
-
-    def getNbIntelligenceA(self):
+    def getCouleur(self):
         """Getter du nb d'IA."""
-        return self.__nbIntelligenceA
+        return self.__couleur
 
-    def setNbIntelligenceA(self, nbIntelligenceA):
-        """Setter du nb d'IA."""
-        self.__nbIntelligenceA = nbIntelligenceA
+    def getGame(self):
+        """Getter du nb d'IA."""
+        return self.__game
 
 # ----------------------------------- Affichage des élements ----------------------------------- #
         
@@ -74,272 +38,271 @@ class Logique:
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (320 <= mouse_x <= 470 and 500 <= mouse_y <= 550) : # Stats
                         demarrage = False
-                        return PageState.STATISTIQUE
+                        self.getGame().setPageActuel(PageState.STATISTIQUE)
                     if (170 <= mouse_x <= 350 and 550 <= mouse_y <= 600) : # En local
-                        self.setHorsLigneOuLigne("HL")
-                        self.actionPageNbJoueur()
+                        demarrage = False
+                        self.getGame().setHorsLigneOuLigne("HL")
+                        self.getGame().setPageActuel(PageState.NBJOUEUR)
                     if (450 <= mouse_x <= 630 and 550 <= mouse_y <= 600) : # En ligne
-                        self.setHorsLigneOuLigne("EL")
-                        self.actionPageNbJoueur()
+                        demarrage = False
+                        self.getGame().setHorsLigneOuLigne("EL")
+                        self.getGame().setPageActuel(PageState.NBJOUEUR)
                     if (700 <= mouse_x <= 764 and 25 <= mouse_y <= 89) : # Info
-                        self.actionPageCommande()
+                        demarrage = False
+                        self.getGame().setPageActuel(PageState.COMMANDE)
                     if (10 <= mouse_x <= 70 and 630 <= mouse_y <= 690): # Retour
-                        self.actionPageDemarrage()
+                        demarrage = False
+                        self.getGame().setPageActuel(PageState.DEMARRAGE)
                 if (event.type == pygame.QUIT): # Quitter
                     pygame.quit()
                     exit()
 
     def actionPageStatistiques(self):
-        stats = False
-        while (stats != True):
+        stats = True
+        while (stats):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if (event.type == pygame.MOUSEBUTTONDOWN):
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # Retour
-                        self.PageDemarrage()
-                        stats = True
+                        stats = False
+                        self.getGame().setPageActuel(PageState.DEMARRAGE)
                 if (event.type == pygame.QUIT): # Quitter
                     pygame.quit()
                     exit()
 
     def actionPageCommande(self):
-        stats = False
-        while (stats != True):
+        commande = True
+        while (commande):
             mouse_x, mouse_y = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if (event.type == pygame.MOUSEBUTTONDOWN):
-                    if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100): # Retour
-                        self.PageDemarrage()
-                        stats = True
+                    if (20 <= mouse_x <= 70 and 630 <= mouse_y <= 680): # Retour
+                        commande = False
+                        self.getGame().setPageActuel(PageState.DEMARRAGE)
                 if (event.type == pygame.QUIT): # Quitter
                     pygame.quit()
                     exit()
 
     def actionPageNbJoueur(self):
-        while (self.getNbJoueur() == -1):
+        nbJoueur = True
+        while (nbJoueur):
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN :
                     mouse_x, mouse_y = pygame.mouse.get_pos() 
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) : # Retour
-                        self.setNbJoueur(-1)
-                        self.PageDemarrage()
-                    if (200 <= mouse_x <= 260 and 470 <= mouse_y <= 540) : # 1 joueur
-                        self.setNbJoueur(1)
-                        if self.getHorsLigneOuLigne() == "HL":
-                            self.PageNbIntelligenceA()
-                        else:
-                            self.setEtatJeu("demarrage_jeu")
-                    if (300 <= mouse_x <= 360 and 470 <= mouse_y <= 540) : # 2 joueurs
-                        self.setNbJoueur(2)
-                        if self.getHorsLigneOuLigne() == "HL":
-                            self.PageNbIntelligenceA()
-                        else:
-                            self.setEtatJeu("demarrage_jeu")
-                    if (400 <= mouse_x <= 460 and 470 <= mouse_y <= 540) : # 3 joueurs
-                        self.setNbJoueur(3)
-                        if self.getHorsLigneOuLigne() == "HL":
-                            self.PageNbIntelligenceA()
-                        else:
-                            self.setEtatJeu("demarrage_jeu")
-                    if (500 <= mouse_x <= 560 and 470 <= mouse_y <= 540) : # 4 joueurs
-                        self.setNbJoueur(4)
-                        if self.getHorsLigneOuLigne() == "HL":
-                            self.PageNbIntelligenceA()
-                        else:
-                            self.setEtatJeu("demarrage_jeu")
+                        nbJoueur = False
+                        self.getGame().setNbJoueur(None)
+                        self.getGame().setPageActuel(PageState.DEMARRAGE)
+                    if (220 <= mouse_x <= 290 and 470 <= mouse_y <= 540) : # 1 joueur
+                        nbJoueur = False
+                        self.getGame().setNbJoueur(1)
+                        self.getGame().setPageActuel(PageState.NBIA)
+                    if (320 <= mouse_x <= 390 and 470 <= mouse_y <= 540) : # 2 joueurs
+                        nbJoueur = False
+                        self.getGame().setNbJoueur(2)
+                        self.getGame().setPageActuel(PageState.NBIA)
+                    if (420 <= mouse_x <= 490 and 470 <= mouse_y <= 540) : # 3 joueurs
+                        nbJoueur = False
+                        self.getGame().setNbJoueur(3)
+                        self.getGame().setPageActuel(PageState.NBIA)
+                    if (520 <= mouse_x <= 590 and 470 <= mouse_y <= 540) : # 4 joueurs
+                        nbJoueur = False
+                        self.getGame().setNbJoueur(4)
+                        self.getGame().setPageActuel(PageState.NBIA)
                 if event.type == pygame.QUIT: # Quitter
                     pygame.quit()
                     exit()
 
     def actionPageNbIntelligenceA(self):
-        while (self.getNbIntelligenceA() == -1):
+        nbIA = True
+        while (nbIA):
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN :
                     mouse_x, mouse_y = pygame.mouse.get_pos() 
                     if (40 <= mouse_x <= 100 and 40 <= mouse_y <= 100) :
-                        self.setNbIntelligenceA(-1)
-                        self.setNbJoueur(-1)
-                        self.PageNbJoueur()
-                    if (200 <= mouse_x <= 260 and 470 <= mouse_y <= 540 and (self.getNbJoueur() == 1 or self.getNbJoueur() == 2 or self.getNbJoueur() == 3 or self.getNbJoueur() == 4)):   
-                        self.setNbIntelligenceA(0)
-                    if (300 <= mouse_x <= 340 and 470 <= mouse_y <= 540 and (self.getNbJoueur() == 1 or self.getNbJoueur() == 2 or self.getNbJoueur() == 3)):
-                        self.setNbIntelligenceA(1)
-                    if (400 <= mouse_x <= 440 and 470 <= mouse_y <= 540 and (self.getNbJoueur() == 1 or self.getNbJoueur() == 2)):   
-                        self.setNbIntelligenceA(2)
-                    if (500 <= mouse_x <= 540 and 470 <= mouse_y <= 540 and self.getNbJoueur() == 1):   
-                        self.setNbIntelligenceA(3)
+                        nbIA = False
+                        self.getGame().setNbIntelligenceA(None)
+                        self.getGame().setPageActuel(PageState.CHOIXPERSONNAGE)
+                    if (220 <= mouse_x <= 290 and 470 <= mouse_y <= 540 and (self.getGame().getNbJoueur() == 1 or self.getGame().getNbJoueur() == 2 or self.getGame().getNbJoueur() == 3 or self.getGame().getNbJoueur() == 4)):   
+                        nbIA = False
+                        self.getGame().setNbIntelligenceA(0)
+                        self.getGame().setPageActuel(PageState.CHOIXPERSONNAGE)
+                    if (320 <= mouse_x <= 390 and 470 <= mouse_y <= 540 and (self.getGame().getNbJoueur() == 1 or self.getGame().getNbJoueur() == 2 or self.getGame().getNbJoueur() == 3)):
+                        nbIA = False
+                        self.getGame().setNbIntelligenceA(1)
+                        self.getGame().setPageActuel(PageState.CHOIXPERSONNAGE)
+                    if (420 <= mouse_x <= 490 and 470 <= mouse_y <= 540 and (self.getGame().getNbJoueur() == 1 or self.getGame().getNbJoueur() == 2)):   
+                        nbIA = False
+                        self.getGame().setNbIntelligenceA(2)
+                        self.getGame().setPageActuel(PageState.CHOIXPERSONNAGE)
+                    if (520 <= mouse_x <= 590 and 470 <= mouse_y <= 540 and self.getGame().getNbJoueur() == 1):   
+                        nbIA = False
+                        self.getGame().setNbIntelligenceA(3)
+                        self.getGame().setPageActuel(PageState.CHOIXPERSONNAGE)
                 if event.type == pygame.QUIT: # Quitter
                     pygame.quit()
                     exit()
 
-    def actionPageChoixPersonnage(self, joueurActuelId): 
-        tempNb = self.getListeJoueur().count
-        while (tempNb == self.getListeJoueur().count) :
+    def actionPageChoixPersonnage(self):
+        choixPerso = True
+        while (choixPerso) :
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN : 
                     mouse_x, mouse_y = pygame.mouse.get_pos() 
-                    if (200 <= mouse_x <= 260 and 470 <= mouse_y <= 540): # Pierre
-                        prenom = joueur.Nom.ROCK.value
-                        element = joueur.Element.ROCK.value
-                        self.setListeJoueur(self.getListeJoueur() + [joueur.Joueur(joueurActuelId, prenom, element, self)])
-                    if (300 <= mouse_x <= 360 and 470 <= mouse_y <= 540): # Ondine
-                        prenom = joueur.Nom.WATER.value
-                        element = joueur.Element.WATER.value
-                        self.setListeJoueur(self.getListeJoueur() + [joueur.Joueur(joueurActuelId, "Ondine","de la Rivière", self)])
-                    if (400 <= mouse_x <= 460 and 470 <= mouse_y <= 540): # Kevin
-                        prenom = joueur.Nom.TOWN.value
-                        element = joueur.Element.ROCK.value
-                        self.setListeJoueur(self.getListeJoueur() + [joueur.Joueur(joueurActuelId, prenom, element, self)])
-                    if (500 <= mouse_x <= 560 and 470 <= mouse_y <= 540): # Flora
-                        prenom = joueur.Nom.GRASS.value
-                        element = joueur.Element.GRASS.value
-                        self.setListeJoueur(self.getListeJoueur() + [joueur.Joueur(joueurActuelId, prenom, element, self)])
+                    if (220 <= mouse_x <= 290 and 470 <= mouse_y <= 540): # Pierre
+                        self.getGame().setListeJoueurs(self.getGame().getListeJoueurs() + [joueur.Joueur(len(self.getGame().getListeJoueurs()), "Pierre", "du Rocher", self.getGame().getPlateau().getCaseJaune()[0], self.getGame().getPlateau().getCaseJaune()[1])])
+                        self.getGame().setJoueurActuel(self.getGame().getListeJoueurs()[len(self.getGame().getListeJoueurs()) -1])
+                        choixPerso = False
+                        self.getGame().setPageActuel(PageState.PREMIERMOUVEMENT)
+                    if (320 <= mouse_x <= 390 and 470 <= mouse_y <= 540): # Ondine
+                        self.getGame().setListeJoueurs(self.getGame().getListeJoueurs() + [joueur.Joueur(len(self.getGame().getListeJoueurs()), "Ondine", "de la Rivière", self.getGame().getPlateau().getCaseJaune()[0], self.getGame().getPlateau().getCaseJaune()[1])])
+                        self.getGame().setJoueurActuel(self.getGame().getListeJoueurs()[len(self.getGame().getListeJoueurs()) -1])
+                        choixPerso = False
+                        self.getGame().setPageActuel(PageState.PREMIERMOUVEMENT)
+                    if (420 <= mouse_x <= 490 and 470 <= mouse_y <= 540): # Kevin
+                        self.getGame().setListeJoueurs(self.getGame().getListeJoueurs() + [joueur.Joueur(len(self.getGame().getListeJoueurs()), "Kevin", "de la Ville", self.getGame().getPlateau().getCaseJaune()[0], self.getGame().getPlateau().getCaseJaune()[1])])
+                        self.getGame().setJoueurActuel(self.getGame().getListeJoueurs()[len(self.getGame().getListeJoueurs()) -1])
+                        choixPerso = False
+                        self.getGame().setPageActuel(PageState.PREMIERMOUVEMENT)
+                    if (520 <= mouse_x <= 590 and 470 <= mouse_y <= 540): # Flora
+                        self.getGame().setListeJoueurs(self.getGame().getListeJoueurs() + [joueur.Joueur(len(self.getGame().getListeJoueurs()), "Flora", "de la Forêt", self.getGame().getPlateau().getCaseJaune()[0], self.getGame().getPlateau().getCaseJaune()[1])])
+                        self.getGame().setJoueurActuel(self.getGame().getListeJoueurs()[len(self.getGame().getListeJoueurs()) -1])
+                        choixPerso = False
+                        self.getGame().setPageActuel(PageState.PREMIERMOUVEMENT)
                 if event.type == pygame.QUIT: # Quitter
                     pygame.quit()
                     exit()
         
-    def actionPagePremierMouvement(self, joueurActuel):
-        pass
+    def actionPagePremierMouvement(self):
+        premierMouvement = True
+        while (premierMouvement):
+            mouse_x, mouse_y = pygame.mouse.get_pos() 
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:  
+                    if 360 < mouse_x < 424 and 475 < mouse_y < 539:
+                        premierMouvement = False
+                        self.getGame().setPageActuel(PageState.DIRECTION)
+                if event.type == pygame.QUIT:  
+                    pygame.quit()
+                    exit() 
 
-    def actionPageMouvement(self, joueurActuel):
-        if isinstance(joueurActuel, intelA.IntelA):
-            joueurActuel.choix_mouvement_combat_IA(self)
-        else:
-            action_joueurActuel = ""
-            while (action_joueurActuel == "") :
-                for event in pygame.event.get():
-                    if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueurActuel clique sur le bouton, on passe à la prochaine page "introduction"
-                        mouse_x, mouse_y = pygame.mouse.get_pos() 
-                        # Si le personnage sur lequel on clique est Ondine   
-                        if (220 <= mouse_x <= 284 and 480 <= mouse_y <= 544) :
-                            self.PageAttaque(joueurActuel)
-                            action_joueurActuel = "Attaquer"
-                        elif (510 <= mouse_x <= 574 and 480 <= mouse_y <= 544):
-                            self.PageRejouer(joueurActuel)
-                            action_joueurActuel = "Lancer"
-                    if event.type == pygame.QUIT: # si le joueurActuel quitte la fenetre # si le joueurActuel quitte la fenetre
-                        pygame.quit()
-                        exit()
+    def actionPageMouvement(self):
+        action_joueurActuel = ""
+        while (action_joueurActuel == "") :
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN : # Si le joueurActuel clique sur le bouton, on passe à la prochaine page "introduction"
+                    mouse_x, mouse_y = pygame.mouse.get_pos() 
+                    # Si le personnage sur lequel on clique est Ondine   
+                    if (220 <= mouse_x <= 284 and 480 <= mouse_y <= 544) :
+                        action_joueurActuel = "Attaquer"
+                        self.getGame().setPageActuel(PageState.ATTAQUE)
+                    elif (510 <= mouse_x <= 574 and 480 <= mouse_y <= 544):
+                        action_joueurActuel = "Lancer"
+                        self.getGame().setPageActuel(PageState.DIRECTION)
+                if event.type == pygame.QUIT: # si le joueurActuel quitte la fenetre # si le joueurActuel quitte la fenetre
+                    pygame.quit()
+                    exit()
 
-    def actionPageDirection(self, joueurActuel):
-        face_choisie = self.getDe().getFaceAleatoireDe(self,joueurActuel)
-        if isinstance(joueurActuel, intelA.IntelA):
-            joueurActuel.choix_case_IA(self)
-        else:
-            # Tant que : Le joueurActuel n'a pas choisi de direction (haut, bas, gauche, droite)
-            while self.getDe().getFaceDe() != 0 :
-                # Pour tout : Les evenements de pygame
-                for event in pygame.event.get():
+    def actionPageDirection(self):
+        direction = True
+        while (direction):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
                     
-                    # Si le joueurActuel quitte la fenetre
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        exit()
+                elif event.type == pygame.KEYDOWN:
+                    touche_fleche = event.key
+
+                    if touche_fleche == pygame.K_UP:
+                        direction = False
+                        if (self.getGame().getJoueurActuel().haut(47)):
+                            self.getGame().getDe().setFaceDeDesincremente(1)
+                        else:
+                            self.getGame().setPageActuel(PageState.HORSPLATEAU)
                         
-                    elif event.type == pygame.KEYDOWN:
-                        touche_fleche = event.key
-
-                        if touche_fleche == pygame.K_UP:
-                            # La touche fleche vers le haut a ete enfoncee
-                            avancer = joueurActuel.haut(47)
-                            self.getPlateauJeu().setCasesDecouvertes(self.getPlateauJeu().getCasesDecouvertes() + [[joueurActuel.getPlateauX(),joueurActuel.getPlateauY()]])
-                            self.affichagePlateau()
-                            if avancer == True :
-                                self.getDe().setFaceDeDesincremente(1)
-                            else:
-                                self.PageHorsPlateau(joueurActuel, face_choisie)
-                        
-                        elif touche_fleche == pygame.K_DOWN:
-                            # La touche fleche vers le bas a ete enfoncee
-                            avancer = joueurActuel.bas(47)
-                            self.getPlateauJeu().setCasesDecouvertes(self.getPlateauJeu().getCasesDecouvertes() + [[joueurActuel.getPlateauX(),joueurActuel.getPlateauY()]])
-                            self.affichagePlateau()
-                            
-                            if avancer == True :
-                                self.getDe().setFaceDeDesincremente(1)
-                            else:
-                                self.PageHorsPlateau(joueurActuel, face_choisie)
-                        
-                        elif touche_fleche == pygame.K_RIGHT:
-                            # La touche fleche vers la droite a ete enfoncee
-                            avancer = joueurActuel.droite(47) 
-                            self.getPlateauJeu().setCasesDecouvertes(self.getPlateauJeu().getCasesDecouvertes() + [[joueurActuel.getPlateauX(),joueurActuel.getPlateauY()]])
-                            self.affichagePlateau()
-                            
-                            if avancer == True :
-                                self.getDe().setFaceDeDesincremente(1)
-                            else:
-                                self.PageHorsPlateau(joueurActuel, face_choisie)
-
-                        elif touche_fleche == pygame.K_LEFT:
-                            # La touche fleche vers la gauche a ete enfoncee
-                            avancer = joueurActuel.gauche(47) 
-                            self.getPlateauJeu().setCasesDecouvertes(self.getPlateauJeu().getCasesDecouvertes() + [[joueurActuel.getPlateauX(),joueurActuel.getPlateauY()]])  
-                            self.affichagePlateau()
-                            
-                            if avancer == True :
-                                self.getDe().setFaceDeDesincremente(1)
-                            else:
-                                self.PageHorsPlateau(joueurActuel, face_choisie)
-                            
-    def actionPageHorsPlateau(self, joueurActuel, face_choisie):
-        pass
-
-    def actionPageRejouer(self, joueurActuel): 
-        self.PageDirection(joueurActuel)
-        self.PageActionCases(joueurActuel)   
-
-    def actionPageAttaque(self, joueurActuel): 
-        if joueurActuel.advDisponible(self.getListeJoueur()) != True:
-            self.PageRejouer(joueurActuel)
-
-    def actionPageActionCases(self, joueurActuel):
-        couleur_case = self.getPlateauJeu().getCases(joueurActuel.getPlateauX(), joueurActuel.getPlateauY())
+                    elif touche_fleche == pygame.K_DOWN:
+                        direction = False
+                        if (self.getGame().getJoueurActuel().bas(47)):
+                            self.getGame().getDe().setFaceDeDesincremente(1)
+                        else:
+                            self.getGame().setPageActuel(PageState.HORSPLATEAU)
+                    
+                    elif touche_fleche == pygame.K_RIGHT:
+                        direction = False
+                        if (self.getGame().getJoueurActuel().droite(47)):
+                            self.getGame().getDe().setFaceDeDesincremente(1)
+                        else:
+                            self.getGame().setPageActuel(PageState.HORSPLATEAU)
+                    
+                    elif touche_fleche == pygame.K_LEFT:
+                        direction = False
+                        if (self.getGame().getJoueurActuel().gauche(47)):
+                            self.getGame().getDe().setFaceDeDesincremente(1)
+                        else:
+                            self.getGame().setPageActuel(PageState.HORSPLATEAU)
         
-        if joueurActuel.getPv() != 0:
+        if (self.getGame().getDe().getFaceDe() == 0):
+            self.getGame().setPageActuel(PageState.ACTIONCASE)
+
+                
+                            
+    def actionPageHorsPlateau(self):
+        self.getGame().setPageActuel(PageState.DIRECTION)
+
+    def actionPageRejouer(self): 
+        self.getGame().setPageActuel(PageState.DIRECTION)
+
+    def actionPageAttaque(self): 
+        if self.getGame().getJoueurActuel().advDisponible(self.getGame().getListeJoueurs()) != True:
+            self.getGame().setPageActuel(PageState.REJOUER)
+        else:
+            self.getGame().setPageActuel(PageState.COMBAT)
+
+    def actionPageActionCases(self):
+        couleur_case = self.getGame().getPlateau().getCases(self.getGame().getJoueurActuel().getPlateauX(), self.getGame().getJoueurActuel().getPlateauY())
+        
+        if self.getGame().getJoueurActuel().getPv() != 0:
             if couleur_case == self.getCouleur().getBeige():
-                self.getPlateauJeu().ActionCouleurBeige(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEBEIGE)
                 
             elif couleur_case == self.getCouleur().getBlanc():
-                self.affichageMenu(joueurActuel)
-                self.affichageDialogues(["Tu es dans une case Vide.", "Il ne t'arrivera rien tu peux etre rassure."])
-                
+                self.getGame().setPageActuel(PageState.ACTIONCASEBLANC)
+
             elif couleur_case == self.getCouleur().getBleu():
-                self.getPlateauJeu().ActionCouleurBleu(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEBLEU)
                         
             elif couleur_case == self.getCouleur().getGris():
-                self.getPlateauJeu().ActionCouleurGris(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEGRIS)
                 
             elif couleur_case == self.getCouleur().getIndigo():
-                self.getPlateauJeu().ActionCouleurIndigo(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEINDIGO)
                 
             elif couleur_case == self.getCouleur().getJaune():
-                self.affichageMenu(joueurActuel)
-                self.affichageDialogues(["Tu es la case de Depart.","Depeche toi de recuperer les cles","avant les autres joueurs."])
-                
+                self.getGame().setPageActuel(PageState.ACTIONCASEJAUNE)
+
             elif couleur_case == self.getCouleur().getNoir():
-                self.getPlateauJeu().ActionCouleurNoir(self, joueurActuel)     
+                self.getGame().setPageActuel(PageState.ACTIONCASENOIR)
                 
             elif couleur_case == self.getCouleur().getOrange():
-                self.getPlateauJeu().ActionCouleurOrange(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEORANGE)
 
             elif couleur_case == self.getCouleur().getRose():
-                self.getPlateauJeu().ActionCouleurRose(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEROSE)
                 
             elif couleur_case == self.getCouleur().getRouge():
-                self.getPlateauJeu().ActionCouleurRouge(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEROUGE)
                 
             elif couleur_case == self.getCouleur().getVert():
-                self.getPlateauJeu().ActionCouleurVert(self,joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEVERT)
                 
             elif couleur_case == self.getCouleur().getViolet():
-                self.getPlateauJeu().ActionCouleurViolet(self, joueurActuel)
+                self.getGame().setPageActuel(PageState.ACTIONCASEVIOLET)
 
-            if (joueurActuel.getPv() <= 0):
-                self.setListeJoueur(self.getListeJoueur().remove(joueurActuel))
-            pygame.time.delay(1000)
+            if (self.getGame().getJoueurActuel().getPv() <= 0):
+                self.setListeJoueurs(self.getListeJoueurs().remove(self.getGame().getJoueurActuel()))
 
-    def actionPageSorciere(self, joueurActuel):
+    def actionPageSorciere(self):
         selection_potion = False
         while selection_potion != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -348,47 +311,15 @@ class Logique:
                     pygame.quit()
                     exit() 
                 
-                
                 if event.type == pygame.MOUSEBUTTONDOWN:  
                     if 500 < mouse_x < 725 and 150 < mouse_y < 450:
-                        image.Image(0,0,image.Sorciere.MAISON_SYMBOLE.value).affichage_image_redimensionnee(800, 700,self.getFenetre())
-                        self.affichageMenu(joueurActuel)
-                        self.affichageDialogues(["C'est un symbole astral, si c'est chez la","sorciere, il vaut mieux ne pas y toucher"])
-                        
-                        pygame.time.delay(2500)
-                        image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.getFenetre())
-                        self.affichageMenu(joueurActuel)
-                        self.affichageDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
-                        
+                        self.getGame().setPageActuel(PageState.SORCIEREASTRAL)
                     elif 90 < mouse_x < 190 and 180 < mouse_y < 350:
-                        image.Image(0,0,image.Sorciere.MAISON_DRAGON.value).affichage_image_redimensionnee(800, 700,self.getFenetre())
-                        self.affichageMenu(joueurActuel)
-                        self.affichageDialogues(["Un dragon de pierre... ce n'est pas très","rassurant, trouvons vite un remède et sortons","d'ici très vite"])
-                        
-                        pygame.time.delay(2500)
-                        image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.getFenetre())
-                        self.affichageMenu(joueurActuel)
-                        self.affichageDialogues(["Tu es chez la sorciere, mais on dirait","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
-                        
+                        self.getGame().setPageActuel(PageState.SORCIEREDRAGON)
                     elif 330 < mouse_x < 430 and 480 < mouse_y < 580:
-                        image.Image(0,0,image.Sorciere.MAISON.value).affichage_image_redimensionnee(800, 700,self.getFenetre())
-                        self.affichageMenu(joueurActuel)
-                        self.affichageDialogues(["Tu as trouvé une potion... Potion inverstium","Tu décides de la boire afin d'inverser le","sortilège"])
-                        
-                        joueurActuel.set_inventaire(["Potion inverstium"])
-                        self.affichage_potion()
-                        pygame.time.delay(2500)
-                        image.Image(0,0,image.Page.FIN_JEU).affichage_image_redimensionnee(800, 700,self.getFenetre())
-                        self.affichageMenu(joueurActuel)
-                        self.affichageDialogues(["Tu as terminé le jeu bravo à toi jeune aventurier","Tu es le premier a t'être libéré du sort !!"])
-                        
-                        pygame.time.delay(2500)
+                        self.getGame().setPageActuel(PageState.SORCIEREPOTION)
     
     def actionPageFin(self):
-        self.affichageFondEcran(image.Page.FIN_JEU.value)
-        self.affichageMenu()
-        self.affichageDialogues(["Aucun des joueurs n'a réussi à finir le jeu","Retentez votre chance une prochaine fois","pour profiter de cette aventure :)"])
-
         selection_fin = False
         while selection_fin != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -400,9 +331,9 @@ class Logique:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN:  
                     if 0 < mouse_x < 800 and 0 < mouse_y < 700:
-                        self.PageStatistiques()
+                        self.getGame().setPageActuel(PageState.STATISTIQUE)
 
-    def actionCouleurBleu(self, joueur):
+    def actionPageActionBleu(self):
         selection_utilisateur = False
         while selection_utilisateur != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -426,20 +357,23 @@ class Logique:
                             interface.affichageDialogues(["Tu n'as pas de cles, ni assez de pv", "Tu es donc condamne à devoir mourrir et arreter","la partie ici."])
                     selection_utilisateur = True
         
-    def actionCouleurNoir(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.FIN_JEU.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageDialogues(["Tu n'as pas de chance...", "Tu es tombe sur la case de Mort...", "La partie est finie pour toi."])
-        joueur.setPv(0)
+    def actionPageActionNoir(self):
+        self.getGame().setJoueurActuel().setPv(0)
+        pygame.time.delay(2500)
+        self.getGame().joueurSuivant()
+        self.getGame().setPageActuel(PageState.MOUVEMENT)
+
+    def actionPageActionJaune(self):
+        pygame.time.delay(2500)
+        self.getGame().joueurSuivant()
+        self.getGame().setPageActuel(PageState.MOUVEMENT)
+
+    def actionPageActionBlanc(self):
+        pygame.time.delay(2500)
+        self.getGame().joueurSuivant()
+        self.getGame().setPageActuel(PageState.MOUVEMENT)
         
-    def actionCouleurOrange(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.JEU.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageAction([image.Interaction.MALUS.value], ["Malus"])
-        interface.affichageDialogues(["Tu es sur une case Malus.", "Clique pour savoir quel sort", "le jeu te reserve."])
-            
+    def actionPageActionOrange(self):
         selection_malus = False
         while selection_malus != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -484,7 +418,7 @@ class Logique:
                         selection_malus = True
                         interface.affichageDialogues(["Tu vas {}".format(malus)])
                         
-    def actionCouleurRouge(self, interface, joueur):
+    def actionPageActionRouge(self):
         if joueur.aCles() != True:
             un_ennemis = ennemis.Choix_ennemis(joueur)
 
@@ -627,13 +561,7 @@ class Logique:
                             image.Image(400, 508, image.BtnAttaque.DEFENSE.value).affiche(interface.getFenetre())
                             image.Image(550, 508, image.BtnAttaque.FUITE.value).affiche(interface.getFenetre())
             
-    def actionCouleurRose(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.JEU.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageAction([image.Interaction.CHANCE.value], ["Bonus"])
-        interface.affichageDialogues(["Tu es sur une case Chance","Clique pour decouvrir le pouvoir","que le jeu va te donner."])
-        
+    def actionPageActionRose(self):
         selection_bonus = False
         while selection_bonus != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -642,13 +570,10 @@ class Logique:
                     pygame.quit()
                     exit() 
                 
-                
                 if event.type == pygame.MOUSEBUTTONDOWN:  
                     if 360 < mouse_x < 424 and 475 < mouse_y < 539:
                         liste_chance = ["gagner 100 pv","gagner 200 pv","gagner 500 pv", "gagner 150 pv","gagner 400 pv","gagner 1050 pv"]
-                        chance = random.choice(liste_chance)
-                        
-                        
+                        chance = random.choice(liste_chance)                        
                         interface.affichageDialogues(["Tou-dou-dou-doum","Tu vas {}".format(chance)])
                         
                         if chance == "gagner 100 pv":
@@ -675,13 +600,7 @@ class Logique:
                             joueur.setPv(joueur.getPv() + 1050)
                             selection_bonus = True
                                                                                    
-    def actionCouleurGris(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageAction([image.Interaction.CLES.value, image.Interaction.RETOUR.value], ["1 clee", "Froussard !"])
-        interface.affichageDialogues(["Tu es sur une case Speciale ! Si tu tente ta chance", "tu as une chance sur deux gagner deux cles", "que tu n'as pas ou de tout perdre."])
-        
+    def actionPageActionGris(self):
         selection_speciale = False
         while selection_speciale != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -701,12 +620,9 @@ class Logique:
                             if tirage == "bravo":
                                 interface.affichageDialogues(["Bravo tu as gagner !!!","Voilà deux cles supplementaires que tu peux", "voir apparaître dans ton inventaire."])
                                 selection_speciale = True
-                                
-                            
                             else:
                                 interface.affichageDialogues(["Oh non dommage...", "Tu pourras retenter ta chance si tu as", "d'autres cles :)"])       
                                 selection_speciale = True
-                                
                         else:
                             interface.affichageDialogues(["Tu ne possede pas de cles.", "Obtient-en une en tuant un boss sur les", "cases rouges."])
                             selection_speciale = True    
@@ -715,22 +631,10 @@ class Logique:
                         interface.affichageDialogues(["Pas de soucis, retente ta chance une autre fois"])
                         selection_speciale = True
                         
-    def actionCouleurViolet(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.JEU.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageDialogues(["Tu es sur une case Rejoue !","Relance le de pour avoir un", "deuxieme lance"])
-        interface.affichageAction([image.De.FACE1.value])
-        interface.PageDirection(interface.getListeJoueur()[joueur.getId()])
-        interface.PageActionCases(interface.getListeJoueur()[joueur.getId()])
+    def actionPageActionViolet(self):
+        self.getGame().setPageActuel(PageState.REJOUER)
 
-    def actionCouleurBeige(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageDialogues(["Tu es devant la Hutte de la sorciere.","Veux-tu essayer de l'ouvrir à l'aide", "des cles des quatre boss ?"])
-        interface.affichageAction([image.Interaction.CLES.value, image.Interaction.RETOUR.value], ["Entrer dans l'entre", "Plus tard"])
-        
+    def actionPageActionBeige(self):
         selection_sorciere = False
         while selection_sorciere != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -739,12 +643,10 @@ class Logique:
                     pygame.quit()
                     exit() 
                 
-                
                 if event.type == pygame.MOUSEBUTTONDOWN:  
                     if 220 < mouse_x < 284 and 480 < mouse_y < 544:
                         if joueur.aCles() == True:
                             interface.affichageDialogues(["Bravo tu as trouve toutes les cles", "Ouvre la porte et apprete toi à","affronter la sorciere."])
-                            interface.setEtatJeu("fin_du_jeu")
                             selection_sorciere = True
                         else:
                             interface.affichageDialogues(["Tu n'as pas encore recuperer toutes","les cles afin d'ouvrir la porte de", "la sorciere. Depeche-toi !"])
@@ -754,13 +656,7 @@ class Logique:
                         interface.affichageDialogues(["Pas de soucis, recupere les cles afin", "d'ouvrir la porte en premier !"])
                         selection_sorciere = True
 
-    def actionCouleurIndigo(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageDialogues(["Tu es sur une case de Teleportation. Veux-tu etre teleporter","en passant par le passage secret ?"])
-        interface.affichageAction([image.Interaction.TP.value, image.Interaction.RETOUR.value], ["Avec plaisir", "Non merci"])
-        
+    def actionPageActionIndigo(self):
         selection_teleporte = False
         while selection_teleporte != True:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
@@ -774,10 +670,10 @@ class Logique:
                     if 220 < mouse_x < 284 and 480 < mouse_y < 544:
                         interface.affichageDialogues(["Tou-dou-dou-doum", "Teleportation sur la deuxieme case", "de teleportation"])
 
-                        coord_case_indigo = interface.getPlateauJeu().getCaseIndigo(joueur)
+                        coord_case_indigo = interface.getPlateau().getCaseIndigo(joueur)
                         joueur.setPlateauX(coord_case_indigo[0])
                         joueur.setPlateauY(coord_case_indigo[1])
-                        interface.getPlateauJeu().setCasesDecouvertes(interface.getPlateauJeu().getCasesDecouvertes() + [[coord_case_indigo[0],coord_case_indigo[1]]])
+                        interface.getPlateau().setCasesDecouvertes(interface.getPlateau().getCasesDecouvertes() + [[coord_case_indigo[0],coord_case_indigo[1]]])
                         selection_teleporte = True
                         
                         
@@ -785,14 +681,13 @@ class Logique:
                         interface.affichageDialogues(["Pas de soucis, essaye une prochaine fois si tu en as l'envie.", "Bonne chance à toi jeune aventurier"])
                         selection_teleporte = True
         
-    def actionCouleurVert(self, interface, joueur):
-        interface.affichageFondEcran(image.Page.JEU.value)
-        interface.affichagePlateau()   
-        interface.affichageMenu(joueur)
-        interface.affichageDialogues(["Tu es sur une case Grrr", "Un tremblement de terre surgit de nul part", "et teleporte tous les joueurs !!!"])        
-        for joueur in interface.getListeJoueur():
+    def actionPageActionVert(self):
+        for joueur in self.getGame().getListeJoueurs():
             joueur.setPlateauX(random.randint(0,9))
             joueur.setPlateauY(random.randint(0,16))
             joueur.setX(joueur.getPlateauY() * 47)
             joueur.setY(joueur.getPlateauX() * 47)
-            interface.getPlateauJeu().setCasesDecouvertes(interface.getPlateauJeu().getCasesDecouvertes() + [[joueur.getPlateauX(), joueur.getPlateauY()]])
+            self.getGame().getPlateau().setCasesDecouvertes(self.getGame().getPlateau().getCasesDecouvertes() + [[joueur.getPlateauX(), joueur.getPlateauY()]])
+        pygame.time.delay(2500)
+        self.getGame().joueurSuivant()
+        self.getGame().setPageActuel(PageState.MOUVEMENT)

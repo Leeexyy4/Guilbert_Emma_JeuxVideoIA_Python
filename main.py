@@ -8,100 +8,155 @@
 
 # Bibliotheques utilisees pour le code
 import pygame
-from classe.jeu import interface, plateau, logique
-from enum import Enum
-
-class PageState(Enum):
-    DEMARRAGE = 1
-    STATISTIQUE = 2
-    COMMANDE = 3
-    CHOIXPERSONNAGE = 4
-    NBJOUEUR = 5
-    NBIA = 6
-    PREMIERMOUVEMENT = 7
-    MOUVEMENT = 8
-    DIRECTION = 9
-    HORSPLATEAU = 10
-    REJOUER = 11
-    ATTAQUE = 12
-    ACTIONCASE = 13
-    SORCIERE = 14
-    FIN = 15
+from classe.jeu import interface, logique, game
+from classe.jeu.game import PageState
 
 # ----------------------- Jeu de plateau - Logique du jeu ------------------------ #
 class Main:
     def __init__(self):
-        self.plateau = plateau.Plateau()
-        self.logique = logique.Logique()
-        self.interface = interface.Interface()
-        self.pageActuel = PageState.DEMARRAGE
+        self.__game = game.Game()
+        self.__logique = logique.Logique(self.getGame())
+        self.__interface = interface.Interface(self.getGame())
+
+# ----------------------------------- Getter des élements ----------------------------------- #
+        
+    def getLogique(self):
+        """Getter de la liste de joueur."""
+        return self.__logique
+
+    def getInterface(self):
+        """Getter du nb de joueur."""
+        return self.__interface
+        
+    def getGame(self):
+        """Getter des variables globales du jeu."""
+        return self.__game
+
+# ----------------------------------- Page du jeu ----------------------------------- #
 
     def PageDemarrage(self):
-        self.interface.affichagePageDemarrage()
-        self.pageActuel = self.logique.actionPageDemarrage()
+        self.getInterface().affichagePageDemarrage()
+        self.getLogique().actionPageDemarrage()
 
     def PageStatistiques(self):
-        self.interface.affichagePageStatistiques()
-        self.logique.actionPageStatistiques()
+        self.getInterface().affichagePageStatistiques()
+        self.getLogique().actionPageStatistiques()
 
     def PageCommande(self):
-        self.interface.affichagePageCommande()
-        self.logique.actionPageCommande()
-
-    def PageChoixPersonnage(self):
-        self.interface.affichagePageChoixPersonnage()
-        self.logique.actionPageChoixPersonnage()
+        self.getInterface().affichagePageCommande()
+        self.getLogique().actionPageCommande()
 
     def PageNbJoueur(self):
-        self.interface.affichagePageNbJoueur()
-        self.logique.actionPageNbJoueur()
+        self.getInterface().affichagePageNbJoueur()
+        self.getLogique().actionPageNbJoueur()
 
     def PageNbIntelligenceA(self):
-        self.interface.affichagePageNbIntelligenceA()
-        self.logique.actionPageNbIntelligenceA()
+        self.getInterface().affichagePageNbIntelligenceA()
+        self.getLogique().actionPageNbIntelligenceA()
+
+    def PageChoixPersonnage(self):
+        self.getInterface().affichagePageChoixPersonnage()
+        self.getLogique().actionPageChoixPersonnage()
         
-    def PagePremierMouvement(self, joueurActuelId):
-        self.interface.affichagePagePremierMouvement(joueurActuelId)
-        self.logique.actionPagePremierMouvement()
+    def PagePremierMouvement(self):
+        self.getInterface().affichagePagePremierMouvement()
+        self.getLogique().actionPagePremierMouvement()
 
-    def PageMouvement(self, joueurActuelId):
-        self.interface.affichagePageMouvement(joueurActuelId)
-        self.logique.actionPageMouvement()
+    def PageMouvement(self):
+        self.getInterface().affichagePageMouvement()
+        self.getLogique().actionPageMouvement()
 
-    def PageDirection(self, joueurActuelId):
-        self.interface.affichagePageDirection(joueurActuelId)
-        self.logique.actionPageDirection()
+    def PageDirection(self):
+        self.getInterface().affichagePageDirection()
+        self.getLogique().actionPageDirection()
 
-    def PageHorsPlateau(self, joueurActuelId , faceChoisie):
-        self.interface.affichagePageHorsPlateau(joueurActuelId, faceChoisie)
-        self.logique.actionPageHorsPlateau()
+    def PageHorsPlateau(self):
+        self.getInterface().affichagePageHorsPlateau()
+        self.getLogique().actionPageHorsPlateau()
 
-    def PageRejouer(self, joueurActuelId):
-        self.interface.affichagePageRejouer(joueurActuelId)
-        self.logique.actionPageRejouer()
+    def PageRejouer(self):
+        self.getInterface().affichagePageRejouer()
+        self.getLogique().actionPageRejouer()
 
-    def PageAttaque(self, joueurActuelId):
-        self.interface.affichagePageAttaque(joueurActuelId)
-        self.logique.actionPageAttaque()
+    def PageAttaque(self):
+        self.getInterface().affichagePageAttaque()
+        self.getLogique().actionPageAttaque()
 
-    def PageActionCases(self, joueurActuelId):
-        self.interface.affichagePageActionCases(joueurActuelId)
-        self.logique.actionPageActionCases()
+    def PageActionCases(self):
+        self.getInterface().affichagePageActionCases()
+        self.getLogique().actionPageActionCases()
 
-    def PageSorciere(self, joueurActuelId):
-        self.interface.affichagePageSorciere(joueurActuelId)
-        self.logique.actionPageSorciere()
+    def PageActionCasesBeige(self):
+        self.getInterface().affichagePageActionBeige()
+        self.getLogique().actionPageActionBeige()
 
-    def PageFin(self):
-        self.interface.affichagePageFin()
-        self.logique.actionPageFin()
-        if self.interface.getListeJoueur() == None:
-            self.interface.PageFin()
-        else:
-            for joueurActuel in self.interface.getListeJoueur():
-                if joueurActuel.aGagner(self.interface.getPlateauJeu()) == True:
-                    joueurActuel.set_inventaire([])
-                    self.interface.PageSorciere(joueurActuel)
+    def PageActionCasesBlanc(self):
+        self.getInterface().affichagePageActionBlanc()
+        self.getLogique().actionPageActionBlanc()
+
+    def PageActionCasesBleu(self):
+        self.getInterface().affichagePageActionBleu()
+        self.getLogique().actionPageActionBleu()
+
+    def PageActionCasesGris(self):
+        self.getInterface().affichagePageActionGris()
+        self.getLogique().actionPageActionGris()
+
+    def PageActionCasesIndigo(self):
+        self.getInterface().affichagePageActionIndigo()
+        self.getLogique().actionPageActionIndigo()
+
+    def PageActionCasesJaune(self):
+        self.getInterface().affichagePageActionJaune()
+        self.getLogique().actionPageActionJaune()
+
+    def PageActionCasesOrange(self):
+        self.getInterface().affichagePageActionGris()
+        self.getLogique().actionPageActionGris()
+
+    def PageActionCasesNoir(self):
+        self.getInterface().affichagePageActionNoir()
+        self.getLogique().actionPageActionNoir()
+
+    def PageActionCasesRouge(self):
+        self.getInterface().affichagePageActionRouge()
+        self.getLogique().actionPageActionRouge()
+
+    def PageActionCasesRose(self):
+        self.getInterface().affichagePageActionRose()
+        self.getLogique().actionPageActionRose()
+
+    def PageActionCasesVert(self):
+        self.getInterface().affichagePageActionVert()
+        self.getLogique().actionPageActionVert()
+
+    def PageActionCasesViolet(self):
+        self.getInterface().affichagePageActionViolet()
+        self.getLogique().actionPageActionViolet()
+
+    def PageSorciere(self):
+        self.getInterface().affichagePageSorciere()
+        self.getLogique().actionPageSorciere()
+
+    def PageSorciereAstral(self):
+        self.getInterface().affichagePageSorciereAstral()
+        self.getLogique().actionPageSorciereAstral()
+
+    def PageSorciereDragon(self):
+        self.getInterface().affichagePageSorciereDragon()
+        self.getLogique().actionPageSorciereDragon()
+
+    def PageSorcierePotion(self):
+        self.getInterface().affichagePageSorcierePotion()
+        self.getLogique().actionPageSorcierePotion()
+
+    def PageFinGagne(self):
+        self.getInterface().affichagePageFinGagne()
+        self.getLogique().actionPageFinGagne()
+
+    def PageFinPerdu(self):
+        self.getInterface().affichagePageFinPerdu()
+        self.getLogique().actionPageFinPerdu()
 
 if __name__ == "__main__":
     # Initialisation du jeu
@@ -109,48 +164,99 @@ if __name__ == "__main__":
     self = Main()
 
     # Boucle de jeu pour tous les joueurs encore en vie
-    while self.pageActuel != PageState.FIN:
-        if self.pageActuel == PageState.DEMARRAGE:
+    while self.getGame().getPageActuel() != PageState.FINGAGNE or  self.getGame().getPageActuel() != PageState.FINPERDU:
+        if self.getGame().getPageActuel().value is PageState.DEMARRAGE.value:
             self.PageDemarrage()
 
-        elif self.pageActuel is PageState.STATISTIQUE:
+        elif self.getGame().getPageActuel().value is PageState.STATISTIQUE.value:
             self.PageStatistiques()
 
-        elif self.pageActuel == PageState.COMMANDE:
+        elif self.getGame().getPageActuel().value == PageState.COMMANDE.value:
             self.PageCommande()
 
-        elif self.pageActuel == PageState.CHOIXPERSONNAGE:
-            self.PageChoixPersonnage()
-
-        elif self.pageActuel == PageState.NBJOUEUR:
+        elif self.getGame().getPageActuel().value == PageState.NBJOUEUR.value:
             self.PageNbJoueur()
             
-        elif self.pageActuel == PageState.NBIA:
+        elif self.getGame().getPageActuel().value == PageState.NBIA.value:
             self.PageNbIntelligenceA()
 
-        elif self.pageActuel == PageState.PREMIERMOUVEMENT:
+        elif self.getGame().getPageActuel().value == PageState.CHOIXPERSONNAGE.value:
+            self.PageChoixPersonnage()
+
+        elif self.getGame().getPageActuel().value == PageState.PREMIERMOUVEMENT.value:
             self.PagePremierMouvement()
         
-        elif self.pageActuel == PageState.MOUVEMENT:
+        elif self.getGame().getPageActuel().value == PageState.MOUVEMENT.value:
             self.PageMouvement()
             
-        elif self.pageActuel == PageState.DIRECTION:
+        elif self.getGame().getPageActuel().value == PageState.DIRECTION.value:
             self.PageDirection()
 
-        elif self.pageActuel == PageState.HORSPLATEAU:
+        elif self.getGame().getPageActuel().value == PageState.HORSPLATEAU.value:
             self.PageHorsPlateau()
 
-        elif self.pageActuel == PageState.REJOUER:
+        elif self.getGame().getPageActuel().value == PageState.REJOUER.value:
             self.PageRejouer()
             
-        elif self.pageActuel == PageState.ATTAQUE:
+        elif self.getGame().getPageActuel().value == PageState.ATTAQUE.value:
             self.PageAttaque()
 
-        elif self.pageActuel == PageState.ACTIONCASE:
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASE.value:
             self.PageActionCases()
 
-        elif self.pageActuel == PageState.SORCIERE:
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEBEIGE.value:
+            self.PageActionCasesBeige()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEBLANC.value:
+            self.PageActionCasesBlanc()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEBLEU.value:
+            self.PageActionCasesBleu()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEGRIS.value:
+            self.PageActionCasesGris()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEINDIGO.value:
+            self.PageActionCasesIndigo()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEJAUNE.value:
+            self.PageActionCasesJaune()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASENOIR.value:
+            self.PageActionCasesNoir()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEORANGE.value:
+            self.PageActionCasesOrange()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEROUGE.value:
+            self.PageActionCasesRouge()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEROSE.value:
+            self.PageActionCasesRose()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEVERT.value:
+            self.PageActionCasesVert()
+
+        elif self.getGame().getPageActuel().value == PageState.ACTIONCASEVIOLET.value:
+            self.PageActionCasesViolet()
+
+        elif self.getGame().getPageActuel().value == PageState.SORCIERE.value:
             self.PageSorciere()
+
+        elif self.getGame().getPageActuel().value == PageState.SORCIEREASTRAL.value:
+            self.PageSorciereAstral()
+
+        elif self.getGame().getPageActuel().value == PageState.SORCIEREDRAGON.value:
+            self.PageSorciereDragon()
+
+        elif self.getGame().getPageActuel().value == PageState.SORCIEREPOTION.value:
+            self.PageSorcierePotion()
+
+        elif self.getGame().getPageActuel().value == PageState.FINGAGNE.value:
+            self.PageFinGagne()
+
+        elif self.getGame().getPageActuel().value == PageState.FINPERDU.value:
+            self.PageFinGagne()
 
         # Mettre à jour l'affichage
         pygame.display.update()

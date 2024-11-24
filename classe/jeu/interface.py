@@ -1,18 +1,17 @@
 # ----------------------- Jeu de plateau - Interface ------------------------ #
 
 # Bibliothèques utilisées pour le code
-import pygame
+import pygame, random
 from classe.visuel import image, couleur, rectangle, texte
-from classe.jeu import de
-from classe.personnage import joueur
+from classe.jeu.game import PageState
 
 class Interface:
-    def __init__(self) -> None:
+    def __init__(self, game) -> None:
         """Initialisation de l'interface."""
         self.__tailleCase = 800 // 17
         self.__police = pygame.font.Font('./assets/font/times-new-roman.ttf', 16)
-        self.__de = de.De()
         self.__couleur = couleur.Couleur()
+        self.__game = game
 
         self.__fenetre = pygame.display.set_mode((800, 700))
         pygame.display.set_caption("Plateau de jeu")
@@ -29,10 +28,6 @@ class Interface:
         """Getter de la police."""
         return self.__police
     
-    def getDe(self):
-        """Getter de la dé."""
-        return self.__de
-
     def getCouleur(self):
         """Getter de la couleur."""
         return self.__couleur
@@ -40,12 +35,10 @@ class Interface:
     def getTailleCase(self):
         """Getter  de la taille de la case"""
         return self.__tailleCase
-
-# ----------------------------------- Setter des élements ----------------------------------- #
-
-    def setDe(self, de_jeu):
-        """Setter de la dé."""
-        self.__de = de_jeu
+    
+    def getGame(self):
+        """Getter de la liste de joueur."""
+        return self.__game
 
 # ----------------------------------- Affichage des élements ----------------------------------- #
     
@@ -68,13 +61,13 @@ class Interface:
                 rectangle = pygame.Rect(x, y, self.getTailleCase(), self.getTailleCase())  # Créer un rectangle
                 pygame.draw.rect(self.getFenetre(), self.getCouleur().getNoir(), rectangle)  # Dessiner le rectangle avec la couleur
         """Met à jour le plateau en affichant les cases découvertes."""
-        for i in self.getPlateauJeu().getCasesDecouvertes():
+        for i in self.getGame().getPlateau().getCasesDecouvertes():
             x = i[1] * self.getTailleCase()  # Coordonnée X du coin supérieur gauche du rectangle
             y = i[0] * self.getTailleCase()  # Coordonnée Y du coin supérieur gauche du rectangle          
             # Obtenir la couleur ou l'image de la case
-            self.getFenetre().blit(self.getPlateauJeu().getNom(i[0],i[1]), (x,y))
+            self.getFenetre().blit(self.getGame().getPlateau().getNom(i[0],i[1]), (x,y))
         """Affiche tous les joueurs sur le plateau."""
-        for joueur in self.getListeJoueur():
+        for joueur in self.getGame().getListeJoueurs():
             image = pygame.transform.scale(pygame.image.load(joueur.getLien()), (47, 47))
             self.getFenetre().blit(image, (joueur.getX(), joueur.getY()))
         pygame.display.update()
@@ -116,7 +109,7 @@ class Interface:
             pygame.draw.line(self.getFenetre(), self.getCouleur().getNoir(), (715, 595), (715, 670), 2)
             
             # Affichage des potions
-            if (joueurActuel.aGagner(self.getPlateauJeu())):
+            if (joueurActuel.aGagner(self.getGame().getPlateau())):
                 self.getFenetre().blit(image.Interaction.POTION.value, (668, 593))
                 pygame.display.update()
 
@@ -138,7 +131,7 @@ class Interface:
             La fonction affichageAction permet d'afficher les interractions
         """   
         if len(interraction) == 1:
-            self.getFenetre().blit(interraction[0],(360,475))
+            self.getFenetre().blit(interraction[0],(360,485))
             if texte and len(texte) == 1:
                 self.getFenetre().blit(self.getPolice().render(texte[0], True, self.getCouleur().getNoir()), (372,545))
         elif len(interraction) == 2:
@@ -182,6 +175,67 @@ class Interface:
         texte.Texte(adversaireActuel.getPv(), self.getCouleur().getNoir(), 538, 645).affiche(self.getPolice(), self.getFenetre())
         pygame.display.update()
 
+    def affichageAnimationDe(self):
+        """La fonction Choix_De retourne la face aleatoire choisie du de (Surface surface).
+        """
+        # Affiche le de sur la face 2
+        self.affichageAction([image.De.FACE2.value])
+        pygame.time.delay(150)
+        pygame.display.update()
+        
+        # Affiche le de sur la face 3
+        self.affichageAction([image.De.FACE3.value])
+        pygame.time.delay(200)
+        pygame.display.update()
+
+        # Affiche le de sur la face 4
+        self.affichageAction([image.De.FACE4.value])
+        pygame.time.delay(250)
+        pygame.display.update()
+
+        # Affiche le de sur la face 5
+        self.affichageAction([image.De.FACE5.value])
+        pygame.time.delay(300)
+        pygame.display.update()
+
+        # Affiche le de sur la face 1
+        self.affichageAction([image.De.FACE1.value])
+        pygame.time.delay(400)
+        pygame.display.update()
+
+        # Affiche le de sur la face 6
+        self.affichageAction([image.De.FACE6.value])
+        pygame.time.delay(450)
+        pygame.display.update()
+                            
+        # Choisir la face aleatoire
+        self.getGame().getDe().setFaceDe(random.randint(1,6))
+        
+        if self.getGame().getDe().getFaceDe() == 1:
+            # Affiche le de sur la face 1
+            self.affichageAction([image.De.FACE1.value])
+            
+        elif self.getGame().getDe().getFaceDe() == 2:
+            # Affiche le de sur la face 2
+            self.affichageAction([image.De.FACE2.value])
+            
+        elif self.getGame().getDe().getFaceDe() == 3:
+            # Affiche le de sur la face 3
+            self.affichageAction([image.De.FACE3.value])
+            
+        elif self.getGame().getDe().getFaceDe() == 4:
+            # Affiche le de sur la face 4
+            self.affichageAction([image.De.FACE4.value])
+            
+        elif self.getGame().getDe().getFaceDe() == 5:
+            # Affiche le de sur la face 5
+            self.affichageAction([image.De.FACE5.value])
+            
+        elif self.getGame().getDe().getFaceDe() == 6:
+            # Affiche le de sur la face 6
+            self.affichageAction([image.De.FACE6.value])
+        pygame.display.update()
+
 # ----------------------------------- Page du jeu ----------------------------------- #
 
     def affichagePageDemarrage(self):    
@@ -202,14 +256,13 @@ class Interface:
     def affichagePageNbIntelligenceA(self):
         self.affichageFondEcran(image.Page.CHOIX_NB_IA.value)
         self.affichageMenu()
-    
-        if self.getNbJoueur() == 1:
+        if self.getGame().getNbJoueur() == 1:
             self.affichageAction([image.BtnMenu.BTN_0.value, image.BtnMenu.BTN_1.value, image.BtnMenu.BTN_2.value, image.BtnMenu.BTN_3.value])
-        elif self.getNbJoueur() == 2:
+        elif self.getGame().getNbJoueur() == 2:
             self.affichageAction([image.BtnMenu.BTN_0.value, image.BtnMenu.BTN_1.value, image.BtnMenu.BTN_2.value])
-        elif self.getNbJoueur() == 3:
+        elif self.getGame().getNbJoueur() == 3:
             self.affichageAction([image.BtnMenu.BTN_0.value, image.BtnMenu.BTN_1.value])
-        if self.getNbJoueur() != 4:
+        if self.getGame().getNbJoueur() != 4:
             self.affichageDialogues(["Tu as la possibilité d'ajouter des intelligences artificelles", "au jeu.", "Combien d'IA souhaites-tu intégrer au jeu ?"])
         else:
             self.affichageAction([image.BtnMenu.BTN_0.value])
@@ -218,135 +271,167 @@ class Interface:
     def affichagePageChoixPersonnage(self):  
         self.affichageFondEcran(image.Page.CHOIX_PERSO.value)
         self.affichageMenu()
-        self.affichageAction([image.Personnages.ROCK.value, image.Personnages.WATER.value, image.Personnages.TOWN.value, image.Personnages.GRASS.value], [joueur.Nom.ROCK.value, joueur.Nom.WATER.value, joueur.Nom.TOWN.value, joueur.Nom.GRASS.value])
+        self.affichageAction([image.Personnages.ROCK.value, image.Personnages.WATER.value, image.Personnages.TOWN.value, image.Personnages.GRASS.value], ["Pierre", "Ondine", "Kevin", "Flora"])
         self.affichageDialogues(["Bienvenue à toi jeune aventurier..  C'est ici que demarre", "cette nouvelle aventure !" ,"Quel personnage souhaites-tu intégrer durant la partie ?"])
         
-    def affichagePagePremierMouvement(self, joueurActuel):
-        self.getPlateauJeu().setCasesDecouvertes(self.getPlateauJeu().getCasesDecouvertes() + [[self.getPlateauJeu().getCaseJaune()[0],self.getPlateauJeu().getCaseJaune()[1]]])
+    def affichagePagePremierMouvement(self):
         self.affichageFondEcran(image.Page.JEU.value)
-        self.affichageMenu(joueurActuel)        
+        self.affichageMenu(self.getGame().getJoueurActuel())        
         self.affichagePlateau()    
         self.affichageAction([image.De.FACE1.value])
-        self.affichageDialogues(["Joueur {}, je t'invite à cliquer sur le dé. Récupère les 4 clés".format(str(joueurActuel.getId() + 1)), "de boss. N'oublie pas d'avoir assez de points de vie avant", "de te rendre chez la sorcière"])
+        self.affichageDialogues(["Joueur {}, je t'invite à cliquer sur le dé. Récupère les 4 clés".format(str(self.getGame().getJoueurActuel().getId() + 1)), "de boss. N'oublie pas d'avoir assez de points de vie avant", "de te rendre chez la sorcière"])
                
-    def affichagePageMouvement(self, joueurActuel):
+    def affichagePageMouvement(self):
         self.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        self.affichageMenu(joueurActuel)        
-        self.affichagePlateau()    
-        self.affichageDialogues(["Joueur {}, je t'invite à cliquer sur le dé. Récupère les 4 clés".format(str(joueurActuel.getId() + 1)), "de boss. N'oublie pas d'avoir assez de points de vie avant", "de te rendre chez la sorcière"])
+        self.affichageMenu(self.getGame().getJoueurActuel())        
+        self.affichagePlateau()
+        self.affichageDialogues(["Joueur {}, je t'invite à cliquer sur le dé. Récupère les 4 clés".format(str(self.getGame().getJoueurActuel().getId() + 1)), "de boss. N'oublie pas d'avoir assez de points de vie avant", "de te rendre chez la sorcière"])
         self.affichageAction([image.Interaction.ATTAQUER.value, image.Interaction.DE.value], ["Attaquer", "Lancer de dé"])
            
-    def affichagePageDirection(self, joueurActuel):  
-        self.affichageMenu(joueurActuel)
-        self.affichageDialogues(["Bravo ! Tu peux avancer de {} cases ! Où veux-tu aller ?".format(face_choisie), "Lors des déplacements des joueurs sur le plateau, les cases", "apparaitront pour tous les joueurs"])
-           
-    def affichagePageHorsPlateau(self, joueurActuel, face_choisie):
-        self.affichageMenu(joueurActuel)
+    def affichagePageDirection(self):  
+        self.affichageFondEcran(image.Page.JEU.value)
+        self.affichageMenu(self.getGame().getJoueurActuel())        
         self.affichagePlateau()
-        self.affichageDialogues(["Tu ne peux pas aller par là, tu as atteint un bord","ou il n'y a pas de cases dans cette direction", "rejoue ! Tu peux avancer de {} cases ! ".format(face_choisie)])
+        if (self.getGame().getDe().getFaceDe() == 0):
+            self.affichageAnimationDe()
+        self.affichageDialogues(["Bravo ! Tu peux avancer de {} cases ! Où veux-tu aller ?".format(self.getGame().getDe().getFaceDe()), "Lors des déplacements des joueurs sur le plateau, les cases", "apparaitront pour tous les joueurs"])
+           
+    def affichagePageHorsPlateau(self):
+        self.affichageMenu(self.getGame().getJoueurActuel())
+        self.affichagePlateau()    
+        self.affichageDialogues(["Tu ne peux pas aller par là, tu as atteint un bord","ou il n'y a pas de cases dans cette direction", "rejoue ! Tu peux avancer de {} cases ! ".format(self.getGame().getDe().getFaceDe())])
     
-    def affichagePageRejouer(self, joueurActuel): 
+    def affichagePageRejouer(self): 
         self.affichageFondEcran(image.Page.JEU.value)
         self.affichagePlateau()    
-        self.affichageMenu(joueurActuel)
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageAction([image.De.FACE1.value])
-        self.affichageDialogues(["Tu es le joueur " + str(joueurActuel.getId() + 1) + ", clique sur le de afin de faire ton" , "déplacement"]) 
-        self.PageDirection(joueurActuel)
-        self.PageActionCases(joueurActuel)   
+        self.affichageDialogues(["Tu es le joueur " + str(self.getGame().getJoueurActuel().getId() + 1) + ", clique sur le de afin de faire ton" , "déplacement"]) 
 
-    def affichagePageAttaque(self, joueurActuel): 
+    def affichagePageAttaque(self): 
         self.affichageFondEcran(image.Page.JEU.value)
-        self.affichageMenu(joueurActuel)
-        self.affichagePlateau()    
-        if joueurActuel.advDisponible(self.getListeJoueur()) == True:
-            self.affichageDialogues(["Combat"])
-        else:
-            self.affichageDialogues(["Personne n'est assez proche de toi pour","être attaquer. Clique sur le dé","pour avancer dans la partie."])
-            self.PageRejouer(joueurActuel)
+        self.affichageMenu(self.getGame().getJoueurActuel())
+        self.affichagePlateau()   
 
-    def affichagePageActionCases(self, joueurActuel):
+    def affichagePageActionCases(self):
         self.affichageFondEcran(image.Page.JEU.value)
-        self.affichageMenu(joueurActuel)
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichagePlateau()    
-        self.affichageDialogues(["Tu as atterris sur une case {}".format(self.getPlateauJeu().getNom(joueurActuel.getPlateauX(),joueurActuel.getPlateauY()))])
+        self.affichageDialogues(["Tu as atterris sur une case {}".format(self.getGame().getPlateau().getNom(self.getGame().getJoueurActuel().getPlateauX(),self.getGame().getJoueurActuel().getPlateauY()))])
     
-    def affichagePageSorciere(self, joueurActuel):
-        # Page de la sorcière quan don a réussi le jeu
+    def affichagePageSorciere(self):
         self.affichageFondEcran(image.Sorciere.MAISON.value)
-        self.affichageMenu(joueurActuel)
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageDialogues(["Tu es chez la sorciere, mais j'ai l'impression","qu'elle est sortie de sa taniere...","profite-en pour fouiller dans ses affaires :)"])
-    
-    def affichagePageFin(self):
+
+    def affichagePageSorciereAstral(self):
+        self.affichageFondEcran(image.Page.MAISON_SYMBOLE.value)
+        self.affichageMenu(self.getGame().getJoueurActuel())
+        self.affichageDialogues(["C'est un symbole astral, si c'est chez la","sorciere, il vaut mieux ne pas y toucher"])
+        pygame.time.delay(2500)        
+        self.getGame().setPageActuel(PageState.SORCIERE)
+
+    def affichagePageSorciereDragon(self):
+        self.affichageFondEcran(image.Page.MAISON_DRAGON.value)
+        self.affichageMenu(self.getGame().getJoueurActuel())
+        self.affichageDialogues(["Un dragon de pierre... ce n'est pas très","rassurant, trouvons vite un remède et sortons","d'ici très vite"])
+        pygame.time.delay(2500)
+        self.getGame().setPageActuel(PageState.SORCIERE)
+
+    def affichagePageSorcierePotion(self):
+        # Page de la sorcière quan don a réussi le jeu
+        self.affichageFondEcran(image.Page.MAISON.value)
+        self.affichageMenu(self.getGame().getJoueurActuel())
+        self.affichageDialogues(["Tu as trouvé une potion... Potion inverstium","Tu décides de la boire afin d'inverser le","sortilège"])
+        self.getGame().getJoueurActuel().set_inventaire(["Potion inverstium"])
+        self.affichage_potion()
+
+    def affichagePageFinPerdu(self):
         self.affichageFondEcran(image.Page.FIN_JEU.value)
         self.affichageMenu()
         self.affichageDialogues(["Aucun des joueurs n'a réussi à finir le jeu","Retentez votre chance une prochaine fois","pour profiter de cette aventure :)"])
+                        
+    def affichagePageFinGagne(self):
+        self.affichageFondEcran(image.Page.FIN_JEU.value)
+        self.affichageMenu()
+        self.affichageDialogues(["Tu as terminé le jeu bravo à toi jeune aventurier","Tu es le premier a t'être libéré du sort !!"])
 
 # ----------------------------------- Plateau du jeu ----------------------------------- #
 
-    def affichagePlateauBleu(self, joueur):
+    def affichagePageActionBleu(self):
         self.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        self.affichageMenu(joueur)
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichagePlateau()    
         self.affichageDialogues(["Tu es tombe dans la case Puit... Pour t'en", "sortir, tu dois sacrifier une de tes cles", "ou 200 pv."])        
         self.affichageAction([image.Interaction.PV.value, image.Interaction.CLES.value], ["200 PV", "1 clée"])
         
-    def affichagePlateauNoir(self, joueur):
+    def affichagePageActionBlanc(self):
+        self.affichageFondEcran(image.Page.JEU.value)
+        self.affichageMenu(self.getGame().getJoueurActuel())
+        self.affichagePlateau()    
+        self.affichageDialogues(["Tu es sur une case vide, il ne t'arrivera rien", "mais dépêche toi de terminer le jeu en premier !"])        
+        
+    def affichagePageActionNoir(self):
         self.affichageFondEcran(image.Page.FIN_JEU.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageDialogues(["Tu n'as pas de chance...", "Tu es tombe sur la case de Mort...", "La partie est finie pour toi."])
         
-    def affichagePlateauOrange(self, joueur):
+    def affichagePageActionOrange(self):
         self.affichageFondEcran(image.Page.JEU.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageAction([image.Interaction.MALUS.value], ["Malus"])
         self.affichageDialogues(["Tu es sur une case Malus.", "Clique pour savoir quel sort", "le jeu te reserve."])
 
-    def affichagePlateauRouge(self, joueur):
+    def affichagePageActionRouge(self, un_ennemis):
         self.affichageFondEcran(image.Page.ARENE.value)
-        self.affichageMenu(joueur)
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageDialogues(["Tu as décidé de combattre un joueur. Le celebre ","{}. Prepare toi à le combattre afin de prendre".format(un_ennemis.get_prenom()), "l'avantage sur lui !"])
                     
-    def affichagePlateauRose(self, joueur):
+    def affichagePageActionRose(self):
         self.affichageFondEcran(image.Page.JEU.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageAction([image.Interaction.CHANCE.value], ["Bonus"])
         self.affichageDialogues(["Tu es sur une case Chance","Clique pour decouvrir le pouvoir","que le jeu va te donner."])
                 
-    def affichagePlateauGris(self, joueur):
+    def affichagePageActionGris(self):
         self.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageAction([image.Interaction.CLES.value, image.Interaction.RETOUR.value], ["1 clee", "Froussard !"])
         self.affichageDialogues(["Tu es sur une case Speciale ! Si tu tente ta chance", "tu as une chance sur deux gagner deux cles", "que tu n'as pas ou de tout perdre."])
                         
-    def affichagePlateauViolet(self, joueur):
+    def affichagePageActionViolet(self):
         self.affichageFondEcran(image.Page.JEU.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageDialogues(["Tu es sur une case Rejoue !","Relance le de pour avoir un", "deuxieme lance"])
         self.affichageAction([image.De.FACE1.value])
-        self.PageDirection(self.getListeJoueur()[joueur.getId()])
-        self.PageActionCases(self.getListeJoueur()[joueur.getId()])
 
-    def affichagePlateauBeige(self, joueur):
+    def affichagePageActionBeige(self):
         self.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageDialogues(["Tu es devant la Hutte de la sorciere.","Veux-tu essayer de l'ouvrir à l'aide", "des cles des quatre boss ?"])
         self.affichageAction([image.Interaction.CLES.value, image.Interaction.RETOUR.value], ["Entrer dans l'entre", "Plus tard"])
 
-    def affichagePlateauIndigo(self, joueur):
+    def affichagePageActionJaune(self):
+        self.affichageFondEcran(image.Page.JEU.value)
+        self.affichagePlateau()
+        self.affichageMenu(self.getGame().getJoueurActuel())
+        self.affichageDialogues(["Tu es la case de Depart.","Depeche toi de recuperer les cles","avant les autres joueurs."])
+                
+    def affichagePageActionIndigo(self):
         self.affichageFondEcran(image.Page.CHOIX_DOUBLE.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageDialogues(["Tu es sur une case de Teleportation. Veux-tu etre teleporter","en passant par le passage secret ?"])
         self.affichageAction([image.Interaction.TP.value, image.Interaction.RETOUR.value], ["Avec plaisir", "Non merci"])
         
-    def affichagePlateauVert(self, joueur):
+    def affichagePageActionVert(self):
         self.affichageFondEcran(image.Page.JEU.value)
-        self.affichagePlateau()   
-        self.affichageMenu(joueur)
+        self.affichagePlateau()    
+        self.affichageMenu(self.getGame().getJoueurActuel())
         self.affichageDialogues(["Tu es sur une case Grrr", "Un tremblement de terre surgit de nul part", "et teleporte tous les joueurs !!!"])        

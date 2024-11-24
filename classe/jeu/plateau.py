@@ -50,8 +50,9 @@ class Plateau:
         }
 
         self.__cases_decouvertes = []
-        
+                
         self.remplirPlateauAleatoirement()
+        self.setCasesDecouvertes(self.getCasesDecouvertes() + [[self.getCaseJaune()[0],self.getCaseJaune()[1]]])
 
         for ligne in range(10):
             for colonne in range(17):

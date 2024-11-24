@@ -3,28 +3,26 @@
 # Bibliotheques utilisees pour le code
 import pygame, random
 from classe.visuel import texte, couleur, image
-from classe.jeu import logique
 
 class Joueur:
     """La classe Joueur est une classe qui permet d'utiliser un personnage."""
     
     # Definir un joueur
-    def __init__(self,id,prenom,element, interface) -> None:
+    def __init__(self,id,prenom,element, plateaux, plateauy) -> None:
         """_summary_
             Initialisation du joueur
         """
         self.__id = id
         self.__prenom = prenom
         self.__element = element
-        self.__plateaux = interface.getPlateauJeu().getCaseJaune()[0]
-        self.__plateauy = interface.getPlateauJeu().getCaseJaune()[1]        
+        self.__plateaux = plateaux
+        self.__plateauy = plateauy      
         self.__x = self.getPlateauY() * 47
         self.__y = self.getPlateauX() * 47
         self.__lien = "./assets/img/personnages/" + prenom + ".png"
         self.__pv = 1000
         self.__attaque = 150
         self.__inventaire = ["clé de la Ville", "clé de la Rivière", "clé de la Forêt", "clé du Rocher"]
-        self.__state:logique.Player_State = logique.Player_State.WAIT_PLAYER
 
     # Definir les getters
     def getX(self):
@@ -234,14 +232,14 @@ class Joueur:
         # Quel adversaire on peut attaquer
         x1 = self.getPlateauX()
         y1 = self.getPlateauY()
-        for i in interface.getListeJoueur():
+        for i in interface.getListeJoueurs():
             if (((self.getPlateauX() == x1) or (self.getPlateauX() == x1 + 1) or (self.getPlateauX() == x1 - 1)) and ((self.getPlateauY() == y1) or (self.getPlateauY() == y1 + 1) or (self.getPlateauY() == y1 - 1)) and (self.getId() != self.getId())):
                 return self.getId()
         return (-1)
     
     def combatJoueurs(self, interface, ordre_adv):
         # Combats des joueurs
-        joueur_adv = Joueur(interface.getListeJoueur()[ordre_adv][0],interface.getListeJoueur()[ordre_adv][1],interface.getListeJoueur()[ordre_adv][2],interface.getListeJoueur()[ordre_adv][3],interface.getListeJoueur()[ordre_adv][4],interface.getListeJoueur()[ordre_adv][5],interface.getListeJoueur()[ordre_adv][6],interface.getListeJoueur()[ordre_adv][7])
+        joueur_adv = Joueur(interface.getListeJoueurs()[ordre_adv][0],interface.getListeJoueurs()[ordre_adv][1],interface.getListeJoueurs()[ordre_adv][2],interface.getListeJoueurs()[ordre_adv][3],interface.getListeJoueurs()[ordre_adv][4],interface.getListeJoueurs()[ordre_adv][5],interface.getListeJoueurs()[ordre_adv][6],interface.getListeJoueurs()[ordre_adv][7])
                 
         # Mettre la fenetre combat
         image_Arene = pygame.image.load("./assets/img/ennemis/Arene.png")
